@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/piecePaddingTop"
+    android:paddingBottom="@dimen/piecePaddingTop"
+    android:paddingLeft="@dimen/piecePaddingLeft"
+    android:paddingRight="@dimen/piecePaddingLeft">
+    <TextView
+        android:id="@+id/piecetitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zixuntoutiao"
+        android:textColor="@color/red_theme"
+        android:textSize="16dp"
+        android:drawableRight="@drawable/news" />
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/red_theme"
+        android:layout_below="@+id/piecetitle"/>
+    <ListView
+        android:id="@+id/lv_zixuntoutiao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:layout_below="@+id/line">
+
+    </ListView>
+
+
+</RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@drawable/partingline"/>
+</LinearLayout>

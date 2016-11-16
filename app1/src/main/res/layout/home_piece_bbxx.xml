@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:clickable="false"
+    android:background="@color/white"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    >
+    <LinearLayout
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="30dp">
+        <ImageView
+            android:id="@+id/iv_home_bbxx"
+            android:layout_width="72dp"
+            android:src="@drawable/ssbb"
+            android:layout_gravity="center_vertical"
+            android:layout_height="15dp" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/divider_1"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            />
+        <com.mpzn.mpzn.views.ADTextView
+            android:id="@+id/autoScrollTextView"
+            android:layout_toRightOf="@+id/iv_home_bbxx"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            app:ad_text_content_size="13sp"
+            app:ad_text_front_size="13sp"
+            app:ad_text_front_color="@color/font_black_0"
+            app:ad_text_content_color="@color/font_black_2"
+            android:layout_height="30dp">
+
+        </com.mpzn.mpzn.views.ADTextView>
+
+
+
+    </LinearLayout>
+<View
+android:layout_width="match_parent"
+android:layout_height="10dp"
+android:background="@drawable/partingline"/>
+
+</LinearLayout>
+
+

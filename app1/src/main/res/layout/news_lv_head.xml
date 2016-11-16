@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff">
+    <RelativeLayout
+        android:id="@+id/news_top"
+        android:layout_width="match_parent"
+        android:layout_height="180dp">
+
+        <com.bigkoo.convenientbanner.ConvenientBanner
+            android:id="@+id/banner_news_top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/default_img"
+            app:canLoop="true"
+            />
+
+        <!--<Button-->
+            <!--android:background="@drawable/left"-->
+            <!--android:id="@+id/news_btn_left"-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_alignParentLeft="true" />-->
+        <!--<Button-->
+            <!--android:background="@drawable/right"-->
+            <!--android:id="@+id/news_btn_right"-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--/>-->
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/news_tag"
+        android:layout_below="@+id/news_top"
+        android:layout_width="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_height="40dp">
+        <ImageView
+            android:src="@drawable/lstt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            />
+        <ImageButton
+            android:background="@null"
+            android:src="@drawable/more"
+            android:layout_centerVertical="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

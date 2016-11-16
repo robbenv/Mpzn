@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="80dp">
+    <View style="@style/divider_2"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="70dp"
+            android:layout_height="match_parent" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_weight="3">
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="孙响"
+                android:textSize="18sp"
+                android:textColor="@color/font_black_2"/>
+            <TextView
+                android:id="@+id/tv_phone"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1308888888"
+                android:textSize="14sp"
+                android:textColor="@color/blue"/>
+            <TextView
+                android:id="@+id/tv_last_visit"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="最近一次登录时间："
+                android:textSize="12sp"
+                android:textColor="@color/font_black_5"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+          <CheckBox
+              android:id="@+id/cb_jingjiren"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+              style="@style/StarDeleteCheckboxTheme"/>
+        </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>

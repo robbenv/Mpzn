@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    tools:context=".activity.SearchActivity">
+
+    <include layout="@layout/search_top_layout"
+             android:id="@+id/search_search_bar"/>
+
+    <TextView
+        android:id="@+id/hot_search"
+        android:layout_below="@+id/search_search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:text="最近热搜"
+        android:drawableLeft="@drawable/re"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/font_black_1"
+        android:paddingLeft="10dp"
+        android:background="@drawable/partingline"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_search_hot"
+        android:layout_below="@+id/hot_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rv_search_hot">
+
+    <TextView
+        android:id="@+id/history_search"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:text="搜索历史"
+        android:textColor="@color/font_black_1"
+        android:drawableLeft="@drawable/search_history"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:background="@drawable/partingline"/>
+    <ListView
+        android:id="@+id/lv_search_history"
+        android:layout_below="@+id/history_search"
+        android:layout_above="@+id/btn_clear_search_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
+
+           <RelativeLayout
+                android:id="@+id/btn_clear_search_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:clickable="true"
+                android:padding="20dp">
+            <TextView
+                android:id="@+id/tv_clear_search_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="清除历史搜索"
+                android:textSize="14sp"
+                android:background="@drawable/conner5dp_stroke9e"
+                android:layout_centerInParent="true"/>
+                />
+       </RelativeLayout>
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/lv_search_tips"
+        android:background="@color/fafafa"
+        android:layout_below="@+id/search_search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+    </ListView>
+
+
+
+</RelativeLayout>

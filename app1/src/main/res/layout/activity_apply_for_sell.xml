@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    tools:context="com.mpzn.mpzn.activity.ApplyForSellActivity">
+<com.mpzn.mpzn.views.MyActionBar
+    android:id="@+id/aciton_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/fafafa"
+    app:title_color="@color/font_black_2">
+
+</com.mpzn.mpzn.views.MyActionBar>
+<View style="@style/divider_1"/>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/rl_et"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        >
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@drawable/coners_radius_5dp_gray"
+        android:hint="输入地区或者楼盘名"
+        android:textColorHint="@color/font_black_4"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textColor="@color/font_black_3"
+        />
+    <ImageButton
+        android:id="@+id/ib_search"
+        android:layout_centerVertical="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/btn_bg"
+        android:src="@drawable/search_gray"
+        android:layout_alignParentRight="true"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/fafafa"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <View style="@style/divider_1"
+            android:layout_alignParentTop="true"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            />
+        <Button
+            android:id="@+id/btn_commit_num"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:background="@drawable/btn_bg_red_to_darkred"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:text="去申请(0)"
+            android:textSize="14sp"
+            android:layout_margin="10dp"
+            />
+        <TextView
+            android:id="@+id/tv_check_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_black_2"
+            android:text="全选"
+            android:layout_toLeftOf="@+id/cb_all"
+            android:layout_marginRight="5dp"
+            android:textSize="14sp"
+            android:layout_centerVertical="true"
+            />
+        <CheckBox
+            android:id="@+id/cb_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/StarDeleteCheckboxTheme"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_et"
+        android:layout_above="@id/rl_bottom">
+        <include layout="@layout/layout_load_alert"/>
+
+
+    </RelativeLayout>
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/rl_et"
+    android:layout_above="@id/rl_bottom"
+    android:background="@color/white">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_building"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/fafafa">
+    </android.support.v7.widget.RecyclerView>
+    <ListView
+        android:id="@+id/lv_search_tips"
+        android:background="@color/fafafa"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+    </ListView>
+</FrameLayout>
+
+
+
+</RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_bbstatics_for_jjcom"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    tools:context="com.mpzn.mpzn.activity.BBStaticsForJJComActivity">
+    <com.mpzn.mpzn.views.MyActionBar
+        android:id="@+id/my_action_bar"
+        app:title_color="@color/font_black_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.mpzn.mpzn.views.MyActionBar>
+    <View style="@style/divider_1" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="10dp"
+        >
+        <TextView
+            android:id="@+id/tv_content_title"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:text="总Rank榜"
+            android:textSize="16sp"
+            android:textColor="@color/orange"/>
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/sp_date"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:background="@color/transparent"
+            android:spinnerMode="dropdown"
+            android:padding="3dp">
+
+        </android.support.v7.widget.AppCompatSpinner>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/hg"
+            android:text="带看成功量"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/textView2" />
+
+    </RelativeLayout>
+
+<View
+    android:layout_width="match_parent"
+    android:layout_height="10dp"
+    android:background="@color/gray_nomal"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_bb_rank"
+        android:layout_below="@+id/sp_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

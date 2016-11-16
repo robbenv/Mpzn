@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<com.mpzn.mpzn.views.MyActionBar
+    android:id="@+id/action_bar"
+    android:background="@color/red_theme"
+    app:title_color="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+</com.mpzn.mpzn.views.MyActionBar>
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/bmapView"
+        android:layout_below="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true" />
+
+</RelativeLayout>

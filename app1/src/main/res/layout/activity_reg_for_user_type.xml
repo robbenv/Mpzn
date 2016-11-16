@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:background="@color/bg_activity"
+    tools:context="com.mpzn.mpzn.activity.RegForUserTypeActivity">
+
+    <com.mpzn.mpzn.views.MyActionBar
+        android:background="@color/red_theme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/my_action_bar"
+        android:layout_alignParentTop="true"
+        app:title_color="@color/white">
+
+    </com.mpzn.mpzn.views.MyActionBar>
+
+
+    <RadioGroup
+        android:id="@+id/rg_reg_type"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/fl_reg_for_fm"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
+        <RadioButton
+            android:id="@+id/rb_jingjiren"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:text="经纪人"
+            android:layout_margin="5dp"
+            android:textColor="@color/font2_check_orange"
+            android:gravity="center"
+            android:checked="true"
+            android:background="@drawable/add_red_stroke_seletor"
+            android:button="@color/transparent"/>
+        <RadioButton
+            android:id="@+id/rb_jingjicom"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:text="经纪公司"
+            android:layout_margin="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/font2_check_orange"
+            android:gravity="center"
+            android:background="@drawable/add_red_stroke_seletor"
+            android:button="@color/transparent"/>
+        <RadioButton
+            android:id="@+id/rb_kaifashang"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:text="开发商"
+            android:layout_margin="5dp"
+            android:textColor="@color/font2_check_orange"
+            android:gravity="center"
+            android:background="@drawable/add_red_stroke_seletor"
+            android:button="@color/transparent"
+            />
+
+    </RadioGroup>
+<View
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:id="@+id/center"
+    android:layout_centerInParent="true"/>
+    <FrameLayout
+        android:id="@+id/fl_reg_for_fm"
+        android:layout_below="@id/my_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="15dp">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_fm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+        </android.support.v4.view.ViewPager>
+
+    </FrameLayout>
+    <Button
+        android:id="@+id/btn_reg"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_below="@+id/rg_reg_type"
+        android:text="@string/register"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:layout_marginTop="15dp"
+        android:enabled="false"
+        android:background="@drawable/btn_bg_orang_to_gray"/>
+    <LinearLayout
+        android:id="@+id/ll_agree_rules"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_reg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp">
+        <CheckBox
+            android:id="@+id/cb_read_xiyi"
+            style="@style/CustomCheckboxTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+
+            />
+        <TextView
+
+            android:layout_toRightOf="@+id/cb_read_xiyi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="我已同意并阅读"/>
+        <TextView
+            android:id="@+id/tv_read"
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue"
+            android:text="《卖盘指南网用户协议》"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_tips_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_agree_rules"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:text="请选择你的用户类型并完善你的信息以完成注册"
+        android:textColor="@color/font_black_3"
+        android:textSize="12sp"
+        android:layout_centerHorizontal="true"/>
+
+
+
+
+
+
+</RelativeLayout>

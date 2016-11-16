@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>新闻资讯</title>
+		<link rel="stylesheet" href="http://www.pintuer.com/css/pintuer.css">
+		<link rel="stylesheet" type="text/css" href="http://pan.guyun18.com/css/animsition.css" />
+		<link rel="stylesheet" type="text/css" href="http://pan.guyun18.com/css/newsDetail.css" />
+		<link rel="stylesheet" type="text/css" href="http://pan.guyun18.com/css/popUp.css" />
+		<script src="http://www.pintuer.com/js/jquery.js"></script>
+		<script src="http://www.pintuer.com/js/pintuer.js"></script>
+		<script type="text/javascript" src="http://pan.guyun18.com/js/jquery.animsition.js"></script>
+		<script type="text/javascript" src="http://pan.guyun18.com/js/idangerous.swiper.min.js"></script>
+		<script src="http://pan.guyun18.com/js/fastclick.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://pan.guyun18.com/js/newsDetail.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function() {
+				FastClick.attach(document.body);
+			});
+		</script>
+	</head>
+
+	<body class="animsition">
+
+		
+		<script>
+			$(document).ready(function() {
+
+				$(".back").click(function() {
+					history.back();
+				})
+
+				var obody = $("body").width();
+				if(obody >= 750) {
+
+					$("header").width(obody);
+
+					$("footer").width(obody);
+				}
+			})
+		</script>
+		<div class="title">
+			<h2>标题</h2>
+			<ul class="list-inline list-unstyle">
+				<li class="createTime">111</li>
+				<li class="readed"><img src="http://pan.guyun18.com/img/newsDetail/readed.png" border="0" width="14"/><span></span></li>
+				<li class="pinglun"><img src="http://pan.guyun18.com/img/newsDetail/pl.png" border="0" width="14"/><span></span></li>
+				<!--<li>33333</li>-->
+			</ul>
+		</div>
+		<!--<div class="zhaiyao">
+			<div class="float-left">内容摘要</div>
+			<span>
+				水电费水电费水电费水电费水电费水电费水电费水电费水电费水电费水电费水电费水电费水电费水电费水电费
+			</span>
+		</div>-->
+		<div class="newsCont">
+			
+		</div>
+
+		<!----------推荐新闻----->
+
+		<div class="recommengNews padding">
+			<div class="recommengNewsTitle">
+				推荐新闻
+				<img src="http://pan.guyun18.com/img/newsDetail/news.png" class="float-right" width="20" />
+			</div>
+			<ul class="list-unstyle">
+				
+			</ul>
+		</div>
+	
+	
+
+		<script type="text/javascript">
+			//点击任意位置隐藏footpop
+			var myDiv = $(".footPop");
+			var myTxt = $(".footPop .txt");
+			var myHead = $("header");
+			var myFootPop = $(".footPop");
+			var myFoot = $("footer");
+			$(function() {
+				$(".inputImg").click(function(event) {
+					showDiv(); //调用显示DIV方法
+					$(myTxt).focus();
+					$(myHead).css("position", "static");
+					$(myFootPop).css("position", "static");
+					$(myFoot).css("display", "none");
+					$('html, body').animate({
+						scrollTop: $(document).height()
+					}, 300);
+
+					$(document).one("click", function() { //对document绑定一个影藏Div方法
+						$(myDiv).hide();
+						$(myFoot).css("display", "block");
+						$(myHead).css("position", "fixed");
+						$(myFootPop).css("position", "fixed");
+					});
+
+					event.stopPropagation(); //阻止事件向上冒泡
+				});
+				$(myDiv).click(function(event) {
+					event.stopPropagation(); //阻止事件向上冒泡
+				});
+			});　　　
+			function showDiv() {
+				$(myDiv).show();
+			}
+			//点击任意位置隐藏footpop--end
+			$("#closePop").click(function() {
+				$(myDiv).hide();
+				$(myFoot).css("display", "block");
+				$(myHead).css("position", "fixed");
+				$(myFootPop).css("position", "fixed");
+			})
+
+
+		</script>
+	</body>
+	<script type="text/javascript" src="http://pan.guyun18.com/js/mypop.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+			$(".animsition").animsition({
+
+				inClass: 'fade-in',
+				outClass: 'fade-out',
+				inDuration: 500,
+				outDuration: 200,
+				linkElement: '.animsition-link',
+				// e.g. linkElement   :   'a:not([target="_blank"]):not([href^=#])'
+				loading: true,
+				loadingParentElement: 'body', //animsition wrapper element
+				loadingClass: 'animsition-loading',
+				unSupportCss: ['animation-duration',
+					'-webkit-animation-duration',
+					'-o-animation-duration'
+				],
+				//"unSupportCss" option allows you to disable the "animsition" in case the css property in the array is not supported by your browser.
+				//The default setting is to disable the "animsition" in a browser that does not support "animation-duration".
+
+				overlay: false,
+
+				overlayClass: 'animsition-overlay-slide',
+				overlayParentElement: 'body'
+			});
+		});
+	</script>
+	<script type="text/javascript">
+		function hideHead(){
+			
+			document.getElementById("head").style.display="none";
+				
+			document.getElementById("foot").style.display="none";
+
+		}
+		
+	</script>
+
+
+</html>

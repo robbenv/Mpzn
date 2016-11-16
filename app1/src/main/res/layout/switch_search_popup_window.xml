@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/conner5dp_stroke9e">
+    <TextView
+        android:id="@+id/tv1_popupwindow"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:text="@string/loupan"
+        android:gravity="center"
+        android:textColor="@color/hint"
+        android:textSize="16sp"
+        android:paddingRight="12dp"
+        android:background="@drawable/main_top_edit_text_bg"/>
+
+    <TextView
+        android:id="@+id/tv2_popupwindow"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:text="资讯"
+        android:gravity="center"
+        android:textColor="@color/hint"
+        android:textSize="16sp"
+        android:paddingRight="12dp"
+        android:background="@drawable/main_top_edit_text_bg"/>
+
+
+</LinearLayout>

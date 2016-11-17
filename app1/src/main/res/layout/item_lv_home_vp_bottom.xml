@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/ll_root_view"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+    <ImageView
+        android:id="@+id/img"
+        android:scaleType="centerCrop"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/msg_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/font_black_1"
+                android:layout_toLeftOf="@+id/price"
+                android:maxLines="1"
+                android:text="楼盘名"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00000"
+                android:layout_toLeftOf="@+id/tv"
+                android:textColor="@color/red_theme"/>
+            <TextView
+                android:id="@+id/tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               android:layout_alignParentRight="true"
+                android:textColor="@color/font_black_2"
+                android:text="元/㎡"/>
+
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/msg_extra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="额外蓝色"
+            android:singleLine="true"
+            android:textSize="14sp"
+            android:textColor="#297fbc"/>
+        <TextView
+            android:id="@+id/msg_addr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="楼盘地址"
+            android:maxLines="1"
+            android:textColor="@color/font_black_2"
+            android:textSize="12sp"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"
+            android:layout_marginTop="2dp"
+            >
+            <TextView
+                android:id="@+id/area"
+                android:text="区名"
+                style="@style/house_tag"
+                android:background="@drawable/tag1"
+                />
+            <TextView
+                android:id="@+id/tag_type"
+                style="@style/house_tag"
+                android:text="类型"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/tag2"
+                />
+            <TextView
+                android:id="@+id/weifang"
+                android:text="尾房"
+                style="@style/house_tag"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/tag3"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+   <View android:layout_height="1dp"
+      android:layout_width="match_parent"
+      android:background="@color/divider_1"
+      />
+
+</LinearLayout>

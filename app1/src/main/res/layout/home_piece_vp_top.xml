@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:clickable="false"
+    android:layout_height="wrap_content">
+
+        <com.bigkoo.convenientbanner.ConvenientBanner
+            android:id="@+id/banner_home_top"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:canLoop="true"
+        />
+        <!--<com.mpzn.mpzn.views.circleindicator.CircleIndicator-->
+            <!--android:id="@+id/vp_indicator_home_top"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_marginBottom="20dp"-->
+            <!--app:ci_margin="10dp"-->
+            <!--app:ci_radius="3dp"-->
+            <!--app:ci_mode="inside"-->
+            <!--app:ci_gravity="center"-->
+            <!--app:ci_selected_background="@color/red_theme"-->
+            <!--app:ci_background="@color/white"-->
+            <!--/>-->
+
+
+
+
+</RelativeLayout>

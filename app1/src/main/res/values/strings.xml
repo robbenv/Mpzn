@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">卖盘指南</string>
+    <string name="not_have_space">请不要输入空格</string>
+    <string name="tv_splash">只为你挑选最好的家</string>
+    <string name="tv_2016">©2016 卖盘指南</string>
+    <string name="btn_guide">马上体验</string>
+    <string name="home">首页</string>
+    <string name="zixun">资讯</string>
+    <string name="rb_main1">首页</string>
+    <string name="rb_main2">资讯</string>
+    <string name="rb_main3">消息</string>
+    <string name="rb_main4">我的</string>
+    <string name="loupan">楼盘</string>
+    <string name="hint">输入搜索内容</string>
+    <string name="loupantuijian">精品楼盘推荐</string>
+    <string name="zixuntoutiao">资讯头条</string>
+    <string name="home_bottom_vp_tv1">热销楼盘</string>
+    <string name="home_bottom_vp_tv2">打折优惠</string>
+    <string name="home_bottom_vp_tv3">区域查房</string>
+    <string name="main">首页</string>
+    <string name="lijidenglu">立即登录</string>
+    <string name="favorite">我的收藏</string>
+    <string name="history">浏览历史</string>
+    <string name="baobei">我的报备</string>
+    <string name="search">搜索</string>
+    <string name="login">登录</string>
+    <string name="forget_password">忘记密码</string>
+
+    <string name="smoothlistview_header_hint_normal">下拉刷新</string>
+    <string name="smoothlistview_header_hint_ready">松开刷新数据</string>
+    <string name="smoothlistview_header_hint_loading">正在加载...</string>
+    <string name="smoothlistview_header_last_time">上次更新时间：</string>
+    <string name="smoothlistview_footer_hint_normal">查看更多</string>
+    <string name="smoothlistview_footer_hint_ready">松开载入更多</string>
+    <string name="loadmore">加载更多</string>
+    <string name="phone_kefu">6029-2966</string>
+    <string name="phone_for_jingjicom">15827935446</string>
+    <string name="check_net_suc">诊断完成，网络连接正常</string>
+    <string name="check_net_err">诊断完成，手机未联网</string>
+    <string name="check_net_tips">当你的手机网络处于可用状态而本应用无法连接网络时，您可以尝试诊断网络，并将诊断网络的结果回馈给我们。</string>
+    <string name="tv_check_net_ing">正在诊断...</string>
+    <string name="image_browse_set_self_adaption">自适应</string>
+    <string name="image_browse_set_self_adaption_des">移动网络加载普通图片，WIFI加载高清图片</string>
+    <string name="image_browse_set_high_quality">高清</string>
+    <string name="image_browse_set_high_quality_des">质量较高。图片更清晰</string>
+    <string name="image_browse_set_common_quality">普通</string>
+    <string name="image_browse_set_common_quality_des">流量很少，适合移动网络</string>
+    <string name="image_browse_set_no_image">无图</string>
+    <string name="image_browse_set_no_image_des">流量最少，速度最快</string>
+    <string name="register">注册</string>
+    <string name="error_no_net">数据获取失败，请检查网络后刷新</string>
+    <string name="help">帮助</string>
+    <string name="string_help_text">当前应用缺少必要权限。/n请点击"设置"-"权限"-打开所需权限。/n最后点击两次后退按钮，即可返回。</string>
+    <string name="quit">退出</string>
+    <string name="settings">设置</string>
+
+</resources>

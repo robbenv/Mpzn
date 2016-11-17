@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MainActivity">
+    <FrameLayout
+        android:id="@+id/content_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp">
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="70dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/linearLayout">
+    <View
+        android:id="@+id/devider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_1"
+        />
+    <RadioGroup
+        android:id="@+id/bottombar_main"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:paddingTop="5dp"
+        android:orientation="horizontal"
+        android:background="@color/fafafa">
+        <RadioButton
+            android:id="@+id/rb_home"
+            android:text="@string/rb_main1"
+            android:drawableTop="@drawable/rb_home"
+            style="@style/rb_main"
+            />
+
+        <RadioButton
+            android:id="@+id/rb_zixun"
+            android:text="@string/rb_main2"
+            android:drawableTop="@drawable/rb_zixun"
+            style="@style/rb_main"
+            />
+
+        <View
+            android:id="@+id/rb_center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone"
+            />
+
+        <RadioButton
+            android:id="@+id/rb_loupan"
+            android:text="@string/rb_main3"
+            android:drawableTop="@drawable/rb_loupan"
+            style="@style/rb_main"
+            />
+        <RadioButton
+            android:id="@+id/rb_geren"
+            android:text="@string/rb_main4"
+            android:drawableTop="@drawable/rb_geren"
+            style="@style/rb_main"
+            />
+        </RadioGroup>
+
+      </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/ib_rb_center"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/main_add_bb"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

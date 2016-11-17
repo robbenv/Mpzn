@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="80dp">
+
+    <TextView
+        android:id="@+id/tv_rank_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textSize="18dp"
+        android:textColor="@color/font_black_3"
+        android:text="No.1"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_icon"
+        android:layout_width="60dp"
+        android:layout_height="80dp">
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_default_circle"/>
+        <ImageView
+            android:id="@+id/iv_hat"
+            android:layout_width="60dp"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/huangguan"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:layout_gravity="center"
+        android:textColor="@color/font_black_2"
+        android:paddingLeft="30dp"
+        android:text="Icyoung"/>
+    <TextView
+        android:id="@+id/tv_bb_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/green"
+        android:text="12"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="次"
+
+        android:textSize="14sp"
+        android:textColor="@color/green"
+        android:layout_marginRight="30dp"/>
+    </LinearLayout>
+
+</LinearLayout>

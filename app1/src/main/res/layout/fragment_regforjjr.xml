@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            >
+            <TextView
+                android:id="@+id/tv_jjcom"
+                android:layout_width="85dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="经纪公司："/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <EditText
+                    android:id="@+id/sp_jjcom"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:textColor="@color/font_black_2"
+                    android:background="@color/white"
+                    android:textColorHint="@color/font_black_4"
+                    android:hint="请输入并选择你要申请的经纪公司">
+
+                </EditText>
+                <com.mpzn.mpzn.views.DeleteableCardView
+                    android:id="@+id/tv_com_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:text="卡片"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+            <Button
+                android:id="@+id/btn_choose"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="去选择"
+                android:textSize="15sp"
+                android:enabled="false"
+                android:textColor="@color/white"
+                android:background="@drawable/coners_radius_5dp_blue"/>
+
+        </LinearLayout>
+
+        <View style="@style/divider_1"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            >
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="85dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="姓        名："/>
+            <EditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:textColor="@color/font_black_2"
+                android:background="@color/white"
+                android:textColorHint="@color/font_black_4"
+                android:hint="请输入你的姓名"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

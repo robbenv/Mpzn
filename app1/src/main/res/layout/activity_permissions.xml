@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View android:contentDescription="@null"
+    android:background="#88888888"
+    android:adjustViewBounds="true"
+    android:layout_weight="1"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/image"/>

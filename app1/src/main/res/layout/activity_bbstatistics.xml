@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_bbstatistics"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    tools:context="com.mpzn.mpzn.activity.BBStatisticsActivity">
+<com.mpzn.mpzn.views.MyActionBar
+    android:id="@+id/my_action_bar"
+    android:background="@color/fafafa"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:title_color="@color/font_black_2">
+
+</com.mpzn.mpzn.views.MyActionBar>
+    <View style="@style/divider_1"/>
+    <RadioGroup
+        android:id="@+id/rb_type"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <RadioButton
+            android:id="@+id/rb_recent7"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="最近7天"
+            android:button="@null"
+            android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/white_check_red"
+            android:textColor="@color/red_check_white"
+            android:padding="7dp"/>
+        <RadioButton
+            android:id="@+id/rb_recent30"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="最近30天"
+            android:button="@null"
+            android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/white_check_red"
+            android:textColor="@color/red_check_white"
+            android:padding="7dp"/>
+        <RadioButton
+            android:checked="true"
+            android:id="@+id/rb_all"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="全部统计"
+            android:button="@null"
+            android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/white_check_red"
+            android:textColor="@color/red_check_white"
+            android:padding="7dp"/>
+
+
+    </RadioGroup>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/sp_loupan"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/white"
+        android:spinnerMode="dropdown">
+
+    </android.support.v7.widget.AppCompatSpinner>
+
+    <RelativeLayout
+        android:id="@+id/rl_all"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_bbcount">
+        <TextView
+            android:id="@+id/tv_bbcount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:textSize="45sp"
+            android:textColor="@color/font_black_1"
+            android:text="0"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_bbcount"
+            android:layout_alignBaseline="@+id/tv_bbcount"
+            android:textColor="@color/font_black_3"
+            android:textSize="15sp"
+            android:text="次"/>
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textColor="@color/font_black_3"
+            android:text="报备总数"
+            android:layout_below="@+id/tv_bbcount"
+            android:layout_centerHorizontal="true"
+            />
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/font_black_3"
+            android:text="Report Total"
+            android:layout_below="@+id/tv"
+            android:layout_centerHorizontal="true"
+            />
+
+    </RelativeLayout>
+    <View style="@style/divider_1"/>
+    <RelativeLayout
+        android:id="@+id/rl_suc"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已核验"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:drawableLeft="@drawable/bb_succuss"
+            android:drawablePadding="5dp"
+            />
+        <TextView
+            android:id="@+id/tv_bb_suc_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0次 0%"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:layout_alignParentRight="true"
+            android:drawableRight="@drawable/arrow_right_gray"
+            android:drawablePadding="5dp"/>
+
+    </RelativeLayout>
+
+    <View style="@style/divider_2"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_err"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="未核验"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:drawableLeft="@drawable/bb_error"
+            android:drawablePadding="5dp"
+            />
+        <TextView
+            android:id="@+id/tv_bb_erro_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0次 0%"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:layout_alignParentRight="true"
+            android:drawableRight="@drawable/arrow_right_gray"
+            android:drawablePadding="5dp"/>
+
+    </RelativeLayout>
+
+    <View style="@style/divider_2"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="报备最多"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:drawableLeft="@drawable/bb_most"
+            android:drawablePadding="5dp"
+            />
+        <TextView
+            android:id="@+id/tv_bb_most_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0次 无"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="5dp"/>
+
+    </RelativeLayout>
+    <View style="@style/divider_1"/>
+
+</LinearLayout>

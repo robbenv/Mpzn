@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_image_browse_set"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_activity"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    tools:context="com.mpzn.mpzn.activity.ImageBrowseSetActivity">
+    <com.mpzn.mpzn.views.MyActionBar
+        android:id="@+id/my_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/red_theme">
+
+    </com.mpzn.mpzn.views.MyActionBar>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/white">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:padding="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_browse_set_self_adaption"
+                    android:layout_alignParentTop="true"
+                    android:textSize="16sp"
+                    android:textColor="@color/font_black_0"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_browse_set_self_adaption_des"
+                    android:layout_alignParentBottom="true"
+                    android:textSize="14sp"
+                    android:textColor="@color/font_black_5"/>
+
+            </RelativeLayout>
+            <View style="@style/divider_2"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:padding="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_browse_set_high_quality"
+                    android:layout_alignParentTop="true"
+                    android:textSize="16sp"
+                    android:textColor="@color/font_black_0"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_browse_set_high_quality_des"
+                    android:layout_alignParentBottom="true"
+                    android:textSize="14sp"
+                    android:textColor="@color/font_black_5"/>
+
+            </RelativeLayout>
+            <View style="@style/divider_2"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:padding="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_browse_set_common_quality"
+                    android:layout_alignParentTop="true"
+                    android:textSize="16sp"
+                    android:textColor="@color/font_black_0"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_browse_set_common_quality_des"
+                    android:layout_alignParentBottom="true"
+                    android:textSize="14sp"
+                    android:textColor="@color/font_black_5"/>
+
+            </RelativeLayout>
+            <View style="@style/divider_2"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:padding="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_browse_set_no_image"
+                    android:layout_alignParentTop="true"
+                    android:textSize="16sp"
+                    android:textColor="@color/font_black_0"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_browse_set_no_image_des"
+                    android:layout_alignParentBottom="true"
+                    android:textSize="14sp"
+                    android:textColor="@color/font_black_5"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+        <RadioGroup
+            android:id="@+id/rg_image_browse_set"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/rb_self_adapter"
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:padding="20dp"
+                android:checked="true"
+                android:button="@null"
+                android:drawableRight="@drawable/checked_green_gou"
+                />
+            <RadioButton
+                android:id="@+id/rb_high_quality"
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:padding="20dp"
+                android:button="@null"
+                android:drawableRight="@drawable/checked_green_gou"/>
+            <RadioButton
+                android:id="@+id/rb_common_quality"
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:padding="20dp"
+                android:button="@null"
+                android:drawableRight="@drawable/checked_green_gou"/>
+            <RadioButton
+                android:id="@+id/rb_no_image"
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:padding="20dp"
+                android:button="@null"
+                android:drawableRight="@drawable/checked_green_gou"/>
+        </RadioGroup>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

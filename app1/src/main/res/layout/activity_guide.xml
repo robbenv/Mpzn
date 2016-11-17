@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.mpzn.mpzn.activity.GuideActivity">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_guide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v4.view.ViewPager>
+    <com.mpzn.mpzn.views.circleindicator.CircleIndicator
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:id="@+id/vpindicator_splash"
+        app:ci_margin="10dp"
+        app:ci_radius="3dp"
+        app:ci_gravity="center"
+        app:ci_mode="inside"
+        app:ci_selected_background="@color/red"
+        app:ci_background="@android:color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"/>
+    <ImageButton
+        android:visibility="gone"
+        android:alpha="0"
+        android:id="@+id/btn_toMain"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/lijikaiqi"
+        android:layout_marginBottom="50dp"
+        />
+
+</RelativeLayout>

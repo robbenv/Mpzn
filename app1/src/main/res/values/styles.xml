@@ -1,0 +1,166 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+
+    </style>
+
+    <style name="AppSplash" parent="android:Theme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+
+<style name="rb_main" >
+    <item name="android:textColor">@color/rb_text_color</item>
+    <item name="android:textSize">12dp</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:layout_width">0dp</item>
+    <item name="android:layout_height">match_parent</item>
+    <item name="android:gravity">center_horizontal</item>
+    <item name="android:button">@null</item>
+    <item name="android:drawablePadding">3dp</item>
+
+</style>
+
+    <style name="house_tag">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">12dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">9sp</item>
+
+    </style>
+ <style name="wd_ll">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">15sp</item>
+
+  </style>
+<style name="wd_item">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/font_black_2</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_marginLeft">20dp</item>
+</style>
+    <style name="wd_item_btn">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:textColor">@color/font_black_2</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:drawableRight">@drawable/arrow_right_gray</item>
+        <item name="android:background">@color/transparent</item>
+
+    </style>
+    <style name="wd_item_tv_right">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">40dp</item>
+        <item name="android:textColor">@color/red_theme</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:text">未填写</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+
+    </style>
+
+    <style name="et_addbaobei">
+        <item name="android:textColorHint">@color/font_black_5</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/font_black_1</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:imeOptions">actionNext</item>
+    </style>
+
+    <style name="et_addbb">
+        <item name="android:textColorHint">@color/font_black_5</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/font_black_1</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:background">@drawable/coners_radius_5dp_10alpha_black</item>
+        <item name="android:imeOptions">actionNext</item>
+    </style>
+    <style name="divider_1">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/divider_1</item>
+    </style>
+
+    <style name="divider_2">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+         <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:background">@color/divider_2</item>
+        </style>
+    <style name="divider_3">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">@color/divider_2</item>
+    </style>
+
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/checkbox_style</item>
+    </style>
+    <style name="OpenCloseCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/openclose_checkbox_style</item>
+    </style>
+    <style name="StarCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/star_checkbox_style</item>
+    </style>
+
+    <style name="StarDeleteCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/star_delete_checkbox_style</item>
+    </style>
+
+
+
+    <style name="CustomToggleTheme" parent="android:Widget">
+        <item name="android:background">@drawable/custom_togglebutton_bg</item>
+        <item name="android:textOn">@null</item>
+        <item name="android:textOff">@null</item>
+        <item name="android:clickable">true</item>
+        <item name="android:disabledAlpha">?android:attr/disabledAlpha</item>
+    </style>
+    <style name="ZanToggleTheme" parent="android:Widget">
+        <item name="android:background">@drawable/zan_togglebutton_bg</item>
+        <item name="android:textOn">@null</item>
+        <item name="android:textOff">@null</item>
+        <item name="android:clickable">true</item>
+        <item name="android:disabledAlpha">?android:attr/disabledAlpha</item>
+    </style>
+
+    <style name="mypopwindow_anim_style">
+        <item name="android:windowEnterAnimation">@anim/popshow_anim</item>
+        <!-- 指定显示的动画xml -->
+
+        <item name="android:windowExitAnimation">@anim/pophidden_anim</item>
+        <!-- 指定消失的动画xml -->
+    </style>
+
+
+
+</resources>

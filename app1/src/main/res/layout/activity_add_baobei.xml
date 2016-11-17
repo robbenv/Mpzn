@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_add_bb"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/bg_activity"
+    tools:context="com.mpzn.mpzn.activity.AddBBActivity">
+
+    <com.mpzn.mpzn.views.MyActionBar
+        android:id="@+id/aciton_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/red_theme"
+        app:title_color="@color/white"></com.mpzn.mpzn.views.MyActionBar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+
+                android:layout_width="match_parent"
+                android:layout_height="205dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="15dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/radius7_5_white"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="13dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="13dp"
+                    android:text="客户详情"
+                    android:textColor="@color/font_black_1"
+                    android:textSize="17sp" />
+                <View style="@style/divider_3" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_weight="1"
+                        android:text="报备楼盘"
+                        android:textColor="@color/font_black_3" />
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/sp_loupan"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_toEndOf="@+id/tv_bb_loupan"
+                        android:layout_weight="3"
+                        android:background="@color/transparent"
+                        android:spinnerMode="dropdown">
+                    </android.support.v7.widget.AppCompatSpinner>
+                </LinearLayout>
+
+                <View style="@style/divider_3"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_weight="1"
+                        android:text="客户姓名"
+                        android:textColor="@color/font_black_3" />
+
+                    <EditText
+                        android:id="@+id/et_khname"
+                        style="@style/et_addbaobei"
+                        android:layout_toEndOf="@+id/tv_khname"
+                        android:layout_weight="3"
+                        android:hint="请输入客户姓名" />
+                </LinearLayout>
+
+                <View style="@style/divider_3"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="13dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="客户电话"
+                        android:textColor="@color/font_black_3" />
+
+                    <EditText
+                        android:id="@+id/et_khphone3"
+
+                        style="@style/et_addbaobei"
+                        android:layout_weight="1"
+                        android:hint="前三位"
+                        android:maxLength="3" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="****" />
+
+                    <EditText
+                        android:id="@+id/et_khphone4"
+                        style="@style/et_addbaobei"
+                        android:layout_weight="1"
+                        android:hint="后四位"
+                        android:maxLength="4" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="15dp">
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radius7_5_white"
+                android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="添加陪同"
+                    android:paddingBottom="13dp"
+                    android:paddingTop="13dp"
+                    android:paddingLeft="15dp"
+                    android:textColor="@color/font_black_1"
+                    android:textSize="17sp" />
+                    <CheckBox
+                        android:id="@+id/cb_add_pt"
+                        style="@style/OpenCloseCheckboxTheme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/font_black_4" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_peitong"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+                    <View style="@style/divider_3" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="陪同人姓名"
+                        android:textColor="@color/font_black_3" />
+
+                    <EditText
+                        android:id="@+id/et_khnamep1"
+                        style="@style/et_addbaobei"
+                        android:layout_weight="3"
+                        android:hint="请输入陪同人姓名或者联系方式" />
+                </LinearLayout>
+
+
+                <View style="@style/divider_3"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="陪同人姓名"
+                        android:textColor="@color/font_black_3" />
+
+                    <EditText
+                        android:id="@+id/et_khnamep2"
+                        style="@style/et_addbaobei"
+                        android:layout_weight="3"
+                        android:hint="请输入陪同人姓名" />
+                </LinearLayout>
+              </LinearLayout>
+            </LinearLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="205dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="15dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/radius7_5_white"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="你的信息"
+                    android:paddingBottom="13dp"
+                    android:paddingTop="13dp"
+                    android:paddingLeft="15dp"
+                    android:textColor="@color/font_black_1"
+                    android:textSize="17sp" />
+                <View style="@style/divider_3" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="您的姓名"
+                        android:textColor="@color/font_black_3" />
+
+                    <EditText
+                        android:id="@+id/et_name"
+                        style="@style/et_addbaobei"
+                        android:layout_weight="3"
+                        android:hint="请输入您的姓名"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <View style="@style/divider_3"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="您的电话"
+                        android:textColor="@color/font_black_3" />
+
+                    <EditText
+                        android:id="@+id/et_phone"
+                        style="@style/et_addbaobei"
+                        android:layout_weight="3"
+                        android:hint="请输入您的手机号"
+                        android:maxLength="11" />
+
+                </LinearLayout>
+
+                <View style="@style/divider_3"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_marginBottom="15dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="公司名称"
+                        android:textColor="@color/font_black_3" />
+
+                    <EditText
+                        android:id="@+id/et_cname"
+                        style="@style/et_addbaobei"
+                        android:layout_weight="3"
+                        android:hint="请输入你所在公司的名称"
+                        android:maxLines="1" />
+                </LinearLayout>
+
+             </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

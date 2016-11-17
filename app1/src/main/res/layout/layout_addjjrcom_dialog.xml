@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/coners_radius_8dp_white">
+
+    <View style="@style/divider_3"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="40dp"
+      >
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="申请经纪公司"
+            android:gravity="center_horizontal"
+            android:textSize="18sp"
+            android:textColor="@color/font_black_0"/>
+        <FrameLayout
+            android:id="@+id/fl_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:id="@+id/tv_jjcom"
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:text="经纪公司："/>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <EditText
+                        android:id="@+id/et_jjcom"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:textSize="16sp"
+                        android:textColor="@color/font_black_2"
+                        android:background="@color/white"
+                        android:textColorHint="@color/font_black_4"
+                        android:hint="请输入并选择你要申请的经纪公司">
+
+                    </EditText>
+                    <com.mpzn.mpzn.views.DeleteableCardView
+                        android:id="@+id/tv_com_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:text="卡片"
+                        android:visibility="gone"/>
+                </FrameLayout>
+
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+    <View style="@style/divider_3"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:textColor="@color/font_black_3"
+            android:textSize="14sp"
+            android:background="@color/transparent"
+            android:text="取消"/>
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/divider_2"
+            />
+        <Button
+            android:id="@+id/btn_commit"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:textColor="@color/font0_dis_enable_font5"
+            android:textSize="14sp"
+            android:background="@color/transparent"
+            android:text="提交申请"/>
+    </LinearLayout>
+
+
+</LinearLayout>

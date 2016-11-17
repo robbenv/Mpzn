@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mpzn.mpzn">
+
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESEN" />
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+
+    <!-- 极光推送需要的权限aa -->
+    <permission
+        android:name="com.mpzn.mpzn.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.mpzn.mpzn.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+    <!-- 友盟需要的权限 -->
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <!-- 允许应用可以接收点亮屏幕或解锁广播 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.SET_DEBUG_APP" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <!-- 百度地图 -->
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+
+    <application
+        android:name=".application.MyApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="com.mpzn.mpzn.JPUSH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.GuideActivity" />
+        <activity android:name=".activity.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="com.mpzn.mpzn.JPUSH"/>
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.SearchActivity" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:configChanges="orientation|keyboard"
+            android:fitsSystemWindows="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UMDefault" />
+        <activity android:name=".activity.DetailNewhouseActivity" />
+        <activity
+            android:name=".activity.DetailNewsActivity"
+            android:configChanges="orientation|keyboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UMDefault"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UMDefault">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="wx395a9fb9b698fabc" />
+            </intent-filter>
+        </activity>
+        <!-- 为Activity设置别名，设置目标Activity,WXEntryActivity需放在注册的包名下 -->
+        <!-- <activity-alias -->
+        <!-- android:name="com.mpzn.mpzn.WXEntryActivity" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true" -->
+        <!-- android:targetActivity="com.mpzn.mpzn.wxapi.WXEntryActivity" /> -->
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="57a00dede0f55a7e29002b87" />
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="mfVFvbNoNRZE0MsBGR5nBzRN6igrEWhC" />
+
+        <activity android:name=".activity.WebViewActivity" />
+        <activity android:name=".activity.LoginFastAcitivity" />
+        <activity android:name=".activity.RegForUserTypeActivity" />
+
+        <receiver android:name=".receiver.SmsReceiver">
+            <intent-filter android:priority="999">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- User defined.  For test only  用户自定义的广播接收器 -->
+        <receiver
+            android:name=".receiver.JPushReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!-- Required  用户注册SDK的intent -->
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!-- Required  用户接收SDK消息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!-- Required  用户接收SDK通知栏信息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!-- Required  用户打开自定义通知栏的intent -->
+                <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" /> <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
+                <action android:name="cn.jpush.android.intent.CONNECTION" /> <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <category android:name="com.mpzn.mpzn" />
+            </intent-filter>
+        </receiver>
+
+
+        <!-- 用来在程序没有启动的情况下给MessageFragment传递消息 -->
+
+        <activity android:name=".activity.SetupActivity" />
+        <activity android:name=".activity.MyDataActivity" />
+        <activity android:name=".activity.WebsiteArticleAcivity" />
+        <activity android:name=".activity.MapActivity" />
+        <activity android:name=".activity.SearchResultActivity" />
+        <activity android:name=".activity.AccountActivity" />
+        <activity android:name=".activity.ChangePassActivity" />
+        <activity android:name=".activity.AddBBActivity" />
+        <activity android:name=".activity.StarAndBrowseActivity" />
+        <activity android:name=".activity.MyBBActivity" />
+        <activity android:name=".activity.ChangIconActivity" />
+        <activity android:name=".activity.BBStatisticsActivity" />
+        <activity android:name=".activity.ReviewListActivity" />
+        <activity android:name=".activity.ApplyForSellActivity" />
+        <activity android:name=".activity.MySellActivity" />
+        <activity android:name=".activity.FeedbackActivity" />
+        <activity android:name=".activity.TestActivity" />
+
+        <service
+            android:name=".service.CilpboardListenerService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".service.UpdataVersionService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".activity.JingjiRenManageActivity" />
+        <activity android:name=".activity.AboutActivity" />
+        <activity android:name=".activity.CheckNetActivity" />
+        <activity android:name=".activity.ImageBrowseSetActivity" />
+        <activity android:name=".activity.RegisterSetPassActivity" />
+        <activity android:name=".activity.RegisterSendCodeActivity" />
+        <activity android:name=".activity.ResetPassActivity" />
+        <activity android:name=".activity.BBStaticsForJJComActivity" />
+        <activity android:name=".activity.CheckBBActivity" />
+        <activity android:name=".activity.BBstaticForKfsAcitvity"></activity>
+    </application>
+
+</manifest>

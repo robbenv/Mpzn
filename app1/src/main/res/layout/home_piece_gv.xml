@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <GridView
+        android:padding="10dp"
+        android:id="@+id/gv_home"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:numColumns="4"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="20dp"
+        android:background="@color/white"
+        >
+
+    </GridView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@drawable/partingline"/>
+
+</LinearLayout>

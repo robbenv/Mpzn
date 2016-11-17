@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+<ListView
+    android:id="@+id/lv_building"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="@null"
+    android:dividerHeight="0dp"
+    android:fadingEdge="none"
+    android:overScrollMode="never"
+    android:scrollbars="none"/>
+
+
+    <com.mpzn.mpzn.views.ActionBarForHome
+        android:id="@+id/action_bar_home"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    </com.mpzn.mpzn.views.ActionBarForHome>
+
+    <com.mpzn.mpzn.views.FilterView.FilterView
+        android:visibility="gone"
+        android:id="@+id/filterView_home"
+        android:layout_below="@+id/action_bar_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.mpzn.mpzn.views.FilterView.FilterView>
+    <View
+        android:visibility="gone"
+        android:id="@+id/top_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_below="@+id/action_bar_home"
+        android:background="@drawable/background_with_shadow"/>
+
+
+</RelativeLayout>

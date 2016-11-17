@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.mpzn.mpzn.views.MyActionBar
+            android:id="@+id/aciton_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/fafafa"
+            app:title_color="@color/font_black_2">
+
+
+        </com.mpzn.mpzn.views.MyActionBar>
+        <RadioGroup
+            android:layout_width="180dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:background="@drawable/rb_bg_star_browse"
+            >
+            <RadioButton
+                android:id="@+id/rb_own"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="旗下经纪人"
+                android:textColor="@color/font5_check_fafa"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:background="@drawable/rb_bg_left_font4_selector">
+
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/rb_add"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="待审核"
+                android:textColor="@color/font5_check_fafa"
+                android:button="@null"
+                android:gravity="center"
+                android:background="@drawable/rb_bg_right_font4_selector"
+                >
+
+            </RadioButton>
+
+        </RadioGroup>
+        <View style="@style/divider_1"
+            android:layout_below="@+id/aciton_bar"/>
+    </RelativeLayout>
+
+
+    <com.mpzn.mpzn.views.MyActionBar
+        android:id="@+id/action_bar_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title_color="@color/font_black_2"
+        android:background="@color/fafafa"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone">
+
+    </com.mpzn.mpzn.views.MyActionBar>
+
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/fafafa"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+        <View style="@style/divider_1" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                />
+            <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:background="@drawable/btn_bg_red_to_darkred"
+                android:layout_centerInParent="true"
+                android:textColor="@color/white"
+                android:text="删除经纪人"
+                android:textSize="14sp"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="20dp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/tv_delete_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black_2"
+                android:text="全选"
+                android:layout_toLeftOf="@+id/cb_all"
+                android:layout_margin="10dp"
+                android:layout_centerVertical="true"
+                android:textSize="14sp"
+                android:visibility="gone"
+                />
+
+            <CheckBox
+                android:id="@+id/cb_all"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                style="@style/StarDeleteCheckboxTheme"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:layout_marginRight="39dp"
+                android:visibility="gone"
+
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_with_vp2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+            <Button
+                android:id="@+id/btn_refuse"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:background="@drawable/btn_bg_red_to_darkred"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/white"
+                android:text="驳回申请"
+                android:textSize="14sp"
+                android:layout_margin="10dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                />
+
+
+            <Button
+                android:id="@+id/btn_access"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:background="@drawable/btn_bg_orang_to_gray"
+                android:layout_centerInParent="true"
+                android:textColor="@color/white"
+                android:text="通过审核"
+                android:textSize="14sp"
+                android:layout_margin="10dp"
+                />
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:background="@drawable/coners_radius_5dp_blue"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/white"
+                android:text="手动添加"
+                android:textSize="14sp"
+                android:layout_margin="10dp"
+                android:layout_marginRight="20dp"
+                />
+
+        </RelativeLayout>c
+
+    </LinearLayout>
+
+    <com.mpzn.mpzn.views.IsCanScrollViewPager
+        android:id="@+id/vp_own_add"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_top"
+        android:layout_above="@+id/ll_bottom">
+
+    </com.mpzn.mpzn.views.IsCanScrollViewPager>
+</RelativeLayout>

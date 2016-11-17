@@ -9,6 +9,7 @@ import android.util.Log;
 import com.baidu.mapapi.SDKInitializer;
 import com.mpzn.mpzn.entity.UserMsg;
 import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.https.HttpsUtils;
 
@@ -74,7 +75,8 @@ public class MyApplication extends Application {
         //百度地图初始化 SDK
         SDKInitializer.initialize(mContext);
 
-
+        //初始化友盟的SDK
+        UMShareAPI.get(this);
 
     }
 

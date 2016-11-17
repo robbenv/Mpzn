@@ -1,8 +1,11 @@
 package com.mpzn.mpzn.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +24,7 @@ import com.bm.library.PhotoView;
 import com.dalong.francyconverflow.FancyCoverFlow;
 import com.google.gson.Gson;
 import com.kaopiz.kprogresshud.KProgressHUD;
+
 import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.adapter.BuildingDetailTopVpAdapter;
 import com.mpzn.mpzn.adapter.MyFancyCoverFlowAdapter;
@@ -40,6 +44,7 @@ import com.mpzn.mpzn.views.MyActionBar;
 import com.mpzn.mpzn.views.MyDialog;
 import com.mpzn.mpzn.views.MyProgressDialog;
 import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
@@ -127,6 +132,8 @@ public class DetailNewhouseActivity extends BaseActivity {
     private BuildingDetailTopVpAdapter buildingDetailTopVpAdapter;
     private MessageEntity messageEntity;
 
+//    private UMShareAPI mShareAPI;
+
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onResult(SHARE_MEDIA platform) {
@@ -155,6 +162,7 @@ public class DetailNewhouseActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        mShareAPI = UMShareAPI.get(this);
     }
 
     @Override
@@ -386,8 +394,12 @@ public class DetailNewhouseActivity extends BaseActivity {
         myActionBar.setLROnClickListener(null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //6.0版本需要检查权限
                 if (messageEntity != null) {
+                    if(Build.VERSION.SDK_INT>=23){
+                        String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CALL_PHONE,Manifest.permission.READ_LOGS,Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.SET_DEBUG_APP,Manifest.permission.SYSTEM_ALERT_WINDOW,Manifest.permission.GET_ACCOUNTS,Manifest.permission.WRITE_APN_SETTINGS};
+                        ActivityCompat.requestPermissions(DetailNewhouseActivity.this,mPermissionList,123);
+                    }
 
                     String imgUrl = messageEntity.getThumb();
                     if (imgUrl == null || imgUrl == "") {
@@ -665,6 +677,7 @@ public class DetailNewhouseActivity extends BaseActivity {
                 });
 
     }
+
 
 
     //隐藏全屏PhotoView

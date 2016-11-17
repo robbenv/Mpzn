@@ -117,7 +117,7 @@
             android:value="57a00dede0f55a7e29002b87" />
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="mfVFvbNoNRZE0MsBGR5nBzRN6igrEWhC" />
+            android:value="UHRA2DLtY6wtzWFGsBDTHX2OGI4dpVb0" />
 
         <activity android:name=".activity.WebViewActivity" />
         <activity android:name=".activity.LoginFastAcitivity" />
@@ -184,7 +184,9 @@
         <activity android:name=".activity.ResetPassActivity" />
         <activity android:name=".activity.BBStaticsForJJComActivity" />
         <activity android:name=".activity.CheckBBActivity" />
+        <activity android:name=".activity.PermissionsActivity" />
         <activity android:name=".activity.BBstaticForKfsAcitvity"></activity>
+
     </application>
 
 </manifest>

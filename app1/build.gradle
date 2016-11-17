@@ -67,5 +67,6 @@ dependencies {
     compile 'com.code19.library:library:0.0.7'
 
     compile 'cn.jiguang:jpush:2.1.8'
+    compile('org.kymjs.kjframe:kjframe:2.6')
 
 }

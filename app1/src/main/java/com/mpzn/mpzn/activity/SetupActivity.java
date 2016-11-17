@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.code19.library.AppUtils;
@@ -22,9 +25,12 @@ import com.mpzn.mpzn.entity.VersionCheck;
 import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.service.UpdataVersionService;
 import com.mpzn.mpzn.utils.ACache;
+import com.mpzn.mpzn.utils.AppConfig;
 import com.mpzn.mpzn.utils.CacheUtils;
 import com.mpzn.mpzn.utils.Constant;
 import com.mpzn.mpzn.utils.DataCleanManager;
+import com.mpzn.mpzn.utils.FileUtil;
+import com.mpzn.mpzn.utils.MethodsCompat;
 import com.mpzn.mpzn.views.BadgeView;
 import com.mpzn.mpzn.views.MyActionBar;
 import com.mpzn.mpzn.views.MyDialog;
@@ -33,6 +39,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.File;
+import java.util.Properties;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,6 +54,9 @@ import static com.mpzn.mpzn.utils.ViewUtils.loadedDismissProgressDialog;
 public class SetupActivity extends BaseActivity {
 
 
+    private static final String TAG = "SetupActivitytest";
+    private static final int CLEAN_SUC = 0;
+    private static final int CLEAN_FAIL = 1;
     @Bind(R.id.btn_account)
     Button btnAccount;
     @Bind(R.id.ll_account)
@@ -109,8 +119,10 @@ public class SetupActivity extends BaseActivity {
             setPoint(btnCheckVersion, "new");
         }
         try {
-            String cacheSize = DataCleanManager.getCacheSize(getCacheDir());
-            Log.e("TAG", "cacheSize" + cacheSize);
+//            String cacheSize = DataCleanManager.getCacheSize(getCacheDir());
+//            String cacheSize = DataCleanManager.getCacheSize(getCacheDir());
+            String cacheSize = caculateCacheSize();
+            Log.e(TAG, "cacheSize" + cacheSize);
             setCachesize(btnClearCache, cacheSize);
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,8 +167,13 @@ public class SetupActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         myDialog.dismiss();
-                        DataCleanManager.cleanCustomCache(getCacheDir().getPath());
-                        pointCachesize.hide();
+//                        DataCleanManager.cleanCustomCache(getCacheDir().getPath());
+//                        DataCleanManager.cleanApplicationData(SetupActivity.this, getCacheDir().getPath());
+//                        DataCleanManager.cleanApplicationData(SetupActivity.this, getCacheDir().getPath());
+//                        pointCachesize.setText("0MB");
+                        clearAppCache();
+
+
                     }
                 });
                 break;
@@ -184,6 +201,7 @@ public class SetupActivity extends BaseActivity {
                 break;
         }
     }
+
 
 
     private void showProgressDialog(String content) {
@@ -322,4 +340,135 @@ public class SetupActivity extends BaseActivity {
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
+
+
+    //=======================================缓存清理相关===============================
+    /**
+     * 计算缓存的大小
+     */
+    private String caculateCacheSize() {
+        long fileSize = 0;
+        String cacheSize = "0KB";
+        File filesDir = this.getFilesDir();
+        File cacheDir = this.getCacheDir();
+        Log.i(TAG+"test", "filesdir = "+ FileUtil.getDirSize(filesDir));
+        Log.i(TAG+"test", "cacheDir = "+ FileUtil.getDirSize(cacheDir));
+        Log.i(TAG+"test", "getExternalCacheDir = "+ FileUtil.getDirSize(getExternalCacheDir()));
+        Log.i(TAG+"test", "getExternalFilesDir = "+ FileUtil.getDirSize(getExternalFilesDir(null)));
+        try {
+            Log.i(TAG+"test", "getTotalCacheSize = "+ DataCleanManager.getTotalCacheSize(SetupActivity.this));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        fileSize += FileUtil.getDirSize(filesDir);
+        fileSize += FileUtil.getDirSize(cacheDir);
+        // 2.2版本才有将应用缓存转移到sd卡的功能
+        if (isMethodsCompat(android.os.Build.VERSION_CODES.FROYO)) {
+            File externalCacheDir = MethodsCompat
+                    .getExternalCacheDir(this);
+            fileSize += FileUtil.getDirSize(externalCacheDir);
+            fileSize += FileUtil.getDirSize(new File(
+                    org.kymjs.kjframe.utils.FileUtils.getSDCardPath()
+                            + File.separator + "KJLibrary/cache"));
+        }
+        if (fileSize > 0)
+            cacheSize = FileUtil.formatFileSize(fileSize);
+        return cacheSize;
+    }
+
+    public static boolean isMethodsCompat(int VersionCode) {
+        int currentVersion = android.os.Build.VERSION.SDK_INT;
+        return currentVersion >= VersionCode;
+    }
+    /**
+     * 清除app缓存
+     */
+    public void myclearaAppCache() {
+        DataCleanManager.cleanDatabases(this);
+        // 清除数据缓存
+        DataCleanManager.cleanInternalCache(this);
+        // 2.2版本才有将应用缓存转移到sd卡的功能
+        if (isMethodsCompat(android.os.Build.VERSION_CODES.FROYO)) {
+            DataCleanManager.cleanCustomCache(String.valueOf(MethodsCompat
+                    .getExternalCacheDir(this)));
+        }
+        // 清除编辑器保存的临时内容
+        Properties props = getProperties();
+        for (Object key : props.keySet()) {
+            String _key = key.toString();
+            if (_key.startsWith("temp"))
+                removeProperty(_key);
+        }
+        DataCleanManager.cleanApplicationData(this, getCacheDir().getPath());
+        DataCleanManager.cleanInternalCache(SetupActivity.this);
+                DataCleanManager.cleanDatabases(SetupActivity.this);
+                DataCleanManager.cleanSharedPreference(SetupActivity.this);
+                DataCleanManager.cleanFiles(SetupActivity.this);
+                //真正清除最大数据量缓存的是这个方法
+                DataCleanManager.cleanExternalCache(SetupActivity.this);
+        DataCleanManager.clearAllCache(this);
+
+//        Core.getKJBitmap().cleanCache();
+    }
+
+    /**
+     * 清除保存的缓存
+     */
+    public Properties getProperties() {
+        return AppConfig.getAppConfig(this).get();
+    }
+    public void removeProperty(String... key) {
+        AppConfig.getAppConfig(this).remove(key);
+    }
+    /**
+     * 清除app缓存
+     *
+     * @param
+     */
+    public void clearAppCache() {
+
+        new Thread() {
+            @Override
+            public void run() {
+                Log.i(TAG+"test", "clearAppCache()__");
+                Message msg = new Message();
+                try {
+                    myclearaAppCache();
+                    msg.what = CLEAN_SUC;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    msg.what = CLEAN_FAIL;
+                }
+                handler.sendMessage(msg);
+            }
+        }.start();
+    }
+    private Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case CLEAN_FAIL:
+//                    ToastUtils.show(SxApplication.getInstance(),"清除失败");
+                    Toast.makeText(SetupActivity.this, "清除失败", Toast.LENGTH_SHORT).show();
+
+                    break;
+                case CLEAN_SUC:
+                    try {
+//                        String cacheSize = DataCleanManager.getCacheSize(getCacheDir());
+//                            String cacheSize = DataCleanManager.getCacheSize(getExternalCacheDir());
+                        String cacheSize = caculateCacheSize();
+                        Log.e(TAG, "cacheSize" + cacheSize);
+//                            setCachesize(btnClearCache, cacheSize);
+                        pointCachesize.setText(cacheSize);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    pointCachesize.show();
+                    Toast.makeText(SetupActivity.this, "清除成功", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        };
+    };
+
+
 }

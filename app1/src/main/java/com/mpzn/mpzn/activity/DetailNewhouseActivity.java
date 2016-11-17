@@ -61,6 +61,7 @@ import static com.mpzn.mpzn.utils.ViewUtils.showCustomProgressDialog;
 public class DetailNewhouseActivity extends BaseActivity {
 
 
+    private static final String TAG = "DetailNewhouseActivity";
     @Bind(R.id.vp_detail_house_top)
     ViewPager vpDetailHouseTop;
     @Bind(R.id.tv_detail_house_des)
@@ -291,6 +292,7 @@ public class DetailNewhouseActivity extends BaseActivity {
     public void initData() {
         Intent intent = getIntent();
         aid = intent.getIntExtra("Aid", -1);
+        Log.i(TAG, "initData()__aid = "+aid);
         initAbtract();
         updataView();
         initStarCheckBox();
@@ -314,6 +316,7 @@ public class DetailNewhouseActivity extends BaseActivity {
                         AbstractEntity abstractEntity = new Gson().fromJson(response, AbstractEntity.class);
                         if (abstractEntity.getCode() == 200) {
                             messageEntity = abstractEntity.getData();
+                            Log.i(TAG, "onResponse()__messageEntity = "+messageEntity);
                             myActionBar.init(messageEntity.getSubject(), R.drawable.return_red, R.drawable.share);
 
 

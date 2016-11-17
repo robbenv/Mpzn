@@ -44,6 +44,7 @@ import static com.mpzn.mpzn.utils.ViewUtils.dip2px;
 public class MainActivity extends BaseActivity {
 
 
+    private static final String TAG = "MainActivity";
     public static int bottomBarHeight;
 
 
@@ -72,7 +73,7 @@ public class MainActivity extends BaseActivity {
 
 
     String[] mPermissionList = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS};
-
+    private boolean isFromJpush;
 
 
     @Override
@@ -83,6 +84,7 @@ public class MainActivity extends BaseActivity {
 
         //添加友盟分享需要的权限
         ActivityCompat.requestPermissions(MainActivity.this, mPermissionList, 100);
+
     }
 
     @Override
@@ -166,6 +168,17 @@ public class MainActivity extends BaseActivity {
             setPoint(3);
         }
         upData();
+
+        //当程序没有运行时，对极光推送打开进行处理
+        isFromJpush = getIntent().getBooleanExtra("jpush", false);
+        if (isFromJpush) {
+            Intent intent = new Intent(this, DetailNewhouseActivity.class);
+            intent.putExtra("jpush", true);
+            Log.i(TAG+"test", "initData()__id = "+getIntent().getIntExtra("Aid", -1));
+            intent.putExtra("Name", getIntent().getStringExtra("Name"));
+            intent.putExtra("Aid", getIntent().getIntExtra("Aid", -1));
+            startActivity(intent);
+        }
 
     }
     public void upData(){

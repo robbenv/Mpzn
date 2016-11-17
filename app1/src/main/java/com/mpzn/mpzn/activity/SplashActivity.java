@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.application.MyApplication;
 import com.mpzn.mpzn.base.BaseActivity;
+import com.mpzn.mpzn.entity.JPushNotificationEntity;
 import com.mpzn.mpzn.entity.LoginEntity;
 import com.mpzn.mpzn.entity.UserMsg;
 import com.mpzn.mpzn.http.API;
@@ -21,12 +22,16 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import butterknife.Bind;
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 public class SplashActivity extends BaseActivity {
 
+    private static final String TAG = "SplashActivity";
     private final int TOMAIN = 1;
     private final int TOGUID = -1;
+
+    private boolean isFromJpush;
     @Bind(R.id.iv_splash_bg)
     ImageView ivSplashBg;
     private LoginEntity loginEntity;
@@ -37,7 +42,23 @@ public class SplashActivity extends BaseActivity {
             if (msg.what == TOGUID) {
                 startActivity(new Intent(SplashActivity.this, GuideActivity.class));
             } else {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                isFromJpush = getIntent().getBooleanExtra("jpush", false);
+                if (isFromJpush) {
+                    intent.putExtra("jpush", true);
+                    Log.i(TAG+"test", "id = "+ getIntent().getIntExtra("Aid", -1));
+                    String name = getIntent().getStringExtra("Name");
+                    int aId = getIntent().getIntExtra("Aid", -1);
+                    String type = intent.getStringExtra("Type");
+                    intent.putExtra("Name", name);
+                    intent.putExtra("Aid", aId);
+                    JPushNotificationEntity jPushNotificationEntity = new JPushNotificationEntity();
+                    jPushNotificationEntity.setType(type);
+                    jPushNotificationEntity.setId(String.valueOf(aId));
+                    EventBus.getDefault().postSticky(jPushNotificationEntity);
+                }
+                startActivity(intent);
+
             }
             finish();
         }

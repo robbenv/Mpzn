@@ -1,6 +1,10 @@
 package com.mpzn.mpzn.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,11 +24,14 @@ import com.mpzn.mpzn.activity.WebViewActivity;
 import com.mpzn.mpzn.adapter.RvMessageAdapter;
 import com.mpzn.mpzn.application.MyApplication;
 import com.mpzn.mpzn.base.BaseFragment;
+import com.mpzn.mpzn.base.BaseListAdapter;
 import com.mpzn.mpzn.entity.AbstractEntity;
 import com.mpzn.mpzn.entity.JPushNotificationEntity;
 import com.mpzn.mpzn.entity.MessageEntity;
+import com.mpzn.mpzn.helper.JpushMessageDBHelper;
 import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.listener.OnRecyclerItemClickListener;
+import com.mpzn.mpzn.receiver.JPushReceiver;
 import com.mpzn.mpzn.utils.CacheUtils;
 import com.mpzn.mpzn.utils.ViewUtils;
 import com.mpzn.mpzn.views.MyActionBar;
@@ -64,6 +71,9 @@ public class MessageFragment extends BaseFragment {
     private ViewGroup fragment_building;
     private RvMessageAdapter rvMessageAdapter;
     private LinearLayoutManager linearLayoutManager;
+
+    private JpushMessageDBHelper dbHelper;
+    private List<JPushNotificationEntity> JpushList = new ArrayList<JPushNotificationEntity>();
 
 
     public MessageFragment() {
@@ -112,9 +122,15 @@ public class MessageFragment extends BaseFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
-    public void onEventBackgroudThread(final JPushNotificationEntity jPushNotificationEntity) {
-        Log.e("TAG", "接到消息" + jPushNotificationEntity.toString());
+    public void onUserEvent(final JPushNotificationEntity jPushNotificationEntity) {
 
+        Log.e(TAG, "接到消息" + jPushNotificationEntity.toString());
+
+        handleJpushNotification(jPushNotificationEntity);
+
+    }
+
+    private void handleJpushNotification(final JPushNotificationEntity jPushNotificationEntity) {
         if (jPushNotificationEntity.getType().equals(TYPE_HTML)) {
 
         } else {
@@ -147,7 +163,7 @@ public class MessageFragment extends BaseFragment {
                                 messageEntity.setType(jPushNotificationEntity.getType());
 
                                 if (rvMessageAdapter != null) {
-                                    if(llNoData.getVisibility()==View.VISIBLE){
+                                    if(llNoData.getVisibility()== View.VISIBLE){
                                         llNoData.setVisibility(View.GONE);
                                     }
                                     messageEntityList.add(messageEntity);
@@ -161,7 +177,6 @@ public class MessageFragment extends BaseFragment {
                     });
 
         }
-
     }
 
     @Override
@@ -180,8 +195,43 @@ public class MessageFragment extends BaseFragment {
             llNoData.setVisibility(View.VISIBLE);
         }
 
+        initJpushOffline();
+    }
+
+    private void initJpushOffline() {
+        //读取程序没运行时获取的消息
+        dbHelper = new JpushMessageDBHelper(getContext(), "jpush.db", null, 1);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.query("jpush", null, null, null, null, null, null);
+        JPushNotificationEntity jPushNotificationEntity;
+        if (cursor.moveToFirst()) {
+            jPushNotificationEntity = new JPushNotificationEntity();
+            do {
+        // 遍历Cursor对象,取出数据并打印
+                String aId = cursor.getString(cursor.
+                        getColumnIndex("aid"));
+                String type = cursor.getString(cursor.
+                        getColumnIndex("type"));
+
+                Log.i(TAG, "initData()__读取消息：aId = "+aId);
+                Log.i(TAG, "initData()__读取消息：type = "+type);
+                jPushNotificationEntity.setId(aId);
+                jPushNotificationEntity.setType(type);
+                JpushList.add(jPushNotificationEntity);
+                handleJpushNotification(jPushNotificationEntity);
+
+            } while (cursor.moveToNext());
+            //清空
+            db.delete("jpush", null, null);
+            //设置
+//            for (JPushNotificationEntity jn : JpushList) {
+//                handleJpushNotification(jn);
+//            }
+        }
+        cursor.close();
 
     }
+
 
     @Override
     public void bindListener() {

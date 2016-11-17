@@ -1,12 +1,16 @@
 package com.mpzn.mpzn.receiver;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.code19.library.SPUtils;
 import com.code19.library.StringUtils;
 import com.google.gson.Gson;
 import com.mpzn.mpzn.activity.DetailNewhouseActivity;
@@ -16,12 +20,15 @@ import com.mpzn.mpzn.activity.TestActivity;
 import com.mpzn.mpzn.activity.WebViewActivity;
 import com.mpzn.mpzn.application.MyApplication;
 import com.mpzn.mpzn.entity.JPushNotificationEntity;
+import com.mpzn.mpzn.helper.JpushMessageDBHelper;
+import com.mpzn.mpzn.utils.Utils;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
+import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
 import de.greenrobot.event.EventBus;
@@ -39,10 +46,13 @@ public class JPushReceiver extends BroadcastReceiver {
     public static final String TYPE_BUILDING="building";
     public static final String TYPE_NEWS="news";
     public static final String TYPE_HTML = "html";
+    public static final String PACKAGENAME = "com.mpzn.mpzn";
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        boolean isRunning = Utils.isRunningApp(context, PACKAGENAME);
+        JpushMessageDBHelper jpushMessageDBHelper = new JpushMessageDBHelper(context, "jpush.db", null, 1);
         Bundle bundle = intent.getExtras();
         Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
         Log.d(TAG, "EXTRA_EXTRA"+bundle.getString(JPushInterface.EXTRA_EXTRA));
@@ -60,7 +70,19 @@ public class JPushReceiver extends BroadcastReceiver {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
             int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             JPushNotificationEntity jPushNotificationEntity = new Gson().fromJson(bundle.getString(JPushInterface.EXTRA_EXTRA), JPushNotificationEntity.class);
-            EventBus.getDefault().postSticky(jPushNotificationEntity);
+            if (isRunning) {
+                EventBus.getDefault().postSticky(jPushNotificationEntity);
+            } else {
+                //如果推送的时候程序没有运行，EventBus不起作用，此时先存到数据库中
+                SQLiteDatabase db = jpushMessageDBHelper.getWritableDatabase();
+                ContentValues values = new ContentValues();
+                values.put("aid", jPushNotificationEntity.getId());
+                values.put("type", jPushNotificationEntity.getType());
+                db.insert("jpush", null, values);
+            }
+
+
+
             Log.e("TAG", "eventbus发消息"+jPushNotificationEntity.toString());
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
 
@@ -68,16 +90,33 @@ public class JPushReceiver extends BroadcastReceiver {
             Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
 
             JPushNotificationEntity jPushNotificationEntity = new Gson().fromJson(bundle.getString(JPushInterface.EXTRA_EXTRA), JPushNotificationEntity.class);
+
             String type = jPushNotificationEntity.getType();
             Log.d(TAG, "TYPE_NOTIFICATION_TO"+type);
             if(TYPE_BUILDING.equals(type)){
                 //打开自定义的Activity
                 Log.e("TAG", "打开楼盘详情页");
-                Intent i = new Intent(context, DetailNewhouseActivity.class);
-                i.putExtra("Name",bundle.getString(EXTRA_NOTIFICATION_TITLE));
-                i.putExtra("Aid",Integer.parseInt(jPushNotificationEntity.getId()));
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
-                context.startActivity(i);
+//                Intent i = new Intent(context, DetailNewhouseActivity.class);
+
+                Log.i(TAG+"test1", "onReceive()__isRunning = "+isRunning);
+
+                Intent i = isRunning ? new Intent(context, DetailNewhouseActivity.class)
+                        : context.getPackageManager().getLaunchIntentForPackage(PACKAGENAME);
+
+                if (i != null) {
+                    //                Intent i = new Intent(context, MainActivity.class);
+                    i.putExtra("Name",bundle.getString(EXTRA_NOTIFICATION_TITLE));
+                    i.putExtra("Aid",Integer.parseInt(jPushNotificationEntity.getId()));
+                    i.putExtra("Type", jPushNotificationEntity.getType());
+                    i.putExtra("jpush", true);
+//                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+//                i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP );
+                    context.startActivity(i);
+                } else {
+                    Toast.makeText(context, "没有获取到通知信息", Toast.LENGTH_SHORT).show();
+                }
+
 
             }else if(TYPE_NEWS.equals(type)){
 
@@ -174,4 +213,6 @@ public class JPushReceiver extends BroadcastReceiver {
 //            context.sendBroadcast(msgIntent);
 //        }
 //    }
+
+
 }

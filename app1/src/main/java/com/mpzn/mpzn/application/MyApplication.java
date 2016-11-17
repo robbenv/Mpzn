@@ -14,9 +14,11 @@ import com.zhy.http.okhttp.https.HttpsUtils;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import okhttp3.OkHttpClient;
 
 import static com.mpzn.mpzn.utils.CacheUtils.getBoolean;
@@ -51,13 +53,20 @@ public class MyApplication extends Application {
         mScreenHeight = mContext.getResources().getDisplayMetrics().heightPixels;
 
         // 注册全局异常处理
-        CrashHandler.getInstance().init(this);
+//        CrashHandler.getInstance().init(this);
 
         //初始化OkHttp联网
         initOkHttp();
 
         //极光推送初始化SDK
         JPushInterface.init(this);
+        JPushInterface.setAlias(this, "dev", new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+
+                //啥也没有
+            }
+        });
 
         //微信 appid appsecret
         PlatformConfig.setWeixin("wx395a9fb9b698fabc", "c387dcbd2a344a2ece68589b624cceac");

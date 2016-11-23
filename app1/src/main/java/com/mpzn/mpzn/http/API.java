@@ -74,4 +74,6 @@ public class API {
     public static final String CHECKBB_POST = API+"/developers/check_baobei";
     public static final String KFS_OWN_BUILDING_GET = API+"/developers/ownloupan";
     public static final String BB_STATISTICS_FORKFS_GET = API+"/baobei/tongji";
+    public static final String PROXY_SELL_GET = API+"/developers/loupandaixiaolist";
+    public static final String PROXY_SELL_HANDLE = API+"/developers/manageloupandaixiao";
 }

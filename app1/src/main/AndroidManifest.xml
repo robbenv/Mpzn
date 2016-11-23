@@ -185,8 +185,9 @@
         <activity android:name=".activity.BBStaticsForJJComActivity" />
         <activity android:name=".activity.CheckBBActivity" />
         <activity android:name=".activity.PermissionsActivity" />
-        <activity android:name=".activity.BBstaticForKfsAcitvity"></activity>
-
+        <activity android:name=".activity.BBstaticForKfsAcitvity" />
+        <activity android:name=".activity.ProxySellManageActivity" />
+        <activity android:name=".activity.HandleProxySellActivity" />
     </application>
 
 </manifest>

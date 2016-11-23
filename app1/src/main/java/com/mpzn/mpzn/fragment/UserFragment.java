@@ -35,6 +35,7 @@ import com.mpzn.mpzn.activity.LoginActivity;
 import com.mpzn.mpzn.activity.MyBBActivity;
 import com.mpzn.mpzn.activity.MyDataActivity;
 import com.mpzn.mpzn.activity.MySellActivity;
+import com.mpzn.mpzn.activity.ProxySellManageActivity;
 import com.mpzn.mpzn.activity.RegForUserTypeActivity;
 import com.mpzn.mpzn.activity.SetupActivity;
 import com.mpzn.mpzn.activity.StarAndBrowseActivity;
@@ -339,7 +340,7 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
                     startActivity(intent);
                 } else if ((itemName).equals("代销管理")) {
                     Intent intent = new Intent();
-                    intent.setClass(mContext,CheckBBActivity.class);
+                    intent.setClass(mContext,ProxySellManageActivity.class);
                     startActivity(intent);
                 } else if((itemName).equals("更多")){
                     if(MyApplication.getInstance().isLogined) {

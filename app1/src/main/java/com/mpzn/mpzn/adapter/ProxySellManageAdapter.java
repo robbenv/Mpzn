@@ -54,7 +54,7 @@ public class ProxySellManageAdapter extends BaseListAdapter {
     }
 
     public void updata(List<ProxySellListEntity.DataBean> datalist) {
-
+        Log.i("Proxy_test4", "updata()__");
         clearAll();
         addALL(datalist);
         if(datalist.size()!=0) {
@@ -98,7 +98,7 @@ public class ProxySellManageAdapter extends BaseListAdapter {
         }
 
         viewHolder.tvSubject.setText(dataBean.getSubject());
-        String createdate = formatData("yyyy-MM-dd", dataBean.getCreatedate());
+        String createdate = formatData("yyyy-MM-dd HH:mm:ss", dataBean.getCreatedate());
         viewHolder.tvData.setText("(" + createdate + ")");
         viewHolder.tvCompany.setText(dataBean.getCompany());
 
@@ -120,43 +120,20 @@ public class ProxySellManageAdapter extends BaseListAdapter {
                 viewHolder.cbProxysell.setVisibility(View.VISIBLE);
 
 
-//                viewHolder.cbProxysell.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                    @Override
-//                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-//                        int tag = (Integer) compoundButton.getTag();
-//                        checkedMap.put(tag, isChecked);
-//                        notifyDataSetChanged();
-////                            dataBean.setChecked(compoundButton.isChecked() ? 1 : 0);
-//
-//                    }
-//                });
-
-                viewHolder.cbProxysell.setOnClickListener(new View.OnClickListener() {
+                viewHolder.cbProxysell.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onClick(View view) {
-                        if (checkedMap.get(position)) {
-                            checkedMap.put(position, false);
-                            dataBean.setChecked(0);
-                        } else {
-                            checkedMap.put(position, true);
-                            dataBean.setChecked(1);
-                        }
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        int tag = (Integer) compoundButton.getTag();
+                        checkedMap.put(tag, isChecked);
+                        notifyDataSetChanged();
+//                            dataBean.setChecked(compoundButton.isChecked() ? 1 : 0);
+
                     }
                 });
 
-//                if (checkedMap.containsKey(viewHolder.cbProxysell.getTag())) {
-//                    dataBean.setChecked(1);
-//                } else {
-//                    dataBean.setChecked(0);
-//                }
-                Log.i("Proxy_test3", "checkedMap.get(position) = "+checkedMap.get(position));
-                viewHolder.cbProxysell.setChecked(checkedMap.get(position));
-//                viewHolder.cbProxysell.setTag(dataBean.getCid());
 
-                //用来更新按键显示“加几”的回调
-                if(changCheckListener!=null) {
-//                    changCheckListener.ChangCheck(checkedMap.size());
-                }
+
+
 
             } else {
                 viewHolder.tvIschecked.setVisibility(View.VISIBLE);

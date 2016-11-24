@@ -209,6 +209,7 @@ public class ProxySellManageActivity extends BaseActivity {
                                 lv_check_sucAdapter.updata(successList);
 
                             } else if (isChecked == "unchecked" && isSuccess == "") {
+                                Log.i("Proxy_test4", "onResponse()__uncheck");
                                 uncheckList.addAll(proxySellListEntity.getData());
                                 lv_unCheck_Adapter.updata(uncheckList);
                             } else if (isSuccess == "failure") {
@@ -232,8 +233,10 @@ public class ProxySellManageActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(mContext, HandleProxySellActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//                overridePendingTransition(0, 0);
 //                intent.putExtra("unchecklist", uncheckList);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
 
 //                if (isEditor) {
 //                    isEditor = false;
@@ -308,103 +311,125 @@ public class ProxySellManageActivity extends BaseActivity {
             }
         });
 
-        btnRefuse.setOnClickListener(new SellOnclickListener());
-        btnAccess.setOnClickListener(new SellOnclickListener());
-        btnDelete.setOnClickListener(new SellOnclickListener());
+//        btnRefuse.setOnClickListener(new SellOnclickListener());
+//        btnAccess.setOnClickListener(new SellOnclickListener());
+//        btnDelete.setOnClickListener(new SellOnclickListener());
 
     }
 
-    class SellOnclickListener implements View.OnClickListener {
+//    class SellOnclickListener implements View.OnClickListener {
+//
+//        @Override
+//        public void onClick(View view) {
+//            switch (view.getId()) {
+//                case R.id.btn_access:
+//                    handleProxySell("checked");
+//                    break;
+//                case R.id.btn_refuse:
+//                    handleProxySell("unchecked");
+//                    break;
+//                case R.id.btn_delete:
+//                    handleProxySell("delete");
+//                    break;
+//            }
+//        }
+//    }
 
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.btn_access:
-                    handleProxySell("checked");
-                    break;
-                case R.id.btn_refuse:
-                    handleProxySell("unchecked");
-                    break;
-                case R.id.btn_delete:
-                    handleProxySell("delete");
-                    break;
-            }
+//    private void handleProxySell(String action) {
+//        String LoadingMsg = null;
+//        String SuccussMsg = null;
+//        List<ProxySellListEntity.DataBean> proxysellList = null;
+//        if ("checked".equals(action)) {
+//            LoadingMsg = "正在提交审核...";
+//            SuccussMsg = "代销成功";
+////            proxysellList = addJingjirenList;
+//
+//        } else if ("unchecked".equals(action)) {
+//            LoadingMsg = "正在驳回申请...";
+//            SuccussMsg = "驳回申请成功";
+//
+//        } else if ("delete".equals(action)) {
+//
+//            LoadingMsg = "正在删除经纪人...";
+//            SuccussMsg = "删除经纪人成功";
+////            jingjirenlist = ownJingjirenList;
+//
+//        }
+//
+//        loadProgressHUD = KProgressHUD.create(ProxySellManageActivity.this).
+//                setSize(MyApplication.mScreenWidth / 4, MyApplication.mScreenWidth / 6).
+//                setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).
+//                setLabel(LoadingMsg).setCancellable(false).show();
+//
+//        String str = "";
+//        final List<ProxySellListEntity.DataBean> selectList = new ArrayList<>();
+//        for (ProxySellListEntity.DataBean data : uncheckList) {
+//            if (data.getChecked() == 1) {
+//                selectList.add(data);
+//                if (str == "") {
+//                    str = str + data.getCid();
+//                } else {
+//                    str = str + "," + data.getCid();
+//                }
+//            }
+//        }
+//        if (str == "") {
+//            loadedDismissProgressDialog(ProxySellManageActivity.this, false, loadProgressHUD, "请选择", false);
+//        } else {
+//            final String finalSuccussMsg = SuccussMsg;
+//            OkHttpUtils.post()
+//                    .url(API.MANAGEBROKERSLIST_POST)
+//                    .addParams("token", MyApplication.getInstance().token)
+//                    .addParams("cids", str)
+//                    .addParams("action", action)
+//                    .build()
+//                    .execute(new StringCallback() {
+//                        @Override
+//                        public void onError(Call call, Exception e, int id) {
+//                            loadedDismissProgressDialog(ProxySellManageActivity.this, false, loadProgressHUD, "加载失败，请检查网络", false);
+//
+//                        }
+//
+//                        @Override
+//                        public void onResponse(String response, int id) {
+//                            Log.e("TAG", "response" + response);
+//                            CheckStarEntity checkStarEntity = new Gson().fromJson(response, CheckStarEntity.class);
+//                            if (checkStarEntity.getCode() == 200) {
+//                                loadedDismissProgressDialog(ProxySellManageActivity.this, true, loadProgressHUD, finalSuccussMsg, false);
+//
+//                                uncheckList.removeAll(selectList);
+//
+//                                currentAdapter.notifyDataSetChanged();
+//
+//                            } else {
+//                                loadedDismissProgressDialog(ProxySellManageActivity.this, false, loadProgressHUD, checkStarEntity.getMessage(), false);
+//                            }
+//                        }
+//                    });
+//        }
+//    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
+            case 0:
+                Log.i("Proxy_test4", "onActivityResult()__into");
+                uncheckList.clear();
+                getdata("unchecked", "");//未审核
+
+                successList.clear();
+                getdata("", "success");//成功
+
+                failList.clear();
+                getdata("checked", "failure");//失败
+                break;
+            default:
+                break;
         }
     }
 
-    private void handleProxySell(String action) {
-        String LoadingMsg = null;
-        String SuccussMsg = null;
-        List<ProxySellListEntity.DataBean> proxysellList = null;
-        if ("checked".equals(action)) {
-            LoadingMsg = "正在提交审核...";
-            SuccussMsg = "代销成功";
-//            proxysellList = addJingjirenList;
 
-        } else if ("unchecked".equals(action)) {
-            LoadingMsg = "正在驳回申请...";
-            SuccussMsg = "驳回申请成功";
 
-        } else if ("delete".equals(action)) {
-
-            LoadingMsg = "正在删除经纪人...";
-            SuccussMsg = "删除经纪人成功";
-//            jingjirenlist = ownJingjirenList;
-
-        }
-
-        loadProgressHUD = KProgressHUD.create(ProxySellManageActivity.this).
-                setSize(MyApplication.mScreenWidth / 4, MyApplication.mScreenWidth / 6).
-                setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).
-                setLabel(LoadingMsg).setCancellable(false).show();
-
-        String str = "";
-        final List<ProxySellListEntity.DataBean> selectList = new ArrayList<>();
-        for (ProxySellListEntity.DataBean data : uncheckList) {
-            if (data.getChecked() == 1) {
-                selectList.add(data);
-                if (str == "") {
-                    str = str + data.getCid();
-                } else {
-                    str = str + "," + data.getCid();
-                }
-            }
-        }
-        if (str == "") {
-            loadedDismissProgressDialog(ProxySellManageActivity.this, false, loadProgressHUD, "请选择", false);
-        } else {
-            final String finalSuccussMsg = SuccussMsg;
-            OkHttpUtils.post()
-                    .url(API.MANAGEBROKERSLIST_POST)
-                    .addParams("token", MyApplication.getInstance().token)
-                    .addParams("cids", str)
-                    .addParams("action", action)
-                    .build()
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            loadedDismissProgressDialog(ProxySellManageActivity.this, false, loadProgressHUD, "加载失败，请检查网络", false);
-
-                        }
-
-                        @Override
-                        public void onResponse(String response, int id) {
-                            Log.e("TAG", "response" + response);
-                            CheckStarEntity checkStarEntity = new Gson().fromJson(response, CheckStarEntity.class);
-                            if (checkStarEntity.getCode() == 200) {
-                                loadedDismissProgressDialog(ProxySellManageActivity.this, true, loadProgressHUD, finalSuccussMsg, false);
-
-                                uncheckList.removeAll(selectList);
-
-                                currentAdapter.notifyDataSetChanged();
-
-                            } else {
-                                loadedDismissProgressDialog(ProxySellManageActivity.this, false, loadProgressHUD, checkStarEntity.getMessage(), false);
-
-                            }
-                        }
-                    });
-        }
-    }
 
 }

@@ -3,6 +3,7 @@ package com.mpzn.mpzn.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,12 +19,14 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.mpzn.mpzn.R;
+import com.mpzn.mpzn.adapter.HandleProxyAdapter;
 import com.mpzn.mpzn.adapter.ProxySellManageAdapter;
 import com.mpzn.mpzn.application.MyApplication;
 import com.mpzn.mpzn.base.BaseActivity;
 import com.mpzn.mpzn.entity.CheckStarEntity;
 import com.mpzn.mpzn.entity.ProxySellListEntity;
 import com.mpzn.mpzn.http.API;
+import com.mpzn.mpzn.listener.EndLessOnScrollListener;
 import com.mpzn.mpzn.views.MyActionBar;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -40,7 +43,7 @@ import static com.mpzn.mpzn.utils.ViewUtils.loadedDismissProgressDialog;
 /**
  * Created by larry on 16-11-23.
  */
-public class HandleProxySellActivity extends BaseActivity implements ProxySellManageAdapter.ChangCheckListener {
+public class HandleProxySellActivity extends BaseActivity{
     public static final int ACTION_ACCESS = 4;
     public static final int ACTION_REFUSE = 3;
     @Bind(R.id.aciton_bar)
@@ -63,13 +66,15 @@ public class HandleProxySellActivity extends BaseActivity implements ProxySellMa
     RelativeLayout rlBottom;
     @Bind(R.id.iv_load_alert)
     ImageView ivLoadAlert;
-    @Bind(R.id.lv_apply)
-    ListView lvApply;
+    @Bind(R.id.rv_apply)
+    RecyclerView rvApply;
 
-    private ProxySellManageAdapter lvAdapter;
+    private HandleProxyAdapter rvAdapter;
     private ArrayList<ProxySellListEntity.DataBean> uncheckList = new ArrayList<>();
     private KProgressHUD loadProgressHUD;
     private int currentBtn;
+    private LinearLayoutManager linearLayoutManager;
+    private int currentMaxOffset = 0;
 
     @Override
     public int getLayoutId() {
@@ -86,10 +91,11 @@ public class HandleProxySellActivity extends BaseActivity implements ProxySellMa
 //        searchLvTipsAdapter = new ApplyForSellTipsLvAdapter(mContext, tipsList);
 //        lvSearchTips.setAdapter(searchLvTipsAdapter);
         Log.i("Proxy_test1", "onResponse()__uncheckList.size ="+uncheckList.size() );
-        lvAdapter = new ProxySellManageAdapter(mContext, uncheckList);
-        lvAdapter.changeEditable(true, false);
-
-        lvApply.setAdapter(lvAdapter);
+        rvAdapter = new HandleProxyAdapter(mContext, uncheckList);
+//        rvAdapter.changeEditable(true, false);
+        linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        rvApply.setLayoutManager(linearLayoutManager);
+        rvApply.setAdapter(rvAdapter);
     }
 
     @Override
@@ -103,14 +109,15 @@ public class HandleProxySellActivity extends BaseActivity implements ProxySellMa
 //        String subject = intent.getStringArrayListExtra()
 //        etSearch.setText(subject);
 //        getData(currentMaxOffset, subject);
-        getData();
+        getData(currentMaxOffset);
     }
 
-    private void getData() {
+    private void getData(int offset) {
         OkHttpUtils.get()
                 .url(API.PROXY_SELL_GET)
                 .addParams("token", MyApplication.getInstance().token)
                 .addParams("checked", "unchecked")
+                .addParams("offset", offset + "")
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -125,8 +132,9 @@ public class HandleProxySellActivity extends BaseActivity implements ProxySellMa
                         if (proxySellListEntity.getCode() == 200) {
                             uncheckList.addAll(proxySellListEntity.getData());
                             Log.i("Proxy_test1", "onResponse()__uncheckList.size ="+uncheckList.size() );
-                            lvAdapter.updata(uncheckList);
-                            lvAdapter.changeEditable(true, false);
+                            rvAdapter.updata(uncheckList);
+//                            rvAdapter.changeEditable(true, false);
+                            rvAdapter.notifyDataSetChanged();
                         }
 
                     }
@@ -140,17 +148,58 @@ public class HandleProxySellActivity extends BaseActivity implements ProxySellMa
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    lvAdapter.changeEditable(true, true);
-//                    tvCheckAll.setText("取消全选");
+                    rvAdapter.selectAll(true);
+                    tvCheckAll.setText("全选");
                 } else {
-                    lvAdapter.changeEditable(true, false);
-//                    tvCheckAll.setText("全选");
+                    rvAdapter.selectAll(false);
+                    tvCheckAll.setText("全选");
                 }
+            }
+        });
+
+        acitonBar.setLROnClickListener(
+                new View.OnClickListener() {
+                    //左
+            @Override
+            public void onClick(View view) {
+                finish();
+                overridePendingTransition(0, 0);
+            }
+        },
+                //右
+                new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                overridePendingTransition(0, 0);
             }
         });
 
         btnRefuse.setOnClickListener(new HandleProxySellActivity.SellOnclickListener());
         btnAccess.setOnClickListener(new HandleProxySellActivity.SellOnclickListener());
+
+//        rvAdapter.setChangCheckListener(new HandleProxyAdapter.ChangCheckListener() {
+//            @Override
+//            public void ChangCheck(boolean isCheck) {
+//                int count = 0;
+//                for (ProxySellListEntity.DataBean data : uncheckList) {
+//                    if (data.getChecked() == 1) {
+//                        count += 1;
+//                    }
+//                }
+//                btnAccess.setText("通过(" + count + ")");
+//                btnRefuse.setText("拒绝(" + count + ")");
+//            }
+//        });
+
+        rvApply.addOnScrollListener(new EndLessOnScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int currentPage) {
+                Log.e("TAG", "currentMaxOffset" + currentMaxOffset);
+                getData(++currentMaxOffset);
+            }
+        });
+
     }
 
     @Override
@@ -160,14 +209,7 @@ public class HandleProxySellActivity extends BaseActivity implements ProxySellMa
         ButterKnife.bind(this);
     }
 
-    @Override
-    public void ChangCheck(int count) {
-        if (currentBtn == ACTION_ACCESS) {
-            btnAccess.setText(count+"");
-        } else {
-            btnRefuse.setText(count+"");
-        }
-    }
+
 
     class SellOnclickListener implements View.OnClickListener {
 
@@ -253,9 +295,9 @@ public class HandleProxySellActivity extends BaseActivity implements ProxySellMa
                                 loadedDismissProgressDialog(HandleProxySellActivity.this, true, loadProgressHUD, finalSuccussMsg, false);
                                 Log.i("Proxy_test1", "onResponse()__uncheckList.size ="+uncheckList.size() );
                                 uncheckList.removeAll(selectList);
-                                lvAdapter.updata(uncheckList);
+                                rvAdapter.updata(uncheckList);
                                 Log.i("Proxy_test1", "onResponse()__uncheckList.size ="+uncheckList.size() );
-                                lvAdapter.notifyDataSetChanged();
+                                rvAdapter.notifyDataSetChanged();
 
                             } else {
                                 loadedDismissProgressDialog(HandleProxySellActivity.this, false, loadProgressHUD, checkStarEntity.getMessage(), false);
@@ -264,5 +306,11 @@ public class HandleProxySellActivity extends BaseActivity implements ProxySellMa
                         }
                     });
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0, 0);
     }
 }

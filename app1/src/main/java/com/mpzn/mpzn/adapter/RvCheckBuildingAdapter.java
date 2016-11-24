@@ -198,6 +198,7 @@ public class RvCheckBuildingAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ButterKnife.bind(this,itemView);
         }
     }
+
     public class NoDataViewHolder extends RecyclerView.ViewHolder{
 
         public NoDataViewHolder(View itemView) {

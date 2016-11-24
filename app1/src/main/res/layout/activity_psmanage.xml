@@ -30,7 +30,10 @@
     <RelativeLayout
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        >
 
         <com.mpzn.mpzn.views.CustomViewPager
             android:id="@+id/vp_proxy_sell"
@@ -56,7 +59,7 @@
             android:gravity="center"
             android:textSize="14sp"
             android:textColor="@color/font_black_3"
-            android:drawableLeft="@drawable/search_gray" />
+            android:drawableRight="@drawable/search_gray" />
     </RelativeLayout>
 
     <RelativeLayout

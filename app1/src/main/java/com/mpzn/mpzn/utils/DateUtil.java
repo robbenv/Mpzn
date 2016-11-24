@@ -64,7 +64,7 @@ public class DateUtil {
     }
 
    //时间戳转日期
-    public static String             formatData(String dataFormat, long timeStamp) {
+    public static String  formatData(String dataFormat, long timeStamp) {
         if (timeStamp == 0) {
             return "";
         }

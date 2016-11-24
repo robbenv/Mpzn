@@ -28,6 +28,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             >
             <EditText
                 android:id="@+id/et_search"
@@ -36,7 +38,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:background="@drawable/coners_radius_5dp_gray"
-                android:hint="输入地区或者楼盘名"
+                android:hint="请输入楼盘名或经纪公司名称"
                 android:textColorHint="@color/font_black_4"
                 android:gravity="center"
                 android:textSize="14sp"
@@ -80,7 +82,7 @@
                 android:background="@drawable/btn_bg_red_to_darkred"
                 android:layout_toLeftOf="@id/btn_access"
                 android:textColor="@color/white"
-                android:text="拒绝(0)"
+                android:text="拒绝"
                 android:textSize="14sp"
                 android:layout_margin="10dp"
                 />
@@ -91,7 +93,7 @@
                 android:background="@drawable/btn_bg_red_to_darkred"
                 android:layout_centerInParent="true"
                 android:textColor="@color/white"
-                android:text="审核(0)"
+                android:text="同意"
                 android:textSize="14sp"
                 android:layout_margin="10dp"
                 />
@@ -134,12 +136,12 @@
             android:background="@color/white">
 
 
-            <ListView
-                android:id="@+id/lv_apply"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_apply"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/fafafa">
-            </ListView>
+            </android.support.v7.widget.RecyclerView>
         </FrameLayout>
 
 

@@ -3,6 +3,7 @@ package com.mpzn.mpzn.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +57,10 @@ public class HandleProxyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public HandleProxyAdapter(Context mContext, List<ProxySellListEntity.DataBean> datas) {
+        Log.i("Proxy_test34", "HandleProxyAdapter()__");
         this.mContext = mContext;
         this.datas = datas;
+        noData.add(new ProxySellListEntity.DataBean(datas.size() != 0));
         mInflater = LayoutInflater.from(mContext);
     }
 
@@ -81,6 +84,7 @@ public class HandleProxyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Log.i("Proxy_test34", "onBindViewHolder()__into");
 
         if(holder instanceof NoDataViewHolder){
             Log.i("Proxy_test3", "onBindViewHolder()__holder instanceof NoDataViewHolder__return");
@@ -114,7 +118,9 @@ public class HandleProxyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return datas.size();
+
+            return datas.size();
+
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder  {
@@ -136,11 +142,13 @@ public class HandleProxyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     public void updata(List<ProxySellListEntity.DataBean> proxySellList) {
+        Log.i("Proxy_test34", "updata()__into");
         if(proxySellList.size()!=0) {
             Log.i("Proxy_test3", "updata()__proxySellList = "+proxySellList.size());
             datas = proxySellList;
             this.notifyDataSetChanged();
         }else{
+            Log.i("Proxy_test34", "updata()__noData");
             this.datas = noData;
             this.notifyDataSetChanged();
         }
@@ -157,9 +165,10 @@ public class HandleProxyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemViewType(int position) {
+        Log.i("Proxy_test34", "getItemViewType()__into");
         //Enum类提供了一个ordinal()方法，返回枚举类型的序数，这里ITEM_TYPE.ITEM.ordinal()代表0， ITEM_TYPE.NODATA.ordinal()代表1
 
-        if(datas==noData) {
+        if(datas == noData) {
             return ITEM_TYPE.NODATA.ordinal();
         }else{
             return ITEM_TYPE.ITEM.ordinal();

@@ -86,6 +86,7 @@ import static com.mpzn.mpzn.views.FilterView.entity.ModelUtil.getCategoryBuildin
  */
 public class HomeFragment extends BaseFragment {
     public static final int FV_HEIGHT = 92;
+    public static final int STATUSBAR_HEIGHT = 24;
     public static String TAG = "tag_home_fragment";
 
     @Bind(R.id.lv_building)
@@ -242,9 +243,10 @@ public class HomeFragment extends BaseFragment {
 
         if(MyApplication.isInfect){
             Log.i(TAG, "initLayoutParams()__isInfect");
-//            titleViewHeight=40+px2dip(ViewUtils.getStatusBarHeight());
-            titleViewHeight = 50+px2dip(ViewUtils.getStatusBarHeight());
+            titleViewHeight=40+px2dip(ViewUtils.getStatusBarHeight());
+//            titleViewHeight = 50+px2dip(ViewUtils.getStatusBarHeight());
         }else{
+
             Log.i(TAG, "initLayoutParams()__noInfect");
             titleViewHeight = titleViewHeight_v19;
         }
@@ -505,10 +507,7 @@ public class HomeFragment extends BaseFragment {
                     filterData.getCategory().get(1).setSelected(true);
                     filterData.getCategory().get(1).setSelectedFilterEntity(new FilterEntity("不限","1"));
                     fillAdapter(getCategoryBuildingData(filterData.getCategory().get(1)));
-                    Log.i(TAG+"1", "onItemClick()__filterViewPosition = " +filterViewPosition + "   titleViewHeight = "+titleViewHeight);
-//                    int viewHeight = getViewHeight(headerFilterViewView, true);
-//                    Log.i(TAG, "onItemClick()__height = " + viewHeight);
-                    smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1, dip2px(titleViewHeight) + FV_HEIGHT);
+                    smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1, 0);
 
                 }else if("商铺".equals(item)){
                     isClick = true;
@@ -516,8 +515,7 @@ public class HomeFragment extends BaseFragment {
                     filterData.getCategory().get(4).setSelected(true);
                     filterData.getCategory().get(4).setSelectedFilterEntity(new FilterEntity("不限","1"));
                     fillAdapter(getCategoryBuildingData(filterData.getCategory().get(4)));
-                    Log.i(TAG+"1", "onItemClick()__filterViewPosition = " +filterViewPosition + "   titleViewHeight = "+titleViewHeight);
-                    smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1, dip2px(titleViewHeight) + FV_HEIGHT);
+                    smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1, 0);
 //                    lvBuilding.smoothScrollToPositionFromTop(filterViewPosition, dip2px(titleViewHeight));
 
                 }else if("写字楼".equals(item)){
@@ -526,8 +524,7 @@ public class HomeFragment extends BaseFragment {
                     filterData.getCategory().get(5).setSelected(true);
                     filterData.getCategory().get(5).setSelectedFilterEntity(new FilterEntity("不限","1"));
                     fillAdapter(getCategoryBuildingData(filterData.getCategory().get(5)));
-                    Log.i(TAG+"1", "onItemClick()__filterViewPosition = " +filterViewPosition + "   titleViewHeight = "+titleViewHeight);
-                    smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1, dip2px(titleViewHeight) + FV_HEIGHT);
+                    smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1, 0);
 //                    lvBuilding.smoothScrollToPositionFromTop(filterViewPosition + 1, dip2px(titleViewHeight) + FV_HEIGHT);
 
                 }else if("地图找房".equals(item)){
@@ -565,13 +562,13 @@ public class HomeFragment extends BaseFragment {
                     getActivity().startActivity(intent);
 
                 }else if("购房工具".equals(item)){
-                    Toast.makeText(mContext, "暂未开放，敬请期待", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, "暂未开放，敬请期待", Toast.LENGTH_SHORT).show();
 
-//                    Intent intent = new Intent();
-//                    intent.setClass(mContext, WebViewActivity.class);
-//                    intent.putExtra("title",item);
-//                    intent.putExtra("url",API.GFTOOL);
-//                    getActivity().startActivity(intent);
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, WebViewActivity.class);
+                    intent.putExtra("title",item);
+                    intent.putExtra("url",API.GFTOOL);
+                    getActivity().startActivity(intent);
 
                 }
             }
@@ -747,8 +744,8 @@ public class HomeFragment extends BaseFragment {
             public void onFilterClick(int position) {
                 filterPosition = position;
                 isSmooth = true;
-                lvBuilding.smoothScrollToPositionFromTop(filterViewPosition, dip2px(titleViewHeight));
-
+//                lvBuilding.smoothScrollToPositionFromTop(filterViewPosition, dip2px(titleViewHeight));
+                smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1 , 0);
 
             }
         });
@@ -766,6 +763,8 @@ public class HomeFragment extends BaseFragment {
             isScrollIdle = (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE);
 
             if (isScrollIdle && isClick) {
+            Log.i("Proxy_test34", "onScrollStateChanged()__titleViewHeight = "+titleViewHeight + "   filterViewTopSpace = "+filterViewTopSpace);
+
                 Log.i(TAG+"test", "onScrollStateChanged()__scrollState == SCROLL_STATE_IDLE && isClick");
 //                view.setOnScrollListener(null);
 
@@ -773,14 +772,16 @@ public class HomeFragment extends BaseFragment {
                 new Handler().post(new Runnable() {
                     @Override
                     public void run() {
-//                        view.setSelection(filterViewPosition);
-                          view.smoothScrollToPositionFromTop(filterViewPosition+1, dip2px(titleViewHeight) + FV_HEIGHT);
+                        //不要问我为什么偏移量是这个值，我也不知道，反正这个值就对了
+                          view.smoothScrollToPositionFromTop(filterViewPosition + 1, dip2px(titleViewHeight) + FV_HEIGHT + 40);
                         isClick = false;
                     }
                 });
             }
 
         }
+
+
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
@@ -808,7 +809,7 @@ public class HomeFragment extends BaseFragment {
             }
 
             // 处理筛选是否吸附在顶部
-            Log.i(TAG+"test", "onScroll()__filterViewTopSpace = " + filterViewTopSpace);
+            Log.i(TAG+"test", "onScroll()__titleViewHeight = " + titleViewHeight + "     filterViewTopSpace = " + filterViewTopSpace);
             if (filterViewTopSpace > titleViewHeight) {
                 isStickyTop = false; // 没有吸附在顶部
                 filterViewHome.setVisibility(View.GONE);
@@ -831,12 +832,13 @@ public class HomeFragment extends BaseFragment {
             filterViewHome.setStickyTop(isStickyTop);
 
             // 处理标题栏颜色渐变
-            Log.i(TAG + "test", "onScroll()__adViewTopSpace = "+adViewTopSpace);
             //adViewTopSpace实际上是轮拨图底部的距离
             actionBarHome.setChangeWithScroll(200 - adViewTopSpace, topShadow);
 
 
         }
+
+
     };
 
 
@@ -851,10 +853,11 @@ public class HomeFragment extends BaseFragment {
 
 
         // Perform scrolling to position
+        //dip2px(titleViewHeight) + FV_HEIGHT
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                view.smoothScrollToPositionFromTop(position, offset);
+                view.smoothScrollToPositionFromTop(filterViewPosition + 1, dip2px(titleViewHeight) + FV_HEIGHT + 40);
             }
         });
     }
@@ -873,9 +876,11 @@ public class HomeFragment extends BaseFragment {
     private void fillAdapter(List<BuildingEntity> list) {
 
         if (list == null || list.size() == 0) {
+            Log.i("Proxy_test344", "fillAdapter()__list为null");
             int height = MyApplication.mScreenHeight-dip2px(titleViewHeight + 50 + 45); // 95 = 标题栏高度 ＋ FilterView+底部bar的高度
             mainHomeBuildingLvAdapter.setData(ModelUtil.getNoDataEntity(height));
         } else {
+            Log.i("Proxy_test344", "fillAdapter()__list.size = "+list.size());
             mainHomeBuildingLvAdapter.setData(list);
         }
     }

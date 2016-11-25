@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -83,6 +86,8 @@ public class ProxySellManageActivity extends BaseActivity {
     private ArrayList<ProxySellListEntity.DataBean> uncheckList = new ArrayList<>();
     private ArrayList<ProxySellListEntity.DataBean> failList = new ArrayList<>();
     List<ProxySellListEntity.DataBean> currentlist;
+    List<ProxySellListEntity.DataBean> tmplist = new ArrayList<>();
+
 
     //    private ProxySellManageAdapter lv_allSellAdapter;
     private ProxySellManageAdapter lv_check_sucAdapter;
@@ -227,6 +232,33 @@ public class ProxySellManageActivity extends BaseActivity {
     @Override
     public void
     bindListener() {
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                tmplist.clear();
+                if (charSequence.length() == 0) {
+                    tmplist.addAll(currentlist);
+                } else  {
+                    for (ProxySellListEntity.DataBean data : currentlist) {
+                        if (data.getCompany().contains(charSequence.toString()) || data.getSubject().contains(charSequence.toString())) {
+                            tmplist.add(data);
+                        }
+                    }
+                }
+                Log.e("TAG", "tmplist"+tmplist.size());
+                currentAdapter.updata(tmplist);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         acitonBar.setLROnClickListener(null, new View.OnClickListener() {
             @Override
@@ -311,103 +343,56 @@ public class ProxySellManageActivity extends BaseActivity {
             }
         });
 
-//        btnRefuse.setOnClickListener(new SellOnclickListener());
-//        btnAccess.setOnClickListener(new SellOnclickListener());
-//        btnDelete.setOnClickListener(new SellOnclickListener());
+
+        lv_check_ing.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                ProxySellListEntity.DataBean data = uncheckList.get(position);
+                if(data.isNoData()){
+                    return;
+                }
+                Intent intent = new Intent();
+                intent.setClass(mContext,DetailNewhouseActivity.class);
+                intent.putExtra("Aid",data.getAid());
+                intent.putExtra("Name",data.getSubject());
+                startActivity(intent);
+            }
+        });
+
+        lv_check_suc.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                ProxySellListEntity.DataBean data = successList.get(position);
+                if(data.isNoData()){
+                    return;
+                }
+                Intent intent = new Intent();
+                intent.setClass(mContext,DetailNewhouseActivity.class);
+                intent.putExtra("Aid",data.getAid());
+                intent.putExtra("Name",data.getSubject());
+                startActivity(intent);
+            }
+        });
+
+        lv_check_err.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                ProxySellListEntity.DataBean data = failList.get(position);
+                if(data.isNoData()){
+                    return;
+                }
+                Intent intent = new Intent();
+                intent.setClass(mContext,DetailNewhouseActivity.class);
+                intent.putExtra("Aid",data.getAid());
+                intent.putExtra("Name",data.getSubject());
+                startActivity(intent);
+            }
+        });
+
 
     }
 
-//    class SellOnclickListener implements View.OnClickListener {
-//
-//        @Override
-//        public void onClick(View view) {
-//            switch (view.getId()) {
-//                case R.id.btn_access:
-//                    handleProxySell("checked");
-//                    break;
-//                case R.id.btn_refuse:
-//                    handleProxySell("unchecked");
-//                    break;
-//                case R.id.btn_delete:
-//                    handleProxySell("delete");
-//                    break;
-//            }
-//        }
-//    }
 
-//    private void handleProxySell(String action) {
-//        String LoadingMsg = null;
-//        String SuccussMsg = null;
-//        List<ProxySellListEntity.DataBean> proxysellList = null;
-//        if ("checked".equals(action)) {
-//            LoadingMsg = "正在提交审核...";
-//            SuccussMsg = "代销成功";
-////            proxysellList = addJingjirenList;
-//
-//        } else if ("unchecked".equals(action)) {
-//            LoadingMsg = "正在驳回申请...";
-//            SuccussMsg = "驳回申请成功";
-//
-//        } else if ("delete".equals(action)) {
-//
-//            LoadingMsg = "正在删除经纪人...";
-//            SuccussMsg = "删除经纪人成功";
-////            jingjirenlist = ownJingjirenList;
-//
-//        }
-//
-//        loadProgressHUD = KProgressHUD.create(ProxySellManageActivity.this).
-//                setSize(MyApplication.mScreenWidth / 4, MyApplication.mScreenWidth / 6).
-//                setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).
-//                setLabel(LoadingMsg).setCancellable(false).show();
-//
-//        String str = "";
-//        final List<ProxySellListEntity.DataBean> selectList = new ArrayList<>();
-//        for (ProxySellListEntity.DataBean data : uncheckList) {
-//            if (data.getChecked() == 1) {
-//                selectList.add(data);
-//                if (str == "") {
-//                    str = str + data.getCid();
-//                } else {
-//                    str = str + "," + data.getCid();
-//                }
-//            }
-//        }
-//        if (str == "") {
-//            loadedDismissProgressDialog(ProxySellManageActivity.this, false, loadProgressHUD, "请选择", false);
-//        } else {
-//            final String finalSuccussMsg = SuccussMsg;
-//            OkHttpUtils.post()
-//                    .url(API.MANAGEBROKERSLIST_POST)
-//                    .addParams("token", MyApplication.getInstance().token)
-//                    .addParams("cids", str)
-//                    .addParams("action", action)
-//                    .build()
-//                    .execute(new StringCallback() {
-//                        @Override
-//                        public void onError(Call call, Exception e, int id) {
-//                            loadedDismissProgressDialog(ProxySellManageActivity.this, false, loadProgressHUD, "加载失败，请检查网络", false);
-//
-//                        }
-//
-//                        @Override
-//                        public void onResponse(String response, int id) {
-//                            Log.e("TAG", "response" + response);
-//                            CheckStarEntity checkStarEntity = new Gson().fromJson(response, CheckStarEntity.class);
-//                            if (checkStarEntity.getCode() == 200) {
-//                                loadedDismissProgressDialog(ProxySellManageActivity.this, true, loadProgressHUD, finalSuccussMsg, false);
-//
-//                                uncheckList.removeAll(selectList);
-//
-//                                currentAdapter.notifyDataSetChanged();
-//
-//                            } else {
-//                                loadedDismissProgressDialog(ProxySellManageActivity.this, false, loadProgressHUD, checkStarEntity.getMessage(), false);
-//                            }
-//                        }
-//                    });
-//        }
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -41,7 +42,7 @@ import okhttp3.Call;
 import static com.mpzn.mpzn.utils.ViewUtils.dip2px;
 import static com.mpzn.mpzn.utils.ViewUtils.loadedDismissProgressDialog;
 
-public class ReviewListActivity extends BaseActivity {
+public class ReviewListActivity extends BaseActivity  {
 
 
     @Bind(R.id.tv_review_bar)
@@ -118,6 +119,12 @@ public class ReviewListActivity extends BaseActivity {
                             if (reviewListEntity.getCode() == 200) {
                                 reviewdatalist = reviewListEntity.getData();
 
+                                    Log.i("Proxy_test44", "dataBean == "+reviewdatalist.get(0).getContent());
+
+                                    for (ReviewListEntity.DataBean dataBean: reviewdatalist) {
+                                        Log.i("Proxy_test445", "接收 ： " + dataBean.getContent().toString() + "    cid = "+dataBean.getCid()
+                                                + "    aid = "+aid);
+                                    }
                                 rvReviewAdapter.updataView(reviewdatalist);
                             } else {
                                 Toast.makeText(ReviewListActivity.this, "获取评论列表失败", Toast.LENGTH_SHORT).show();
@@ -173,6 +180,30 @@ public class ReviewListActivity extends BaseActivity {
                     tvReviewSend.setEnabled(false);
                 }
 
+                // e("s:" + s + "  start:" + start + " before:" + before + " count:" + count);
+                //输入的类容
+                CharSequence input = s.subSequence(start, start + count);
+                //e("输入信息:" + input);
+                // 退格
+                if (count == 0) return;
+
+                //如果 输入的类容包含有Emoji
+                if (isEmojiCharacter(input))
+                {
+//                    show("not input emoji");
+//                    //那么就去掉
+//                    et.setText(removeEmoji(s));
+                }
+
+//                //如果输入的字符超过最大限制,超出的部分 砍掉~
+//                if (s.length() > 3)
+//                {
+//                    show("超过输入的最大限制");
+//                    et.setText(s.subSequence(0, start));
+//                }
+//                //最后光标移动到最后 TODO 这里可能会有更好的解决方案
+//                et.setSelection(et.getText().toString().length());
+
             }
 
             @Override
@@ -196,8 +227,6 @@ public class ReviewListActivity extends BaseActivity {
                 return false;
             }
         });
-
-
     }
 
     private void sendReview() {
@@ -205,6 +234,8 @@ public class ReviewListActivity extends BaseActivity {
             ViewUtils.showCustomProgressDialog(ReviewListActivity.this, "请先登录", R.drawable.toast_error);
             return;
         }
+
+        Log.i("Proxy_test445", "发送 ： "+etReview.getText() + "  aid = "+ aid);
         loadProgressHUD = KProgressHUD.create(ReviewListActivity.this).
                 setSize(MyApplication.mScreenWidth/4, MyApplication.mScreenWidth/6).
                 setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).
@@ -249,5 +280,40 @@ public class ReviewListActivity extends BaseActivity {
         }
 
     }
+
+    /**
+     * 判断一个字符串中是否包含有Emoji表情
+     * @param input
+     * @return true 有Emoji
+     */
+    private boolean isEmojiCharacter(CharSequence input)
+    {
+        for (int i = 0; i < input.length(); i++)
+        {
+            if (isEmojiCharacter(input.charAt(i)))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否是Emoji 表情,抄的那哥们的代码
+     *
+     * @param codePoint
+     * @return true 是Emoji表情
+     */
+    public static boolean isEmojiCharacter(char codePoint)
+    {
+        // Emoji 范围
+        boolean isScopeOf = (codePoint == 0x0) || (codePoint == 0x9) || (codePoint == 0xA) || (codePoint == 0xD)
+                || ((codePoint >= 0x20) && (codePoint <= 0xD7FF) && (codePoint != 0x263a))
+                || ((codePoint >= 0xE000) && (codePoint <= 0xFFFD))
+                || ((codePoint >= 0x10000) && (codePoint <= 0x10FFFF));
+
+        return !isScopeOf;
+    }
+
 
 }

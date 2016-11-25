@@ -44,8 +44,6 @@ public class ProxySellListEntity {
 
     public static class DataBean {
 
-
-
         @Override
         public String toString() {
             return "DataBean{" +
@@ -65,6 +63,15 @@ public class ProxySellListEntity {
         }
 
         private final boolean isNoData;
+
+        public int getAid() {
+            return aid;
+        }
+
+        public void setAid(int aid) {
+            this.aid = aid;
+        }
+
         /**
          * cid : 16
          * subject : 天和湖滨别墅
@@ -79,6 +86,7 @@ public class ProxySellListEntity {
          * salestatus : 待售
          */
 
+        private int aid;
         private int cid;
         private String subject;
         private String thumb;
@@ -184,5 +192,8 @@ public class ProxySellListEntity {
         }
 
 
+        public boolean isNoData() {
+            return isNoData;
+        }
     }
 }

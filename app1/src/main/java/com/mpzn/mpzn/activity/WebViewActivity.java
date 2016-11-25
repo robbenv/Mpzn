@@ -11,8 +11,10 @@ import android.webkit.WebViewClient;
 import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.base.BaseActivity;
 import com.mpzn.mpzn.views.MyActionBar;
+import com.tb.emoji.Emoji;
+import com.tb.emoji.FaceFragment;
 
-public class WebViewActivity extends BaseActivity {
+public class WebViewActivity extends BaseActivity implements FaceFragment.OnEmojiClickListener{
 
     private WebView webView;
     private MyActionBar action_bar;
@@ -81,13 +83,13 @@ public class WebViewActivity extends BaseActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
-                return true;
+                return true;//返回true应该不会执行网页上的链接？
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-//                webView.loadUrl("javascript:hideHead()");
+                view.loadUrl("javascript:hideHead()");
 
             }
         });
@@ -116,6 +118,16 @@ public class WebViewActivity extends BaseActivity {
             }
         }
                 , null);
+
+    }
+
+    @Override
+    public void onEmojiDelete() {
+
+    }
+
+    @Override
+    public void onEmojiClick(Emoji emoji) {
 
     }
 }

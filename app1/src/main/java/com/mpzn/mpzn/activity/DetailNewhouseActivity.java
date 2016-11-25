@@ -300,6 +300,7 @@ public class DetailNewhouseActivity extends BaseActivity {
     public void initData() {
         Intent intent = getIntent();
         aid = intent.getIntExtra("Aid", -1);
+        Log.i("Proxy_test34", "initData()__aid = "+aid);
         Log.i(TAG, "initData()__aid = "+aid);
         initAbtract();
         updataView();
@@ -316,14 +317,16 @@ public class DetailNewhouseActivity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-
+                        Log.i("Proxy_test34", "onError()__");
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
                         AbstractEntity abstractEntity = new Gson().fromJson(response, AbstractEntity.class);
                         if (abstractEntity.getCode() == 200) {
+                            Log.i("Proxy_test34", "onResponse()__200");
                             messageEntity = abstractEntity.getData();
+                            Log.i("Proxy_test34", "onResponse()__messageEntity = "+messageEntity.toString());
                             Log.i(TAG, "onResponse()__messageEntity = "+messageEntity);
                             myActionBar.init(messageEntity.getSubject(), R.drawable.return_red, R.drawable.share);
 

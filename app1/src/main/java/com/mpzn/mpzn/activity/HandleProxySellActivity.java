@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -71,10 +73,13 @@ public class HandleProxySellActivity extends BaseActivity{
 
     private HandleProxyAdapter rvAdapter;
     private ArrayList<ProxySellListEntity.DataBean> uncheckList = new ArrayList<>();
+    List<ProxySellListEntity.DataBean> tmplist = new ArrayList<>();
     private KProgressHUD loadProgressHUD;
     private int currentBtn;
     private LinearLayoutManager linearLayoutManager;
     private int currentMaxOffset = 0;
+    private int count = 0;
+    private boolean isclickCbAll = false;
 
     @Override
     public int getLayoutId() {
@@ -105,6 +110,7 @@ public class HandleProxySellActivity extends BaseActivity{
 
     @Override
     public void initData() {
+        Log.i("Proxy_test34", "initData()__");
 //        Intent intent = getIntent();
 //        String subject = intent.getStringArrayListExtra()
 //        etSearch.setText(subject);
@@ -112,7 +118,7 @@ public class HandleProxySellActivity extends BaseActivity{
         getData(currentMaxOffset);
     }
 
-    private void getData(int offset) {
+    private void getData(final int offset) {
         OkHttpUtils.get()
                 .url(API.PROXY_SELL_GET)
                 .addParams("token", MyApplication.getInstance().token)
@@ -127,11 +133,17 @@ public class HandleProxySellActivity extends BaseActivity{
 
                     @Override
                     public void onResponse(String response, int id) {
+                        Log.i("Proxy_test34", "onResponse()__");
                         ProxySellListEntity proxySellListEntity = new Gson().fromJson(response, ProxySellListEntity.class);
                         Log.e("TAG", proxySellListEntity.getData().toString() + "");
                         if (proxySellListEntity.getCode() == 200) {
                             uncheckList.addAll(proxySellListEntity.getData());
                             Log.i("Proxy_test1", "onResponse()__uncheckList.size ="+uncheckList.size() );
+                            if (offset == 0 && uncheckList.size() == 0) {
+                                rlBottom.setVisibility(View.GONE);
+                            } else {
+                                rlBottom.setVisibility(View.VISIBLE);
+                            }
                             rvAdapter.updata(uncheckList);
 //                            rvAdapter.changeEditable(true, false);
                             rvAdapter.notifyDataSetChanged();
@@ -150,10 +162,18 @@ public class HandleProxySellActivity extends BaseActivity{
                 if (isChecked) {
                     rvAdapter.selectAll(true);
                     tvCheckAll.setText("全选");
-                } else {
+                } else if (isclickCbAll) {
+                    Log.i("Proxy_test34", "onCheckedChanged()__false");
                     rvAdapter.selectAll(false);
                     tvCheckAll.setText("全选");
                 }
+            }
+        });
+
+        cbAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isclickCbAll = true;
             }
         });
 
@@ -178,19 +198,26 @@ public class HandleProxySellActivity extends BaseActivity{
         btnRefuse.setOnClickListener(new HandleProxySellActivity.SellOnclickListener());
         btnAccess.setOnClickListener(new HandleProxySellActivity.SellOnclickListener());
 
-//        rvAdapter.setChangCheckListener(new HandleProxyAdapter.ChangCheckListener() {
-//            @Override
-//            public void ChangCheck(boolean isCheck) {
-//                int count = 0;
-//                for (ProxySellListEntity.DataBean data : uncheckList) {
-//                    if (data.getChecked() == 1) {
-//                        count += 1;
-//                    }
-//                }
-//                btnAccess.setText("通过(" + count + ")");
-//                btnRefuse.setText("拒绝(" + count + ")");
-//            }
-//        });
+        rvAdapter.setChangCheckListener(new HandleProxyAdapter.ChangCheckListener() {
+            @Override
+            public void ChangCheck(boolean isCheck) {
+                Log.i("Proxy_test34", "ChangCheck()__");
+                count = 0;
+                for (ProxySellListEntity.DataBean data : uncheckList) {
+                    if (data.getChecked() == 1) {
+                        count += 1;
+                    }
+                }
+                if (count == uncheckList.size()) {
+                    cbAll.setChecked(true);
+                } else {
+                    isclickCbAll = false;
+                    cbAll.setChecked(false);
+                }
+                btnAccess.setText("通过(" + count + ")");
+                btnRefuse.setText("拒绝(" + count + ")");
+            }
+        });
 
         rvApply.addOnScrollListener(new EndLessOnScrollListener(linearLayoutManager) {
             @Override
@@ -199,6 +226,35 @@ public class HandleProxySellActivity extends BaseActivity{
                 getData(++currentMaxOffset);
             }
         });
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                tmplist.clear();
+                if (charSequence.length() == 0) {
+                    tmplist.addAll(uncheckList);
+                } else  {
+                    for (ProxySellListEntity.DataBean data : uncheckList) {
+                        if (data.getCompany().contains(charSequence.toString()) || data.getSubject().contains(charSequence.toString())) {
+                            tmplist.add(data);
+                        }
+                    }
+                }
+                Log.e("TAG", "tmplist"+tmplist.size());
+                rvAdapter.updata(tmplist);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
 
     }
 
@@ -234,7 +290,6 @@ public class HandleProxySellActivity extends BaseActivity{
     private void handleProxySell(int action) {
         String LoadingMsg = null;
         String SuccussMsg = null;
-        List<ProxySellListEntity.DataBean> proxysellList = null;
         if (action == ACTION_ACCESS) {
             LoadingMsg = "正在提交审核...";
             SuccussMsg = "代销成功";
@@ -295,9 +350,10 @@ public class HandleProxySellActivity extends BaseActivity{
                                 loadedDismissProgressDialog(HandleProxySellActivity.this, true, loadProgressHUD, finalSuccussMsg, false);
                                 Log.i("Proxy_test1", "onResponse()__uncheckList.size ="+uncheckList.size() );
                                 uncheckList.removeAll(selectList);
+                                cbAll.setChecked(false);
                                 rvAdapter.updata(uncheckList);
                                 Log.i("Proxy_test1", "onResponse()__uncheckList.size ="+uncheckList.size() );
-                                rvAdapter.notifyDataSetChanged();
+//                                rvAdapter.notifyDataSetChanged();
 
                             } else {
                                 loadedDismissProgressDialog(HandleProxySellActivity.this, false, loadProgressHUD, checkStarEntity.getMessage(), false);

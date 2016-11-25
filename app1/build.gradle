@@ -68,5 +68,6 @@ dependencies {
 
     compile 'cn.jiguang:jpush:2.1.8'
     compile('org.kymjs.kjframe:kjframe:2.6')
+    compile project(':emoji')
 
 }

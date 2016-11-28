@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -16,9 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dss886.emotioninputdetector.library.EmotionInputDetector;
 import com.google.gson.Gson;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.mpzn.mpzn.R;
@@ -74,6 +75,8 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
     FrameLayout container;
     @Bind(R.id.rl_root_view)
     LinearLayout rlRootView;
+    @Bind(R.id.rl_content)
+    RelativeLayout rlContent;
     private KProgressHUD loadProgressHUD;
     private int aid;
     private int offset = 0;
@@ -81,6 +84,7 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
     private RvReviewAdapter rvReviewAdapter;
     private boolean isShowEmojiPanel;
     private boolean isFoucse;
+    private EmotionInputDetector mDetector;
 
     @Override
     public int getLayoutId() {
@@ -101,8 +105,18 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
 
         rvReviewList.setAdapter(rvReviewAdapter);
 
+        mDetector = EmotionInputDetector.with(this)
+                .setEmotionView(container)
+                .bindToContent(rlContent)
+                .bindToEditText(etReview)
+                .bindToEmotionButton(btEmoji)
+                .build();
+
 
     }
+
+
+
 
     @Override
     public void initLayoutParams() {
@@ -178,8 +192,8 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
                     Log.i("Emoji_test", "onFocusChange()__隐藏");
                     //隐藏编辑框
 
-                        reviewEtBar.setVisibility(View.GONE);
-                        etReview.setText(null);
+                    reviewEtBar.setVisibility(View.GONE);
+                    etReview.setText(null);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
 
                 } else {
@@ -274,27 +288,27 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
             }
         });
 
-        btEmoji.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                InputMethodManager imm = (InputMethodManager) etReview.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                FaceFragment faceFragment = FaceFragment.Instance();
-                if (isShowEmojiPanel) {
-                    Log.i("Emoji_test", "onClick()__remove2");
-                    imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);//显示键盘(没效果)
-//                    imm.showSoftInput(container,InputMethodManager.SHOW_FORCED);
-                    container.setVisibility(View.GONE);
-//                    etReview.requestFocus();
-                    isShowEmojiPanel = false;
-                } else {
-                    Log.i("Emoji_test", "onClick()__show");
-                    container.setVisibility(View.VISIBLE);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container, faceFragment).commit();
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
-                    isShowEmojiPanel = true;
-                }
-            }
-        });
+//        btEmoji.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                InputMethodManager imm = (InputMethodManager) etReview.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                FaceFragment faceFragment = FaceFragment.Instance();
+//                if (isShowEmojiPanel) {
+//                    Log.i("Emoji_test", "onClick()__remove2");
+//                    imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);//显示键盘(没效果)
+////                    imm.showSoftInput(container,InputMethodManager.SHOW_FORCED);
+//                    container.setVisibility(View.GONE);
+////                    etReview.requestFocus();
+//                    isShowEmojiPanel = false;
+//                } else {
+//                    Log.i("Emoji_test", "onClick()__show");
+//                    container.setVisibility(View.VISIBLE);
+//                    getSupportFragmentManager().beginTransaction().replace(R.id.container, faceFragment).commit();
+//                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
+//                    isShowEmojiPanel = true;
+//                }
+//            }
+//        });
 
     }
 
@@ -342,6 +356,10 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
 
     @Override
     public void onBackPressed() {
+        if (!mDetector.interceptBackPress()) {
+            super.onBackPressed();
+        }
+
         if (etReview.hasFocus()) {
             reviewEtBar.setVisibility(View.GONE);
             etReview.setText(null);

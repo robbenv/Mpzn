@@ -67,7 +67,7 @@ public class ChangIconActivity extends BaseActivity {
     Button btnAddImage;
 
     private Bitmap mBitmap;
-    protected static final int CHOOSE_PICTURE = 3;
+    protected static final int CHOOSE_PICTURE = 0;
     protected static final int TAKE_PICTURE = 1;
     protected static Uri tempUri;
     private static final int CROP_SMALL_PICTURE = 2;
@@ -154,10 +154,12 @@ public class ChangIconActivity extends BaseActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Log.i("Photo_test1", "onClick()__");
                 switch (which) {
                     case CHOOSE_PICTURE: // 选择本地照片
                         Intent openAlbumIntent = new Intent(
                                 Intent.ACTION_GET_CONTENT);
+                        Log.i("Photo_test1", "onClick()__选择本地图片");
                         openAlbumIntent.setType("image/*");
                         //用startActivityForResult方法，待会儿重写onActivityResult()方法，拿到图片做裁剪操作
                         startActivityForResult(openAlbumIntent, CHOOSE_PICTURE);

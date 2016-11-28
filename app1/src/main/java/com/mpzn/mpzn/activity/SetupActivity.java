@@ -167,9 +167,9 @@ public class SetupActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         myDialog.dismiss();
-//                        DataCleanManager.cleanCustomCache(getCacheDir().getPath());
-//                        DataCleanManager.cleanApplicationData(SetupActivity.this, getCacheDir().getPath());
-//                        DataCleanManager.cleanApplicationData(SetupActivity.this, getCacheDir().getPath());
+                        DataCleanManager.cleanCustomCache(getCacheDir().getPath());
+                        DataCleanManager.cleanApplicationData(SetupActivity.this, getCacheDir().getPath());
+                        DataCleanManager.cleanApplicationData(SetupActivity.this, getCacheDir().getPath());
 //                        pointCachesize.setText("0MB");
                         clearAppCache();
 

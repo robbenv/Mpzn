@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="210dp">
+    android:layout_height="match_parent">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/face_viewPager"
@@ -12,16 +12,11 @@
         android:paddingRight="16dp"
         android:paddingTop="16dp"></android.support.v4.view.ViewPager>
 
-    <com.tb.emoji.EmojiIndicatorView
-        android:id="@+id/face_indicator"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginTop="150dp"
-        android:gravity="center_horizontal"></com.tb.emoji.EmojiIndicatorView>
-
     <LinearLayout
+        android:id="@+id/ll_bottome"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="0dp"
         android:layout_height="40dp"
         android:orientation="horizontal">
         <TextView
@@ -47,4 +42,14 @@
             android:background="@drawable/selector_face_text"/>
     </LinearLayout>
 
-</FrameLayout>
+    <com.tb.emoji.EmojiIndicatorView
+        android:layout_above="@id/ll_bottome"
+        android:id="@+id/face_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"></com.tb.emoji.EmojiIndicatorView>
+
+
+
+</RelativeLayout>

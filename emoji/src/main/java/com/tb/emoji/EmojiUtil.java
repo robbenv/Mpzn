@@ -26,7 +26,7 @@ public class EmojiUtil {
         return emojiList;
     }
 
-    private static ArrayList<Emoji> generateEmojis() {
+    public static ArrayList<Emoji> generateEmojis() {
         ArrayList<Emoji> list = new ArrayList<>();
         for (int i = 0; i < EmojiResArray.length; i++) {
             Emoji emoji = new Emoji();
@@ -290,7 +290,10 @@ public class EmojiUtil {
         return (int) (dipValue * scale + 0.5f);
     }
 
-    public static void handlerEmojiText(TextView comment, String content, Context context) throws IOException {
+    public static void handlerEmojiText(TextView comment, String content, Context context, boolean isList) throws IOException {
+        if (isList) {
+            comment.setText("");
+        }
         SpannableStringBuilder sb = new SpannableStringBuilder(content);
         String regex = "\\[(\\S+?)\\]";
         Pattern p = Pattern.compile(regex);

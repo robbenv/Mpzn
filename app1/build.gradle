@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 
 android {
-    signingConfigs {
+//    signingConfigs {
 //        mpzn {
 //            keyAlias 'psz'
 //            keyPassword '123123qaz'
-//            storeFile file('C:/Users/shenb/Desktop/Mpzn/mpzn.jks')
+//            storeFile file('/home/larry/code/Mpzn/mpzn.jks')
 //            storePassword 'Icy0510'
 //        }
-    }
+//    }
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
     defaultConfig {

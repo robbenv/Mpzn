@@ -85,6 +85,7 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
     private boolean isShowEmojiPanel;
     private boolean isFoucse;
     private EmotionInputDetector mDetector;
+    private FaceFragment faceFragment;
 
     @Override
     public int getLayoutId() {
@@ -105,13 +106,15 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
 
         rvReviewList.setAdapter(rvReviewAdapter);
 
-        mDetector = EmotionInputDetector.with(this)
+        faceFragment = FaceFragment.Instance();
+
+        mDetector = EmotionInputDetector.with(ReviewListActivity.this)
                 .setEmotionView(container)
                 .bindToContent(rlContent)
                 .bindToEditText(etReview)
                 .bindToEmotionButton(btEmoji)
+                .bindtoFragment(faceFragment)
                 .build();
-
 
     }
 
@@ -177,17 +180,20 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
             public void onClick(View v) {
                 Log.i("Emoji_test", "onClick()__tvReviewBar");
                 //显示真正用来编辑的EditText
+                mDetector = EmotionInputDetector.with(ReviewListActivity.this)
+                        .setEmotionView(container)
+                        .bindToContent(rlContent)
+                        .bindToEditText(etReview)
+                        .bindToEmotionButton(btEmoji)
+                        .bindtoFragment(faceFragment)
+                        .build();
                 reviewEtBar.setVisibility(View.VISIBLE);
-                if (!isFoucse) {
-                    etReview.requestFocus();
-                }
             }
         });
         etReview.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 InputMethodManager imm = (InputMethodManager) etReview.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                isFoucse = hasFocus;
                 if (!hasFocus) {
                     Log.i("Emoji_test", "onFocusChange()__隐藏");
                     //隐藏编辑框
@@ -198,9 +204,6 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
 
                 } else {
                     Log.i("Emoji_test", "onFocusChange()__显示1");
-                    if (isShowEmojiPanel) {
-                        return;
-                    }
                     imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
 //                    imm.showSoftInput(container,InputMethodManager.SHOW_FORCED);
                 }
@@ -268,25 +271,22 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
             }
         });
 
-        etReview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("Emoji_test", "onClick()__etReview1");
-                reviewEtBar.setVisibility(View.VISIBLE);
-                if (!isFoucse) {
-                    Log.i("Emoji_test", "onClick()__!isFoucse");
-                    etReview.requestFocus();
-                } else if (isShowEmojiPanel) {
-                    Log.i("Emoji_test", "onClick()__isShowEmojiPanel");
-                    FaceFragment faceFragment = FaceFragment.Instance();
-                    container.setVisibility(View.GONE);
-                    getSupportFragmentManager().beginTransaction().remove(faceFragment).commit();
-                    isShowEmojiPanel = false;
-//                    etReview.clearFocus();
-//                    etReview.setInputType(InputType.TYPE_NULL);
-                }
-            }
-        });
+//        etReview.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.i("Emoji_test", "onClick()__etReview1");
+//                reviewEtBar.setVisibility(View.VISIBLE);
+//                if (!isFoucse) {
+//                    Log.i("Emoji_test", "onClick()__!isFoucse");
+//                    etReview.requestFocus();
+//                } else if (isShowEmojiPanel) {
+//                    Log.i("Emoji_test", "onClick()__isShowEmojiPanel");
+//
+////                    etReview.clearFocus();
+////                    etReview.setInputType(InputType.TYPE_NULL);
+//                }
+//            }
+//        });
 
 //        btEmoji.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -295,16 +295,16 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
 //                FaceFragment faceFragment = FaceFragment.Instance();
 //                if (isShowEmojiPanel) {
 //                    Log.i("Emoji_test", "onClick()__remove2");
-//                    imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);//显示键盘(没效果)
+////                    imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);//显示键盘(没效果)
 ////                    imm.showSoftInput(container,InputMethodManager.SHOW_FORCED);
-//                    container.setVisibility(View.GONE);
+////                    container.setVisibility(View.GONE);
 ////                    etReview.requestFocus();
 //                    isShowEmojiPanel = false;
 //                } else {
 //                    Log.i("Emoji_test", "onClick()__show");
-//                    container.setVisibility(View.VISIBLE);
+////                    container.setVisibility(View.VISIBLE);
 //                    getSupportFragmentManager().beginTransaction().replace(R.id.container, faceFragment).commit();
-//                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
+////                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
 //                    isShowEmojiPanel = true;
 //                }
 //            }
@@ -356,14 +356,15 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
 
     @Override
     public void onBackPressed() {
-        if (!mDetector.interceptBackPress()) {
-            super.onBackPressed();
-        }
-
-        if (etReview.hasFocus()) {
+        if (mDetector.interceptBackPress()) {
+            Log.i("Emoji_test1", "onBackPressed()__!mDetector.interceptBackPress()");
+            //do nothing
+        } else if (etReview.hasFocus()) {
+            Log.i("Emoji_test1", "onBackPressed()__etReview.hasFocus()");
             reviewEtBar.setVisibility(View.GONE);
             etReview.setText(null);
         } else {
+            Log.i("Emoji_test1", "onBackPressed()__noFous");
             super.onBackPressed();
         }
 
@@ -439,7 +440,7 @@ public class ReviewListActivity extends BaseActivity implements FaceFragment.OnE
                 editable.append(emoji.getContent());
             } else {
                 try {
-                    EmojiUtil.handlerEmojiText(etReview, emoji.getContent(), this);
+                    EmojiUtil.handlerEmojiText(etReview, emoji.getContent(), this, false);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

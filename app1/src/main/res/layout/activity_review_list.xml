@@ -24,7 +24,7 @@
         android:id="@+id/rl_content"
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -79,7 +79,6 @@
 
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/review_et_bar"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -106,7 +105,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:id="@+id/bt_emoji"
-                android:background="@drawable/ic_emoji_objects_light_activated"
+                android:background="@drawable/ic_emotion"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="5dp"
                 android:layout_gravity="center_vertical"
@@ -127,6 +126,7 @@
 
     <FrameLayout
         android:id="@+id/container"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

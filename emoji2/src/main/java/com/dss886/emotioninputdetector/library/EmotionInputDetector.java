@@ -2,10 +2,13 @@ package com.dss886.emotioninputdetector.library;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -15,6 +18,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.tb.emoji.FaceFragment;
+
 /**
  * Created by dss886 on 15/9/26.
  */
@@ -23,18 +28,19 @@ public class EmotionInputDetector {
     private static final String SHARE_PREFERENCE_NAME = "com.dss886.emotioninputdetector";
     private static final String SHARE_PREFERENCE_TAG = "soft_input_height";
 
-    private Activity mActivity;
+    private FragmentActivity mActivity;
     private InputMethodManager mInputManager;
     private SharedPreferences sp;
     private View mEmotionLayout;
     private EditText mEditText;
     private View mContentView;
+    private FaceFragment mFragment;
 
     private EmotionInputDetector() {}
 
     public static EmotionInputDetector with(Activity activity) {
         EmotionInputDetector emotionInputDetector = new EmotionInputDetector();
-        emotionInputDetector.mActivity = activity;
+        emotionInputDetector.mActivity = (FragmentActivity) activity;
         emotionInputDetector.mInputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         emotionInputDetector.sp = activity.getSharedPreferences(SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE);
         return emotionInputDetector;
@@ -65,6 +71,7 @@ public class EmotionInputDetector {
                 return false;
             }
         });
+
         return this;
     }
 
@@ -73,15 +80,19 @@ public class EmotionInputDetector {
             @Override
             public void onClick(View v) {
                 if (mEmotionLayout.isShown()) {
+                    Log.i("Emoji_test1", "onClick()__hide");
                     lockContentHeight();
                     hideEmotionLayout(true);
                     unlockContentHeightDelayed();
                 } else {
+                    Log.i("Emoji_test1", "onClick()__show");
                     if (isSoftInputShown()) {
+                        Log.i("Emoji_test1", "onClick()__isSoftInputShown");
                         lockContentHeight();
                         showEmotionLayout();
                         unlockContentHeightDelayed();
                     } else {
+                        Log.i("Emoji_test1", "onClick()__普通");
                         showEmotionLayout();
                     }
                 }
@@ -114,14 +125,17 @@ public class EmotionInputDetector {
     private void showEmotionLayout() {
         int softInputHeight = getSupportSoftInputHeight();
         if (softInputHeight == 0) {
-            softInputHeight = sp.getInt(SHARE_PREFERENCE_TAG, 400);
+            softInputHeight = sp.getInt(SHARE_PREFERENCE_TAG, 825);
+            Log.i("Emoji_test1", "showEmotionLayout()__取sp_softInputHeight = "+softInputHeight);
         }
         hideSoftInput();
         mEmotionLayout.getLayoutParams().height = softInputHeight;
         mEmotionLayout.setVisibility(View.VISIBLE);
+        Log.i("Emoji_test1", "showEmotionLayout()___最终height = "+softInputHeight);
+        mActivity.getSupportFragmentManager().beginTransaction().replace(mEmotionLayout.getId(), mFragment).commit();
     }
 
-    private void hideEmotionLayout(boolean showSoftInput) {
+    public void hideEmotionLayout(boolean showSoftInput) {
         if (mEmotionLayout.isShown()) {
             mEmotionLayout.setVisibility(View.GONE);
             if (showSoftInput) {
@@ -168,9 +182,12 @@ public class EmotionInputDetector {
         mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
         int screenHeight = mActivity.getWindow().getDecorView().getRootView().getHeight();
         int softInputHeight = screenHeight - r.bottom;
+        Log.i("Emoji_test1", "getSupportSoftInputHeight()__screenHeight = "+ screenHeight + "    r.bottom = "+r.bottom + "   getSoftButtonsBarHeight = "+getSoftButtonsBarHeight());
+        Log.i("Emoji_test1", "getSupportSoftInputHeight()__softInputHeight = " + softInputHeight);
         if (Build.VERSION.SDK_INT >= 20) {
             // When SDK Level >= 20 (Android L), the softInputHeight will contain the height of softButtonsBar (if has)
             softInputHeight = softInputHeight - getSoftButtonsBarHeight();
+
         }
         if (softInputHeight < 0) {
             Log.w("EmotionInputDetector", "Warning: value of softInputHeight is below zero!");
@@ -195,4 +212,8 @@ public class EmotionInputDetector {
         }
     }
 
+    public EmotionInputDetector bindtoFragment(FaceFragment fragment) {
+        mFragment = fragment;
+        return this;
+    }
 }

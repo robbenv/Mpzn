@@ -160,7 +160,9 @@
         <activity android:name=".activity.MyBBActivity" />
         <activity android:name=".activity.ChangIconActivity" />
         <activity android:name=".activity.BBStatisticsActivity" />
-        <activity android:name=".activity.ReviewListActivity" />
+        <activity android:name=".activity.ReviewListActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            />
         <activity android:name=".activity.ApplyForSellActivity" />
         <activity android:name=".activity.MySellActivity" />
         <activity android:name=".activity.FeedbackActivity" />

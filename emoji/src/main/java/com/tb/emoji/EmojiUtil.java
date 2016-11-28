@@ -4,8 +4,16 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
+import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class EmojiUtil {
@@ -303,6 +311,6 @@ public class EmojiUtil {
                 }
             }
         }
-        comment.setText(sb);
+        comment.append(sb);
     }
 }

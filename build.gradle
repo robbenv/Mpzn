@@ -23,3 +23,7 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+buildscript {
+    System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
+}

@@ -41,50 +41,13 @@
     </RelativeLayout>
 
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:id="@+id/review_bar"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/eb">
-            <TextView
-                android:id="@+id/tv_review_bar"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="说两句，转一下"
-                android:paddingLeft="5dp"
-                android:textColor="@color/hint"
-                android:layout_marginLeft="10dp"
-                android:gravity="center_vertical"
-                android:background="@drawable/coners_radius_5dp_white" />
-
-            <Button
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-
-                android:background="@drawable/pinglun"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_gravity="center_vertical"
-                />
-
-        </LinearLayout>
-
-
         <LinearLayout
             android:id="@+id/review_et_bar"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@color/eb"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <EditText
                 android:id="@+id/et_review"
                 android:layout_width="0dp"
@@ -118,11 +81,11 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_gravity="center"
-                android:textColor="@color/review_send"
-                android:enabled="false"
+                android:textColor="@color/cardview_dark_background"
+                android:enabled="true"
                 android:text="发送" />
         </LinearLayout>
-    </RelativeLayout>
+
 
     <FrameLayout
         android:id="@+id/container"

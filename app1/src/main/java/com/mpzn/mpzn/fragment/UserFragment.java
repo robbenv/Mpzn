@@ -345,9 +345,10 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
                 } else if((itemName).equals("更多")){
                     if(MyApplication.getInstance().isLogined) {
 //                        Toast.makeText(mContext, "暂无更多", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent();
-                        intent.setClass(mContext,TestActivity.class);
-                        startActivity(intent);
+//                        Intent intent = new Intent();
+//                        intent.setClass(mContext,TestActivity.class);
+//                        startActivity(intent);
+                        Toast.makeText(mContext, "更多功能，敬请期待", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(mContext, "查看更多，请先登录", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent();

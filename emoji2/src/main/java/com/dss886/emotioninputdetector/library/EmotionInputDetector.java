@@ -173,7 +173,7 @@ public class EmotionInputDetector {
         mInputManager.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
     }
 
-    private boolean isSoftInputShown() {
+    public boolean isSoftInputShown() {
         return getSupportSoftInputHeight() != 0;
     }
 

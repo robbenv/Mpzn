@@ -4,17 +4,23 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
+import android.util.Config;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.mpzn.mpzn.BuildConfig;
 import com.mpzn.mpzn.entity.UserMsg;
 import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.https.HttpsUtils;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +45,8 @@ public class MyApplication extends Application {
     public static boolean isInfect;
     public static int mScreenWidth;
     public static int mScreenHeight;
+    private UMShareAPI mShareAPI;
+
 
     @Override
     public void onCreate() {
@@ -77,6 +85,10 @@ public class MyApplication extends Application {
 
         //初始化友盟的SDK
         UMShareAPI.get(this);
+
+        //授权
+        SHARE_MEDIA platform = SHARE_MEDIA.WEIXIN;
+//        mShareAPI.doOauthVerify(this, platform, umAuthListener);
 
     }
 
@@ -156,5 +168,24 @@ public class MyApplication extends Application {
         }
         System.exit(0);
     }
+
+    //友盟授权监听
+    private UMAuthListener umAuthListener = new UMAuthListener() {
+        @Override
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+            Toast.makeText(getApplicationContext(), "授权成功", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+            Toast.makeText(getApplicationContext(), "授权失败", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform, int action) {
+            Toast.makeText(getApplicationContext(), "取消授权", Toast.LENGTH_SHORT).show();
+        }
+    };
 
 }

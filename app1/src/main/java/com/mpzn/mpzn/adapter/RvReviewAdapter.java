@@ -83,7 +83,7 @@ public class RvReviewAdapter extends RecyclerView.Adapter<RvReviewAdapter.RvView
             e.printStackTrace();
         }
 //        holder.tvContent.setText(dataBean.getContent());
-        holder.tvDate.setText(formatData("yyyy-MM-dd", dataBean.getCreatedate()));
+        holder.tvDate.setText(formatData("yyyy-MM-dd HH:mm:ss", dataBean.getCreatedate()));
         holder.tvName.setText(dataBean.getMname());
         holder.tvFovor.setText(dataBean.getFavour()+"");
 

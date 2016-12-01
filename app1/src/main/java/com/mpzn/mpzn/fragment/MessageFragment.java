@@ -58,6 +58,7 @@ import static com.mpzn.mpzn.receiver.JPushReceiver.TYPE_NEWS;
  */
 public class MessageFragment extends BaseFragment {
     public static String TAG = "tag_building_fragment";
+
     @Bind(R.id.state_bar)
     View stateBar;
     @Bind(R.id.my_action_bar)
@@ -79,7 +80,7 @@ public class MessageFragment extends BaseFragment {
     public MessageFragment() {
         //注册EventBus
         EventBus.getDefault().register(this);
-        Log.e("TAG", "fm注册Eventbus");
+        Log.e("jpush_test", "fm注册Eventbus");
     }
 
 
@@ -121,9 +122,10 @@ public class MessageFragment extends BaseFragment {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
+//    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(sticky = true)
     public void onUserEvent(final JPushNotificationEntity jPushNotificationEntity) {
-
+        Log.i("jpush_test", "onUserEvent()__");
         Log.e(TAG, "接到消息" + jPushNotificationEntity.toString());
 
         handleJpushNotification(jPushNotificationEntity);
@@ -141,7 +143,7 @@ public class MessageFragment extends BaseFragment {
             } else if (jPushNotificationEntity.getType().equals(TYPE_NEWS)) {
                 url = API.NEWSABTRACT_GET;
             }
-            Log.e("TAG", "联网" + url + jPushNotificationEntity.getId());
+            Log.e("jpush_test", "联网" + url);
             OkHttpUtils.get()
                     .url(url)
                     .addParams("aid", jPushNotificationEntity.getId())
@@ -149,11 +151,12 @@ public class MessageFragment extends BaseFragment {
                     .execute(new StringCallback() {
                         @Override
                         public void onError(Call call, Exception e, int id) {
-
+                            Log.i("jpush_test", "onError()__解析错误");
                         }
 
                         @Override
                         public void onResponse(String response, int id) {
+                            Log.i("jpush_test", "onResponse()__success");
                             AbstractEntity abstractEntity = new Gson().fromJson(response, AbstractEntity.class);
                             Log.e("TAG", "获取详情" + response);
 

@@ -72,7 +72,7 @@ public class MainActivity extends BaseActivity {
     private BadgeView pointOnMessage;
 
 
-    String[] mPermissionList = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS};
+//    String[] mPermissionList = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS};
     private boolean isFromJpush;
 
 
@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity {
 
 
         //添加友盟分享需要的权限
-        ActivityCompat.requestPermissions(MainActivity.this, mPermissionList, 100);
+//        ActivityCompat.requestPermissions(MainActivity.this, mPermissionList, 100);
 
     }
 
@@ -317,4 +317,7 @@ public class MainActivity extends BaseActivity {
         }
 
     }
+
+
+
 }

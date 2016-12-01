@@ -38,7 +38,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:background="@drawable/coners_radius_5dp_gray"
-                android:hint="请输入楼盘名或经纪公司名称"
+                android:hint="输入楼盘名或者经济公司名称"
                 android:textColorHint="@color/font_black_4"
                 android:gravity="center"
                 android:textSize="14sp"

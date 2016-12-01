@@ -180,6 +180,7 @@ public class StarAndBrowseActivity extends BaseActivity {
                         List<StarBuildingEntity.DataBean> starBuildingEntityData = starBuildingEntity.getData();
                         if (starBuildingEntity.getCode() == 200) {
                             browseBuildingList.addAll(starBuildingEntityData);
+                            Log.i("bug_browse", "onResponse()__list = browseBuildingList.size = "+browseBuildingList.size());
                             rvBrowseAdapter.updata(browseBuildingList);
 
                         } else {
@@ -263,7 +264,8 @@ public class StarAndBrowseActivity extends BaseActivity {
         rv_Star.addOnItemTouchListener(new OnRecyclerItemClickListener(rv_Star){
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh) {
-                if(starBuildingList.size()==0){
+                if(starBuildingList.size()==0 ||actionBarEdit.getVisibility()==View.VISIBLE){
+                    Log.i("Bug_test1", "onItemClick()__return");
                   return;
                 }
                 StarBuildingEntity.DataBean dataBean = starBuildingList.get(vh.getLayoutPosition());
@@ -277,6 +279,7 @@ public class StarAndBrowseActivity extends BaseActivity {
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh) {
                 if(browseBuildingList.size()==0||actionBarEdit.getVisibility()==View.VISIBLE){
+                    Log.i("Bug_test1", "onItemClick()__return");
                     return ;
                 }
                 StarBuildingEntity.DataBean dataBean = browseBuildingList.get(vh.getLayoutPosition());

@@ -3,6 +3,7 @@ package com.mpzn.mpzn.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,10 +132,12 @@ public class RvCheckBuildingAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         String createdate = formatData("yyyy年MM月dd日", Long.parseLong(String.valueOf(dataBean.getCreatedate())));
         mholder.tvDate.setText(fromType+"时间:"+createdate);
         if(isEdit){
+            Log.i("Bug_test1", "onBindViewHolder()__");
             mholder.cbDelete.setVisibility(View.VISIBLE);
             mholder.cbDelete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Log.i("Bug_test1", "onCheckedChanged()__");
                    if(isChecked){
                        dataBean.setCheck(true);
                    }else {

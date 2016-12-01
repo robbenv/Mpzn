@@ -58,6 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/center"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="16dp"
                 android:src="@drawable/logo_jingjiren"
                 />
             <View
@@ -73,10 +74,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/lijidenglu"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_above="@+id/center"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="10dp"
+                android:ellipsize = "marquee"
+                android:singleLine="true"
 
                 />
 

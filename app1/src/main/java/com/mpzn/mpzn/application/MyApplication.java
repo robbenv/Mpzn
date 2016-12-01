@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.mpzn.mpzn.BuildConfig;
+import com.mpzn.mpzn.activity.AddBBActivity;
 import com.mpzn.mpzn.entity.UserMsg;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMAuthListener;
@@ -26,9 +27,11 @@ import java.util.concurrent.TimeUnit;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import de.greenrobot.event.EventBus;
 import okhttp3.OkHttpClient;
 
 import static com.mpzn.mpzn.utils.CacheUtils.getBoolean;
+import static com.mpzn.mpzn.utils.ViewUtils.loadedDismissProgressDialog;
 
 /**
  * Created by Icy on 2016/7/11.
@@ -52,6 +55,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+
         mContext=getApplicationContext();
 
         getIsNotFirstRun();
@@ -69,13 +73,13 @@ public class MyApplication extends Application {
 
         //极光推送初始化SDK
         JPushInterface.init(this);
-        JPushInterface.setAlias(this, "dev", new TagAliasCallback() {
-            @Override
-            public void gotResult(int i, String s, Set<String> set) {
-
-                //啥也没有
-            }
-        });
+//        JPushInterface.setAlias(this, token, new TagAliasCallback() {
+//            @Override
+//            public void gotResult(int i, String s, Set<String> set) {
+//                
+//                //啥也没有
+//            }
+//        });
 
         //微信 appid appsecret
         PlatformConfig.setWeixin("wx395a9fb9b698fabc", "c387dcbd2a344a2ece68589b624cceac");
@@ -106,9 +110,16 @@ public class MyApplication extends Application {
 
     }
 
-    public void setToken(String token){
+    public void setToken(final String token){
 
         this.token=token;
+        JPushInterface.setAlias(this, token, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                Log.i("jpush_test", "gotResult()__token = "+token);
+                //啥也没有
+            }
+        });
     }
 
     //初始化OkHttp 生成OkhttpClient

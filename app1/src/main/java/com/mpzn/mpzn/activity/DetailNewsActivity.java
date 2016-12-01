@@ -1,5 +1,6 @@
 package com.mpzn.mpzn.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -32,6 +33,7 @@ import com.mpzn.mpzn.entity.MessageEntity;
 import com.mpzn.mpzn.entity.NewsEntity;
 import com.mpzn.mpzn.entity.SimpleEntity;
 import com.mpzn.mpzn.http.API;
+import com.mpzn.mpzn.utils.PermissionsChecker;
 import com.mpzn.mpzn.utils.ViewUtils;
 import com.mpzn.mpzn.views.MyActionBar;
 import com.tb.emoji.Emoji;
@@ -99,6 +101,13 @@ public class DetailNewsActivity extends BaseActivity  implements FaceFragment.On
     private KProgressHUD loadProgressHUD;
 
     private MessageEntity messageEntity;
+
+    static final String[] mPermissionList = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS};
+
+    // 权限检测器
+    private PermissionsChecker mPermissionsChecker;
+
+    private static final int REQUEST_CODE = 0; // 请求码
 
 
     private UMShareListener umShareListener = new UMShareListener() {
@@ -199,6 +208,7 @@ public class DetailNewsActivity extends BaseActivity  implements FaceFragment.On
 
     @Override
     public void initData() {
+        mPermissionsChecker = new PermissionsChecker(this);
         Intent intent = getIntent();
         newsAid = intent.getIntExtra("NewsAid", -1);
 
@@ -434,6 +444,11 @@ public class DetailNewsActivity extends BaseActivity  implements FaceFragment.On
         /** attention to this below ,must add this**/
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         Log.d("result", "onActivityResult");
+
+        // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
+        if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
+            finish();
+        }
     }
 
 
@@ -486,5 +501,18 @@ public class DetailNewsActivity extends BaseActivity  implements FaceFragment.On
                 }
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 缺少权限时, 进入权限配置页面
+        if (mPermissionsChecker.lacksPermissions(mPermissionList)) {
+            startPermissionsActivity();
+        }
+    }
+
+    private void startPermissionsActivity() {
+        PermissionsActivity.startActivityForResult(this, REQUEST_CODE, mPermissionList);
     }
 }

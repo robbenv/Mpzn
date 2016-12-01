@@ -76,4 +76,6 @@ public class API {
     public static final String BB_STATISTICS_FORKFS_GET = API+"/baobei/tongji";
     public static final String PROXY_SELL_GET = API+"/developers/loupandaixiaolist";
     public static final String PROXY_SELL_HANDLE = API+"/developers/manageloupandaixiao";
+    public static final String BIND_WX = API+"/user/bind_weixin";
+    public static final String TAKEPUSH="http://appi.mpzn.com/jpush/jpush/dopush.php";
 }

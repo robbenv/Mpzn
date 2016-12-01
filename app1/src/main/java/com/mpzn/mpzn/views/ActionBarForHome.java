@@ -190,7 +190,7 @@ public class ActionBarForHome extends RelativeLayout{
         if (action_bar.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) action_bar.getLayoutParams();
             p.setMargins(left,  0, right, dip2px(5));
-            this.requestLayout();
+            action_bar.requestLayout();
         }
 
     }

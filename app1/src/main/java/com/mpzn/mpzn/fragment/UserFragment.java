@@ -193,6 +193,7 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
         }
         userRecyclerViewAdapter.updata(results);
 
+
         tv_login.setText("立即登录");
         Log.e("TAG", "tv_login"+tv_login.getText());
         iv_user_type.setImageDrawable(null);
@@ -386,6 +387,7 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
         });
 
 
+
     }
     public void upDataView(){
         int[] usertool;
@@ -450,15 +452,18 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
 
         switch (requestCode) {
             case REQCODE_LOGIN:
+                Log.i("bug_browse", "onActivityResult()__REQCODE_LOGIN");
                 if(resultCode!=0) {
                     Log.e("TAG", "resultCode"+resultCode);
                     userMsg= data.getParcelableExtra("userMsg");
+                    Log.i("bug_browse", "onActivityResult()__name = "+userMsg.getmName());
                     upDataView();
 
                 }
 
                 break;
             case REQCODE_SETTING:
+                Log.i("bug_browse", "onActivityResult()__REQCODE_SETTING");
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         initViewForLogout();
@@ -468,8 +473,10 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
 
                 break;
             case REQCODE_MYDATA:
+                Log.i("bug_browse", "onActivityResult()__REQCODE_MYDATA");
                 switch (resultCode) {
                     case  Activity.RESULT_OK:
+
                         tv_login.setText(data.getStringExtra("Name"));
                         mImageManager.loadCircleImageWithWhite(MyApplication.getInstance().mUserMsg.getmIconUrl(),user_icon);
                         break;
@@ -478,12 +485,12 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
 
                 break;
             case REQCODE_CHANGICON:
+                Log.i("bug_browse", "onActivityResult()__REQCODE_CHANGICON");
                 switch (resultCode) {
                     case  Activity.RESULT_OK:
                         mImageManager.loadCircleImageWithWhite(MyApplication.getInstance().mUserMsg.getmIconUrl(),user_icon);
                         break;
                     case Activity.RESULT_CANCELED:
-
                         break;
                 }
 

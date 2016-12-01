@@ -67,12 +67,14 @@ public class JPushReceiver extends BroadcastReceiver {
 //            processCustomMessage(context, bundle);
 
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
-            Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
+            Log.d("jpush_test", "[MyReceiver] 接收到推送下来的通知");
             int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             JPushNotificationEntity jPushNotificationEntity = new Gson().fromJson(bundle.getString(JPushInterface.EXTRA_EXTRA), JPushNotificationEntity.class);
             if (isRunning) {
+                Log.i("jpush_test", "onReceive()__eventBus__jPushNotificationEntity = "+jPushNotificationEntity.toString());
                 EventBus.getDefault().postSticky(jPushNotificationEntity);
             } else {
+                Log.i("jpush_test", "onReceive()__存到数据库");
                 //如果推送的时候程序没有运行，EventBus不起作用，此时先存到数据库中
                 SQLiteDatabase db = jpushMessageDBHelper.getWritableDatabase();
                 ContentValues values = new ContentValues();
@@ -87,7 +89,7 @@ public class JPushReceiver extends BroadcastReceiver {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
-            Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
+            Log.d("jpush_test", "[MyReceiver] 用户点击打开了通知");
 
             JPushNotificationEntity jPushNotificationEntity = new Gson().fromJson(bundle.getString(JPushInterface.EXTRA_EXTRA), JPushNotificationEntity.class);
 

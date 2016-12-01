@@ -40,6 +40,7 @@ import com.mpzn.mpzn.entity.MessageEntity;
 import com.mpzn.mpzn.entity.SimpleEntity;
 import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.listener.OnRecyclerItemClickListener;
+import com.mpzn.mpzn.utils.PermissionsChecker;
 import com.mpzn.mpzn.views.MyActionBar;
 import com.mpzn.mpzn.views.MyDialog;
 import com.mpzn.mpzn.views.MyProgressDialog;
@@ -131,6 +132,14 @@ public class DetailNewhouseActivity extends BaseActivity {
 
     private BuildingDetailTopVpAdapter buildingDetailTopVpAdapter;
     private MessageEntity messageEntity;
+
+    static final String[] mPermissionList = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS};
+
+    // 权限检测器
+    private PermissionsChecker mPermissionsChecker;
+
+    private static final int REQUEST_CODE = 0; // 请求码
+
 
 //    private UMShareAPI mShareAPI;
 
@@ -298,15 +307,39 @@ public class DetailNewhouseActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        mPermissionsChecker = new PermissionsChecker(this);
         Intent intent = getIntent();
         aid = intent.getIntExtra("Aid", -1);
-        Log.i("Proxy_test34", "initData()__aid = "+aid);
-        Log.i(TAG, "initData()__aid = "+aid);
+        Log.i("Proxy_test34", "initData()__aid = " + aid);
+        Log.i(TAG, "initData()__aid = " + aid);
         initAbtract();
         updataView();
         initStarCheckBox();
         initTwoBtn();
+        addBrowseList();
 
+    }
+
+    private void addBrowseList() {
+        if (token == null || "".equals(token)) {
+            return;
+        }
+        OkHttpUtils.post()
+                .url(API.ADDBROWSE_POST)
+                .addParams("token", token)
+                .addParams("aid", aid + "")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+
+                    }
+                });
     }
 
     private void initAbtract() {
@@ -326,11 +359,9 @@ public class DetailNewhouseActivity extends BaseActivity {
                         if (abstractEntity.getCode() == 200) {
                             Log.i("Proxy_test34", "onResponse()__200");
                             messageEntity = abstractEntity.getData();
-                            Log.i("Proxy_test34", "onResponse()__messageEntity = "+messageEntity.toString());
-                            Log.i(TAG, "onResponse()__messageEntity = "+messageEntity);
+                            Log.i("Proxy_test34", "onResponse()__messageEntity = " + messageEntity.toString());
+                            Log.i(TAG, "onResponse()__messageEntity = " + messageEntity);
                             myActionBar.init(messageEntity.getSubject(), R.drawable.return_red, R.drawable.share);
-
-
                         }
 
                     }
@@ -369,24 +400,24 @@ public class DetailNewhouseActivity extends BaseActivity {
 
     }
 
-    private void initTwoBtn(){
-        if(MyApplication.isLogined){
-            if(MyApplication.getInstance().mUserMsg.getmChild()==RESCODE_JINGJIREN){
+    private void initTwoBtn() {
+        if (MyApplication.isLogined) {
+            if (MyApplication.getInstance().mUserMsg.getmChild() == RESCODE_JINGJIREN) {
 
                 tvDetailBottomLeft.setEnabled(false);
                 tvDetailBottomRight.setEnabled(true);
 
-            }else if(MyApplication.getInstance().mUserMsg.getmChild()==RESCODE_JINGJICOM){
+            } else if (MyApplication.getInstance().mUserMsg.getmChild() == RESCODE_JINGJICOM) {
 
                 tvDetailBottomLeft.setEnabled(true);
                 tvDetailBottomRight.setEnabled(true);
 
-            }else{
+            } else {
                 tvDetailBottomLeft.setEnabled(false);
                 tvDetailBottomRight.setEnabled(false);
 
             }
-        }else{
+        } else {
             tvDetailBottomLeft.setEnabled(false);
             tvDetailBottomRight.setEnabled(false);
         }
@@ -399,9 +430,9 @@ public class DetailNewhouseActivity extends BaseActivity {
             public void onClick(View v) {
                 //6.0版本需要检查权限
                 if (messageEntity != null) {
-                    if(Build.VERSION.SDK_INT>=23){
-                        String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CALL_PHONE,Manifest.permission.READ_LOGS,Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.SET_DEBUG_APP,Manifest.permission.SYSTEM_ALERT_WINDOW,Manifest.permission.GET_ACCOUNTS,Manifest.permission.WRITE_APN_SETTINGS};
-                        ActivityCompat.requestPermissions(DetailNewhouseActivity.this,mPermissionList,123);
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_APN_SETTINGS};
+                        ActivityCompat.requestPermissions(DetailNewhouseActivity.this, mPermissionList, 123);
                     }
 
                     String imgUrl = messageEntity.getThumb();
@@ -409,11 +440,14 @@ public class DetailNewhouseActivity extends BaseActivity {
                         imgUrl = "http://www.mpzn.com/userfiles/image/20160216/16153634da8575901d4313.png";
                     }
 
+
+                    Log.i("bug_browse", "onClick()__id = " + messageEntity.getAid());
                     new ShareAction(DetailNewhouseActivity.this).setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE)
                             .withTitle(messageEntity.getSubject())
                             .withText(messageEntity.getAbstractX())
                             .withMedia(new UMImage(DetailNewhouseActivity.this, imgUrl))
-                            .withTargetUrl(messageEntity.getUrl())
+//                            .withTargetUrl(messageEntity.getUrl())
+                            .withTargetUrl("http://www.mpzn.com/mobile/archive.php?aid=" + messageEntity.getAid())
                             .setCallback(umShareListener)
                             .open();
                 }
@@ -487,7 +521,7 @@ public class DetailNewhouseActivity extends BaseActivity {
             public void onItemClick(RecyclerView.ViewHolder vh) {
                 aid = buildingEntitydata.getMorebuilding().get(vh.getLayoutPosition()).getAid();
                 Intent intent = new Intent();
-                intent.putExtra("Aid",aid);
+                intent.putExtra("Aid", aid);
                 intent.setClass(mContext, DetailNewhouseActivity.class);
                 startActivity(intent);
 
@@ -519,8 +553,8 @@ public class DetailNewhouseActivity extends BaseActivity {
                 myProgressDialog.setContent("正在申请代销");
                 OkHttpUtils.get()
                         .url(API.CHECK_SELL_GET)
-                        .addParams("aid",aid+"")
-                        .addParams("token",MyApplication.getInstance().token)
+                        .addParams("aid", aid + "")
+                        .addParams("token", MyApplication.getInstance().token)
                         .build()
                         .execute(new StringCallback() {
                             @Override
@@ -532,7 +566,7 @@ public class DetailNewhouseActivity extends BaseActivity {
                             @Override
                             public void onResponse(String response, int id) {
                                 SimpleEntity simpleEntity = new Gson().fromJson(response, SimpleEntity.class);
-                                if(simpleEntity.getCode()==1300){
+                                if (simpleEntity.getCode() == 1300) {
                                     myProgressDialog.dismiss();
 
                                     final MyDialog myDialog = new MyDialog(mContext);
@@ -551,7 +585,7 @@ public class DetailNewhouseActivity extends BaseActivity {
                                             OkHttpUtils.post()
                                                     .url(API.APPLYBUILDING_POST)
                                                     .addParams("token", MyApplication.getInstance().token)
-                                                    .addParams("aid", aid+"")
+                                                    .addParams("aid", aid + "")
                                                     .build()
                                                     .execute(new StringCallback() {
                                                         @Override
@@ -566,7 +600,7 @@ public class DetailNewhouseActivity extends BaseActivity {
                                                                 myProgressDialog1.afterprogress("申请代销成功!");
 
                                                             } else {
-                                                                myProgressDialog1.afterprogress("申请代销失败,"+checkStarEntity.getMessage());
+                                                                myProgressDialog1.afterprogress("申请代销失败," + checkStarEntity.getMessage());
 
                                                             }
                                                         }
@@ -577,7 +611,7 @@ public class DetailNewhouseActivity extends BaseActivity {
                                     });
                                     myDialog.show();
 
-                                }else{
+                                } else {
                                     myProgressDialog.afterprogress(simpleEntity.getMessage());
                                 }
 
@@ -594,8 +628,8 @@ public class DetailNewhouseActivity extends BaseActivity {
                 myProgressDialog.setContent("正在检测是否可添加报备");
                 OkHttpUtils.get()
                         .url(API.CHECK_IS_ADD_GET)
-                        .addParams("token",token)
-                        .addParams("aid",aid+"")
+                        .addParams("token", token)
+                        .addParams("aid", aid + "")
                         .build()
                         .execute(new StringCallback() {
                             @Override
@@ -606,18 +640,17 @@ public class DetailNewhouseActivity extends BaseActivity {
                             @Override
                             public void onResponse(String response, int id) {
                                 SimpleEntity simpleEntity = new Gson().fromJson(response, SimpleEntity.class);
-                                if(simpleEntity.getCode()==200){
+                                if (simpleEntity.getCode() == 200) {
                                     myProgressDialog.dismiss();
                                     Intent intent = new Intent();
-                                    intent.putExtra("Aid",aid);
-                                    intent.setClass(mContext,AddBBActivity.class);
+                                    intent.putExtra("Aid", aid);
+                                    intent.setClass(mContext, AddBBActivity.class);
                                     startActivity(intent);
-                                }else{
+                                } else {
                                     myProgressDialog.afterprogress(simpleEntity.getMessage());
                                 }
                             }
                         });
-
 
 
             }
@@ -682,7 +715,6 @@ public class DetailNewhouseActivity extends BaseActivity {
     }
 
 
-
     //隐藏全屏PhotoView
     private void setOnClickHideVpPhotoView(final PhotoView pv) {
         pv.setOnClickListener(new View.OnClickListener() {
@@ -720,6 +752,31 @@ public class DetailNewhouseActivity extends BaseActivity {
             starBuilding();
         } else if ((!cbStar.isChecked()) && cid != 0) {
             disStarBuilding();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 缺少权限时, 进入权限配置页面
+        if (mPermissionsChecker.lacksPermissions(mPermissionList)) {
+            startPermissionsActivity();
+        }
+
+    }
+
+    private void startPermissionsActivity() {
+        PermissionsActivity.startActivityForResult(this, REQUEST_CODE, mPermissionList);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
+        if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
+            finish();
         }
     }
 }

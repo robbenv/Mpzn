@@ -212,6 +212,7 @@ public class MyDataActivity extends BaseActivity {
                         userMsgEntity = new Gson().fromJson(response, UserMsgEntity.class);
                         if(userMsgEntity.getCode()==200){
                             putObject(mContext,"userMsgEntity",userMsgEntity);
+                            Log.i("bug_browse", "onResponse()__userMsgEntity = "+userMsgEntity.getData().getName());
                             updataView();
 
                         }else {

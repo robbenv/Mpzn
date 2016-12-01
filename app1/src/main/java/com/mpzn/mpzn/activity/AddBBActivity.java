@@ -26,10 +26,13 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import okhttp3.Call;
 
 import static com.mpzn.mpzn.http.API.ADDBB;
@@ -208,7 +211,7 @@ public class AddBBActivity extends BaseActivity {
                                     SimpleEntity simpleEntity = new Gson().fromJson(response, SimpleEntity.class);
                                     if (simpleEntity.getCode() == 200) {
                                         loadedDismissProgressDialog(AddBBActivity.this, true, loadProgressHUD, "报备成功", true);
-
+                                        takeJpush();//调用服务器接口提醒该发送推送了
                                     } else {
                                         loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD, simpleEntity.getMessage(), false);
 
@@ -253,7 +256,38 @@ public class AddBBActivity extends BaseActivity {
 
     }
 
+    private void takeJpush() {
 
+        OkHttpUtils.post()
+                .url(API.TAKEPUSH)
+                .addParams("pushid", MyApplication.getInstance().token)
+                .addParams("loupanid", loupan.getAid()+"")
+                .addParams("mname", MyApplication.getInstance().mUserMsg+"")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD, "申请推送失败", false);
+
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        SimpleEntity simpleEntity = new Gson().fromJson(response, SimpleEntity.class);
+                        if (simpleEntity.getCode() == 200) {
+                            loadedDismissProgressDialog(AddBBActivity.this, true, loadProgressHUD, "申请推送成功", true);
+
+                        } else {
+                            loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD, simpleEntity.getMessage(), false);
+
+
+                        }
+
+
+                    }
+                });
+    }
 
 
 

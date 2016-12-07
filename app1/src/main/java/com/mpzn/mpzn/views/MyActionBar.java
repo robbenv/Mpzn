@@ -41,6 +41,9 @@ public class MyActionBar extends FrameLayout {
         tv_right = (TextView)findViewById(R.id.tv_right);
     }
 
+    public void setRightBtVisible(boolean isVisible) {
+        btn_right.setVisibility(isVisible ? VISIBLE : GONE);
+    }
 
     public void init(String title,int ImgResLeft,int ImgResRight){
         tv_title.setText(title);

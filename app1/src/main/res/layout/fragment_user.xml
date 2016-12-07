@@ -14,14 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:background="@color/red_theme">
+
         <ImageView
             android:id="@+id/user_icon"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginLeft="20dp"
-            android:layout_centerVertical="true"
+            android:layout_above="@+id/wave_view"
             android:src="@drawable/logo"
-
             />
 
         <ImageButton
@@ -79,11 +79,15 @@
                 android:gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:ellipsize = "marquee"
-                android:singleLine="true"
-
-                />
+                android:singleLine="true" />
 
         </RelativeLayout>
+        <com.mpzn.mpzn.views.WaveView3
+            android:id="@+id/wave_view"
+            android:background="@color/red_theme"
+            android:layout_alignParentBottom="true"
+            android:layout_width="500dp"
+            android:layout_height="5dp"/>
 
     </RelativeLayout>
 
@@ -98,18 +102,18 @@
             android:weightSum="1">
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/divider_1"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/gray_nomal"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/divider_1"/>
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1px"-->
+                <!--android:background="@color/divider_1"/>-->
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="0dp"-->
+                <!--android:background="@color/gray_nomal"/>-->
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1px"-->
+                <!--android:background="@color/divider_1"/>-->
 
             <RelativeLayout
                 android:layout_width="match_parent"

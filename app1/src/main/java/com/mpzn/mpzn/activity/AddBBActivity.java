@@ -260,7 +260,7 @@ public class AddBBActivity extends BaseActivity {
 
         OkHttpUtils.post()
                 .url(API.TAKEPUSH)
-                .addParams("pushid", MyApplication.getInstance().token)
+                .addParams("token", MyApplication.getInstance().token)
                 .addParams("loupanid", loupan.getAid()+"")
                 .addParams("mname", MyApplication.getInstance().mUserMsg+"")
                 .build()
@@ -268,8 +268,6 @@ public class AddBBActivity extends BaseActivity {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD, "申请推送失败", false);
-
-
                     }
 
                     @Override

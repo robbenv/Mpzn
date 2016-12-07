@@ -51,23 +51,24 @@ public class JPushReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i("fenye", "onReceive()__");
         boolean isRunning = Utils.isRunningApp(context, PACKAGENAME);
         JpushMessageDBHelper jpushMessageDBHelper = new JpushMessageDBHelper(context, "jpush.db", null, 1);
         Bundle bundle = intent.getExtras();
-        Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
+        Log.d("jpush_test1", "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
         Log.d(TAG, "EXTRA_EXTRA"+bundle.getString(JPushInterface.EXTRA_EXTRA));
 
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
-            Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
+            Log.d("jpush_test1", "[MyReceiver] 接收Registration Id : " + regId);
             //send the Registration Id to your server...
 
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
-            Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
+            Log.d("jpush_test1", "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
 //            processCustomMessage(context, bundle);
 
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
-            Log.d("jpush_test", "[MyReceiver] 接收到推送下来的通知");
+            Log.d("jpush_test1", "[MyReceiver] 接收到推送下来的通知");
             int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             JPushNotificationEntity jPushNotificationEntity = new Gson().fromJson(bundle.getString(JPushInterface.EXTRA_EXTRA), JPushNotificationEntity.class);
             if (isRunning) {
@@ -111,9 +112,7 @@ public class JPushReceiver extends BroadcastReceiver {
                     i.putExtra("Aid",Integer.parseInt(jPushNotificationEntity.getId()));
                     i.putExtra("Type", jPushNotificationEntity.getType());
                     i.putExtra("jpush", true);
-//                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
-//                i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP );
                     context.startActivity(i);
                 } else {
                     Toast.makeText(context, "没有获取到通知信息", Toast.LENGTH_SHORT).show();

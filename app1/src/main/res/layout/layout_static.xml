@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <View style="@style/divider_1"/>
+    <RelativeLayout
+        android:id="@+id/rl_suc"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="报备成功"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:drawableLeft="@drawable/bb_succuss"
+            android:drawablePadding="5dp"
+            />
+        <TextView
+            android:id="@+id/tv_bb_suc_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0次 0%"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:layout_alignParentRight="true"
+            android:drawableRight="@drawable/arrow_right_gray"
+            android:drawablePadding="5dp"/>
+
+    </RelativeLayout>
+
+    <View style="@style/divider_2"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_err"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="报备失败"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:drawableLeft="@drawable/bb_most"
+            android:drawablePadding="5dp"
+            />
+        <TextView
+            android:id="@+id/tv_bb_erro_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0次 0%"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:layout_alignParentRight="true"
+            android:drawableRight="@drawable/arrow_right_gray"
+            android:drawablePadding="5dp"/>
+
+    </RelativeLayout>
+
+    <View style="@style/divider_2"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="报备最多"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:drawableLeft="@drawable/bb_error"
+            android:drawablePadding="5dp"
+            />
+        <TextView
+            android:id="@+id/tv_bb_most_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0次 无"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="5dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="报备总数"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:drawableLeft="@drawable/bb_most"
+            android:drawablePadding="5dp"
+            />
+        <TextView
+            android:id="@+id/tv_bb_total_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0次 无"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/font_black_3"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="5dp"/>
+
+    </RelativeLayout>
+</LinearLayout>

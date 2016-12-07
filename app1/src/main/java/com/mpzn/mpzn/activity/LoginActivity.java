@@ -66,6 +66,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import okhttp3.Call;
 
+import static com.mpzn.mpzn.application.MyApplication.mUserMsg;
 import static com.mpzn.mpzn.utils.CacheUtils.getObject;
 import static com.mpzn.mpzn.utils.CacheUtils.putObject;
 import static com.mpzn.mpzn.utils.Constant.REQCODE_REGISTER_SEND_CODE;
@@ -735,6 +736,8 @@ public class LoginActivity extends BaseActivity {
         } else {
             userMsg.setmName(data.getName());
         }
+
+        userMsg.setPhone(data.getMname());
         userMsg.setmId(data.getMid());
         userMsg.setmIconUrl(data.getHeadimage());
 
@@ -745,6 +748,10 @@ public class LoginActivity extends BaseActivity {
         putObject(mContext, "userMsg", userMsg);
         Log.i("bug_browse", "getUserMsg()__name = "+userMsg.getmName());
         MyApplication.getInstance().setmUserMsg(userMsg);
+        Toast.makeText(mContext, "别名："+userMsg.getPhone()+"_dev", Toast.LENGTH_SHORT).show();
+
+
+
         MyApplication.getInstance().setIsLogined(true);
 
         intent.putExtras(bundle);

@@ -55,7 +55,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-
+//        FreelineCore.init(this);
         mContext=getApplicationContext();
 
         getIsNotFirstRun();
@@ -94,6 +94,7 @@ public class MyApplication extends Application {
         SHARE_MEDIA platform = SHARE_MEDIA.WEIXIN;
 //        mShareAPI.doOauthVerify(this, platform, umAuthListener);
 
+
     }
 
 
@@ -102,24 +103,28 @@ public class MyApplication extends Application {
 
         this.isLogined=isLogined;
 
+
+
     }
 
-    public void setmUserMsg(UserMsg mUserMsg){
+    public void setmUserMsg(final UserMsg mUserMsg){
 
         this.mUserMsg=mUserMsg;
+        JPushInterface.setAlias(this, mUserMsg.getPhone()+"_dev", new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                Log.i("jpush_test2", "别名："+mUserMsg.getPhone()+"_dev");
+                //啥也没有
+            }
+        });
+
 
     }
 
     public void setToken(final String token){
 
         this.token=token;
-        JPushInterface.setAlias(this, token, new TagAliasCallback() {
-            @Override
-            public void gotResult(int i, String s, Set<String> set) {
-                Log.i("jpush_test", "gotResult()__token = "+token);
-                //啥也没有
-            }
-        });
+
     }
 
     //初始化OkHttp 生成OkhttpClient

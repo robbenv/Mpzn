@@ -44,7 +44,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/coners_radius_5dp_gray"
-            android:hint="输入客户姓名或手机号或者报备的楼盘名"
+            android:hint="输入客户姓名或手机号后四位"
             android:textColorHint="@color/font_black_4"
             android:gravity="center"
             android:textSize="14sp"

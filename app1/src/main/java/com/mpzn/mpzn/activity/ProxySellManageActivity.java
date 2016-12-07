@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -180,14 +181,22 @@ public class ProxySellManageActivity extends BaseActivity {
             case CURRENT_ITEM_UNCHECK:
                 currentAdapter = lv_unCheck_Adapter;
                 currentlist = uncheckList;
+//                acitonBar.setRightBtVisible(true);不起作用
+                acitonBar.setRightText("管理");
                 break;
             case CURRENT_ITEM_SUCCESS:
                 currentAdapter = lv_check_sucAdapter;
                 currentlist = successList;
+//                acitonBar.setRightBtVisible(false);不起作用
+                acitonBar.setRightText("");
+
+                Log.i("search1", "chooseCurrent()__GONE1");
                 break;
             case CURRENT_ITEM_FAIL:
                 currentAdapter = lv_check_errAdapter;
                 currentlist = failList;
+                acitonBar.setRightText("");
+//                acitonBar.setRightBtVisible(false);不起作用
                 break;
         }
     }
@@ -240,6 +249,7 @@ public class ProxySellManageActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.i("fenye", "onTextChanged()__");
                 tmplist.clear();
                 if (charSequence.length() == 0) {
                     tmplist.addAll(currentlist);
@@ -263,6 +273,10 @@ public class ProxySellManageActivity extends BaseActivity {
         acitonBar.setLROnClickListener(null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (currentAdapter != lv_unCheck_Adapter) {
+                    return;
+                }
+
                 Intent intent = new Intent();
                 intent.setClass(mContext, HandleProxySellActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

@@ -14,8 +14,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESEN" />
-    <uses-permission android:name="android.permission.GET_TASKS"/>
-
+    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -26,14 +25,12 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.SET_DEBUG_APP" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-
 
     <!-- 极光推送需要的权限aa -->
     <permission
@@ -72,20 +69,18 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".activity.MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="com.mpzn.mpzn.JPUSH" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-
             </intent-filter>
         </activity>
         <activity android:name=".activity.GuideActivity" />
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="com.mpzn.mpzn.JPUSH"/>
+                <action android:name="com.mpzn.mpzn.JPUSH" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -164,7 +159,6 @@
             </intent-filter>
         </receiver>
 
-
         <!-- 用来在程序没有启动的情况下给MessageFragment传递消息 -->
 
         <activity android:name=".activity.SetupActivity" />
@@ -179,9 +173,9 @@
         <activity android:name=".activity.MyBBActivity" />
         <activity android:name=".activity.ChangIconActivity" />
         <activity android:name=".activity.BBStatisticsActivity" />
-        <activity android:name=".activity.ReviewListActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"
-            />
+        <activity
+            android:name=".activity.ReviewListActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity android:name=".activity.ApplyForSellActivity" />
         <activity android:name=".activity.MySellActivity" />
         <activity android:name=".activity.FeedbackActivity" />
@@ -209,6 +203,8 @@
         <activity android:name=".activity.BBstaticForKfsAcitvity" />
         <activity android:name=".activity.ProxySellManageActivity" />
         <activity android:name=".activity.HandleProxySellActivity" />
+        <activity android:name=".activity.BBSearchActivity" />
+        <activity android:name=".activity.UserTrackActivity"></activity>
     </application>
 
 </manifest>

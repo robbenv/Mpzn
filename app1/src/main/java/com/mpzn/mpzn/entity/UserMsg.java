@@ -8,17 +8,31 @@ import java.io.Serializable;
 /**
  * Created by Icy on 2016/9/2.
  */
-public class UserMsg implements Parcelable,Serializable {
+public class  UserMsg implements Parcelable,Serializable {
     private int mId;
     private String mName;
     private int mChild;    //账号类型
     private String mIconUrl;
+    private String phone;
 
-    public UserMsg(int mId, String mIconUrl, int mChild, String mName) {
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public static Creator<UserMsg> getCREATOR() {
+        return CREATOR;
+    }
+
+    public UserMsg(int mId, String mIconUrl, int mChild, String mName, String phone) {
         this.mId = mId;
         this.mIconUrl = mIconUrl;
         this.mChild = mChild;
         this.mName = mName;
+        this.phone = phone;
     }
 
     protected UserMsg(Parcel in) {
@@ -26,6 +40,7 @@ public class UserMsg implements Parcelable,Serializable {
         mName = in.readString();
         mChild = in.readInt();
         mIconUrl = in.readString();
+        phone = in.readString();
     }
 
     public static final Creator<UserMsg> CREATOR = new Creator<UserMsg>() {
@@ -87,5 +102,6 @@ public class UserMsg implements Parcelable,Serializable {
         dest.writeString(mName);
         dest.writeInt(mChild);
         dest.writeString(mIconUrl);
+        dest.writeString(phone);
     }
 }

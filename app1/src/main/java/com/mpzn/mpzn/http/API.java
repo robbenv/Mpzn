@@ -68,6 +68,7 @@ public class API {
     public static final String BUILDING_PRICE = "http://pan.guyun18.com/jiagezoushi.html";
     public static final String GFTOOL = "http://pan.guyun18.com/gfTool.html";
     public static final String MAP_SEARCH = "http://pan.guyun18.com/mapSearch.html";
+    public static final String TRACK_SETUP = "http://pan.guyun18.com/shoppingYixiang.html?cid=";
     public static final String CHECK_SELL_GET = API+"/agent/check_loupan_is_daixiao";
     public static final String GET_ICON_GET = API+"/user/account_avatar";
     public static final String WX_REGIST = API+"/Regist/weixinregist";
@@ -78,4 +79,7 @@ public class API {
     public static final String PROXY_SELL_HANDLE = API+"/developers/manageloupandaixiao";
     public static final String BIND_WX = API+"/user/bind_weixin";
     public static final String TAKEPUSH="http://appi.mpzn.com/jpush/jpush/dopush.php";
+    public static final String BBCOMPANY=API + "/baobei/agenttongji";
+    public static final String FILTER_LOUPAN = API + "/baobei/tongji_loupan_list";
+    public static final String TRACK_USER_LIST = API + "/baobei/tracking_list";
 }

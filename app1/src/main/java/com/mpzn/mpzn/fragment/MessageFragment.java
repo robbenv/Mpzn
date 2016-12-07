@@ -133,14 +133,18 @@ public class MessageFragment extends BaseFragment {
     }
 
     private void handleJpushNotification(final JPushNotificationEntity jPushNotificationEntity) {
-        if (jPushNotificationEntity.getType().equals(TYPE_HTML)) {
+        if (jPushNotificationEntity == null) {
+            return;
+        }
+
+        if (TYPE_HTML.equals(jPushNotificationEntity.getType())) {
 
         } else {
             String url = null;
-            if (jPushNotificationEntity.getType().equals(TYPE_BUILDING)) {
+            if (TYPE_BUILDING.equals(jPushNotificationEntity.getType())) {
                 url = API.BUILDINGABTRACT_GET;
 
-            } else if (jPushNotificationEntity.getType().equals(TYPE_NEWS)) {
+            } else if (TYPE_NEWS.equals(jPushNotificationEntity.getType()) || url == null) {
                 url = API.NEWSABTRACT_GET;
             }
             Log.e("jpush_test", "联网" + url);
@@ -221,6 +225,9 @@ public class MessageFragment extends BaseFragment {
                 jPushNotificationEntity.setId(aId);
                 jPushNotificationEntity.setType(type);
                 JpushList.add(jPushNotificationEntity);
+                if (jPushNotificationEntity == null) {
+                    return;
+                }
                 handleJpushNotification(jPushNotificationEntity);
 
             } while (cursor.moveToNext());

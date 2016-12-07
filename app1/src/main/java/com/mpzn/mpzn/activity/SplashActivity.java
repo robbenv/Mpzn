@@ -21,9 +21,15 @@ import com.mpzn.mpzn.utils.CacheUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.util.Set;
+
 import butterknife.Bind;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import de.greenrobot.event.EventBus;
 import okhttp3.Call;
+
+import static com.mpzn.mpzn.application.MyApplication.mUserMsg;
 
 public class SplashActivity extends BaseActivity {
 
@@ -42,6 +48,7 @@ public class SplashActivity extends BaseActivity {
             if (msg.what == TOGUID) {
                 startActivity(new Intent(SplashActivity.this, GuideActivity.class));
             } else {
+
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 isFromJpush = getIntent().getBooleanExtra("jpush", false);
                 if (isFromJpush) {
@@ -142,9 +149,18 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void getUserMsg() {
-        UserMsg mUserMsg = (UserMsg) CacheUtils.getObject(this, "userMsg");
+        final UserMsg mUserMsg = (UserMsg) CacheUtils.getObject(this, "userMsg");
         if (mUserMsg != null) {
             MyApplication.getInstance().mUserMsg = mUserMsg;
+            JPushInterface.setAlias(this, mUserMsg.getPhone()+"_dev", new TagAliasCallback() {
+                @Override
+                public void gotResult(int i, String s, Set<String> set) {
+                    Log.i("jpush_test2", "别名："+mUserMsg.getPhone()+"_dev");
+                    //啥也没有
+                }
+            });
+            Toast.makeText(SplashActivity.this, mUserMsg.getPhone()+"_dev", Toast.LENGTH_SHORT).show();
+
         }
     }
 

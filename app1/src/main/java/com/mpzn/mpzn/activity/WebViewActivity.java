@@ -3,7 +3,9 @@ package com.mpzn.mpzn.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -18,6 +20,8 @@ public class WebViewActivity extends BaseActivity implements FaceFragment.OnEmoj
 
     private WebView webView;
     private MyActionBar action_bar;
+    private String token;
+    private String cid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +81,7 @@ public class WebViewActivity extends BaseActivity implements FaceFragment.OnEmoj
         webView.requestFocus();
 
         webView.loadUrl(url);
-
+        webView.setWebChromeClient(new WebChromeClient());
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -89,10 +93,23 @@ public class WebViewActivity extends BaseActivity implements FaceFragment.OnEmoj
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                view.loadUrl("javascript:hideHead()");
+                Log.i("track", "onPageFinished()__cid = "+cid);
+//                view.loadUrl("javascript:xixi()");
+//                token = null;
+//                cid = null;
+                if (cid != null) {
+                    view.loadUrl("javascript:getToken('" + token + "',"+cid+")");
+                }
+//                view.loadUrl("javascript:getToken('4a6b34fbc71bbe2841038a5882327a52', 125889)");
+//                view.loadUrl("javascript:getToken()");
+                Log.i("track", "4a6b34fbc71bbe2841038a5882327a52");
 
             }
         });
+        //WebChromeClient主要辅助WebView处理Javascript的对话框、网站图标、网站title、加载进度等
+
+
+
 
 
 
@@ -103,9 +120,13 @@ public class WebViewActivity extends BaseActivity implements FaceFragment.OnEmoj
 
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
+        token = intent.getStringExtra("token");
+        cid = intent.getStringExtra("cid");
+        Log.i("track", "initData()__cid = "+cid);
         action_bar.init(title, R.drawable.return_red, R.drawable.share);
         String url = intent.getStringExtra("url");
         initWebView(webView,url);
+
 
     }
 

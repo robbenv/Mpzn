@@ -40,6 +40,7 @@ import com.mpzn.mpzn.activity.RegForUserTypeActivity;
 import com.mpzn.mpzn.activity.SetupActivity;
 import com.mpzn.mpzn.activity.StarAndBrowseActivity;
 import com.mpzn.mpzn.activity.TestActivity;
+import com.mpzn.mpzn.activity.UserTrackActivity;
 import com.mpzn.mpzn.activity.WebViewActivity;
 import com.mpzn.mpzn.adapter.MainUserRecyclerViewAdapter;
 import com.mpzn.mpzn.application.MyApplication;
@@ -55,6 +56,7 @@ import com.mpzn.mpzn.utils.VibratorUtil;
 import com.mpzn.mpzn.utils.ViewUtils;
 import com.mpzn.mpzn.views.DividerItemDecoration;
 import com.mpzn.mpzn.views.SmoothListView.DividerGridItemDecoration;
+import com.mpzn.mpzn.views.WaveView3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +98,8 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
     private RecyclerView rv_user;
     private Button tv_calculator;
     private RelativeLayout rl_user_content;
+    private RelativeLayout user_top;
+    private WaveView3 wave_view;
     private MainUserRecyclerViewAdapter userRecyclerViewAdapter;
     private List<ItemUserTool> results=new ArrayList<>();
     private ItemTouchHelper itemTouchHelper;
@@ -130,7 +134,8 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
         tv_calculator = (Button)fragment_user.findViewById(R.id.tv_calculator);
         iv_setting = (ImageButton)fragment_user.findViewById(R.id.iv_setting);
         rl_user_content= (RelativeLayout)fragment_user.findViewById(R.id.rl_user_content);
-
+        user_top = (RelativeLayout) fragment_user.findViewById(R.id.user_top);
+        wave_view = (WaveView3) fragment_user.findViewById(R.id.wave_view);
     }
 
     @Override
@@ -356,6 +361,10 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
                         intent.setClass(mContext, LoginActivity.class);
                         getActivity().startActivity(intent);
                     }
+                } else if ((itemName).equals("客户信息")) {
+                    Intent intent = new Intent();
+                    intent.setClass(mContext,UserTrackActivity.class);
+                    startActivity(intent);
                 }
             }
         });
@@ -383,6 +392,16 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
                 Intent intent = new Intent();
                 intent.setClass(mContext, SetupActivity.class);
                 startActivityForResult(intent, REQCODE_SETTING);
+            }
+        });
+
+        final RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewUtils.dip2px(80),ViewUtils.dip2px(80));
+        lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        wave_view.setOnWaveAnimationListener(new WaveView3.OnWaveAnimationListener() {
+            @Override
+            public void OnWaveAnimation(float y) {
+                lp.setMargins(ViewUtils.dip2px(20),0,0,(int)y+ViewUtils.dip2px(5));
+                user_icon.setLayoutParams(lp);
             }
         });
 

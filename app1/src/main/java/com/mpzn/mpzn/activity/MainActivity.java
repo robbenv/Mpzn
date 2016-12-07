@@ -182,8 +182,9 @@ public class MainActivity extends BaseActivity {
 
     }
     public void upData(){
-        if(MyApplication.isLogined) {
+        if(MyApplication.getInstance().isLogined) {
             UserMsg mUserMsg = MyApplication.getInstance().mUserMsg;
+
             int usertype = mUserMsg.getmChild();
             switch (usertype) {
                 case  RESCODE_JINGJIREN:

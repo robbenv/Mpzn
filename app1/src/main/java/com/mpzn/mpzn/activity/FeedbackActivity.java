@@ -11,6 +11,7 @@ import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.base.BaseActivity;
 import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.views.MyActionBar;
+import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -82,12 +83,13 @@ public class FeedbackActivity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        Logger.d(e.getMessage());
                         loadedDismissProgressDialog(FeedbackActivity.this, false, loadProgressHUD, "提交失败", false);
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
-                        loadedDismissProgressDialog(FeedbackActivity.this, true, loadProgressHUD, "反馈成功", true);
+                        loadedDismissProgressDialog(FeedbackActivity.this, true, loadProgressHUD, "反馈成功,感谢您的建议，我们会即使处理！", true);
                     }
                 });
 

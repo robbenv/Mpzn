@@ -28,7 +28,7 @@
         android:paddingBottom="10dp"
         android:textColorHint="@color/font_black_4"
         android:textSize="16sp"
-        android:hint="请输入反馈信息，我们将不断为您改进"
+        android:hint="请输入反馈信息，我们将不断为您改进 \n 无论是遇到Bug还是提建议，我们都会为您处理！"
         android:gravity="start"/>
     <EditText
         android:id="@+id/et_contact"

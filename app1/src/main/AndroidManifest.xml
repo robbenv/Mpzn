@@ -177,8 +177,12 @@
         <activity
             android:name=".activity.ReviewListActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity android:name=".activity.ApplyForSellActivity" />
-        <activity android:name=".activity.MySellActivity" />
+        <activity android:name=".activity.ApplyForSellActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            />
+        <activity android:name=".activity.MySellActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            />
         <activity android:name=".activity.FeedbackActivity" />
         <activity android:name=".activity.TestActivity" />
 
@@ -206,6 +210,10 @@
         <activity android:name=".activity.HandleProxySellActivity" />
         <activity android:name=".activity.BBSearchActivity" />
         <activity android:name=".activity.UserTrackActivity"></activity>
+        
+        <!-- 友盟统计相关 -->
+        <meta-data android:value="YOUR_APP_KEY" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="Channel ID" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

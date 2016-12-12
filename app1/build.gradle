@@ -73,4 +73,9 @@ dependencies {
     compile project(':emoji')
     compile project(path: ':emoji2')
     compile 'com.orhanobut:logger:1.15'
+    compile project(':emoji2')
+    //自定义图库
+    compile 'com.yuyh.imgsel:library:1.3.2'
+    //友盟统计
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }

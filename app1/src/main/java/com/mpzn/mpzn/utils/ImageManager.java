@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.code19.library.NetUtils;
 import com.mpzn.mpzn.R;
+import com.orhanobut.logger.Logger;
 
 import java.io.ByteArrayOutputStream;
 
@@ -43,11 +44,11 @@ public class ImageManager {
     public String getUrlFromImageQualitySet(String url){
         switch (loadImageQuality) {
             case  SELT_ADAPTE_LOAD_URL_IMAMGE:
-                 if(NetUtils.isWiFi(mContext)){
-                     url=url;
-                 }else{
-                     url=url;
-                 }
+//                 if(NetUtils.isWiFi(mContext)){
+//                     url=url;
+//                 }else{
+//                     url=urzl;
+//                 }
                 break;
             case  HIGH_QUALITY_LOAD_URL_IMAMGE:
                 url=url;

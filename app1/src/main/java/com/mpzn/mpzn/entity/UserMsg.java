@@ -10,10 +10,28 @@ import java.io.Serializable;
  */
 public class  UserMsg implements Parcelable,Serializable {
     private int mId;
-    private String mName;
+    private String mName;//账户名称
+    private String name;//用户真实姓名
+    private String nickName;
     private int mChild;    //账号类型
     private String mIconUrl;
     private String phone;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
     public String getPhone() {
         return phone;
@@ -27,12 +45,14 @@ public class  UserMsg implements Parcelable,Serializable {
         return CREATOR;
     }
 
-    public UserMsg(int mId, String mIconUrl, int mChild, String mName, String phone) {
+    public UserMsg(int mId, String mIconUrl, int mChild, String mName, String phone ,String name, String nickName) {
         this.mId = mId;
         this.mIconUrl = mIconUrl;
         this.mChild = mChild;
         this.mName = mName;
         this.phone = phone;
+        this.name = name;
+        this.nickName = nickName;
     }
 
     protected UserMsg(Parcel in) {
@@ -41,6 +61,8 @@ public class  UserMsg implements Parcelable,Serializable {
         mChild = in.readInt();
         mIconUrl = in.readString();
         phone = in.readString();
+        name = in.readString();
+        nickName = in.readString();
     }
 
     public static final Creator<UserMsg> CREATOR = new Creator<UserMsg>() {
@@ -103,5 +125,7 @@ public class  UserMsg implements Parcelable,Serializable {
         dest.writeInt(mChild);
         dest.writeString(mIconUrl);
         dest.writeString(phone);
+        dest.writeString(name);
+        dest.writeString(nickName);
     }
 }

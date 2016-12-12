@@ -70,7 +70,7 @@ public class RvBbRankAdapter extends RecyclerView.Adapter<RvBbRankAdapter.MyView
         holder.tvName.setText(brokersbaobeiBean.getXingming());
         holder.tvBbNum.setText(brokersbaobeiBean.getSuccess()+"");
 
-            holder.tvRankNum.setText("NO." + position + 1);
+            holder.tvRankNum.setText("NO." + (position + 1));
 
 
 

@@ -51,6 +51,7 @@ import static com.mpzn.mpzn.utils.ViewUtils.loadedDismissProgressDialog;
 public class JingjiRenManageActivity extends BaseActivity {
 
 
+    private static final String TAG = "JingjiRen";
     @Bind(R.id.aciton_bar)
     MyActionBar acitonBar;
     @Bind(R.id.rb_own)
@@ -407,6 +408,7 @@ public class JingjiRenManageActivity extends BaseActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "onClick()__btnDelete");
                 manageJingjiren("delete");
             }
         });
@@ -420,6 +422,12 @@ public class JingjiRenManageActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.show();
+            }
+        });
+        btnRefuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                manageJingjiren("unchecked");
             }
         });
 
@@ -438,6 +446,7 @@ public class JingjiRenManageActivity extends BaseActivity {
         } else if (action == "unchecked") {
             LoadingMsg = "正在驳回申请...";
             SuccussMsg = "驳回申请成功";
+            jingjirenlist = addJingjirenList;
 
         } else if (action == "delete") {
 
@@ -464,10 +473,13 @@ public class JingjiRenManageActivity extends BaseActivity {
                 }
             }
         }
+
+        Log.i(TAG, "manageJingjiren()__daleteList = "+deleteList.size());
         if (str == "") {
             loadedDismissProgressDialog(JingjiRenManageActivity.this, false, loadProgressHUD, "请选择要移除的楼盘", false);
         } else {
             final String finalSuccussMsg = SuccussMsg;
+            Log.i(TAG, "manageJingjiren()__action = "+action);
             OkHttpUtils.post()
                     .url(API.MANAGEBROKERSLIST_POST)
                     .addParams("token", MyApplication.getInstance().token)

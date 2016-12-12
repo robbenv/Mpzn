@@ -8,15 +8,15 @@ public class API {
     public static final String HOME_GET=API+"/home/get_index_info";
     public static final String NEWSLIST_GET=API+"/news/lists";  //参数offset
     public static final String NEWSTOP_GET=API+"/news/nav";
-    public static final String HOMENEWSLIST_GET=API+"/home/news";
+    public static final String HOMENEWSLIST_GET=API+"/home/news";//没用
     public static final String LOGIN_GET=API+"/user/login";  //首次登录参数: username pass 第二次登录参数：userid token
     public static final String LOGOUT_GET=API+"/user/logout";
     public static final String NEWDETAIL="http://pan.guyun18.com/android_news.html?aid="; //参数aid
-    public static final String BUILDINGINIT_GET="/home/index";
+    public static final String BUILDINGINIT_GET="/home/index";//没用
     public static final String BUILDINGLIST_GET=API+"/filter/tofilter";//参数：region="null",price="null",type="null",character="null",page=0
     public static final String BUILDINGDETAIL_GET=API+"/building/buildingdetail";//参数aid
-    public static final String BUILDINGTJ_GET=API+"/recommend/lplist";
-    public static final String HOME_BBXX=API+"/baobei/baobeilist";
+    public static final String BUILDINGTJ_GET=API+"/recommend/lplist";//没用
+    public static final String HOME_BBXX=API+"/baobei/baobeilist";//没用
     public static final String REG_CHECK_POST=API+"/Regist/checkunique";
     public static final String REG_SEND_SMS=API+"/SendMessage/sendSMS";
     public static final String REGIST_POST=API+"/Regist/toregist";
@@ -55,7 +55,7 @@ public class API {
     public static final String CHECK_VERSION = API+"/Version/get_ver_update";
     public static final String REGIST_FAST = API+"/user/phone_rapid_login";
     public static final String CHECK_PHONE_ISEXSIST_POST = API+"/Regist/checkunique";
-    public static final String CHECK_CODE_ISCORRECT_POST = API+"/user/checkmessage";
+    public static final String CHECK_CODE_ISCORRECT_POST = API+"/regist/checkmessage";
     public static final String JJCOM_LIST_GET = API+"/broker/apply_search_list";
     public static final String APPLYJJCOM_POST = API+"/broker/apply_agent";
     public static final String FORGETPASS_POST = API+"/user/modifypass";

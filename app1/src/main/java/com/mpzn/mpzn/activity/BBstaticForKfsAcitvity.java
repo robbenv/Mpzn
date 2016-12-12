@@ -22,6 +22,7 @@ import com.mpzn.mpzn.entity.KfsOwnBuilding;
 import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.views.DividerItemDecoration;
 import com.mpzn.mpzn.views.MyActionBar;
+import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -50,6 +51,7 @@ public class BBstaticForKfsAcitvity extends BaseActivity {
     RecyclerView rvBbRank;
 
     private List<String> mList = new ArrayList();
+    private List<BBstaticForKfsListEntity.DataBean.AgentbaobeiBean> noData=new ArrayList<>();
     List<KfsOwnBuilding.DataBean> loupans=new ArrayList<>();
     private ArrayAdapter arrayAdapter;
 
@@ -102,6 +104,7 @@ public class BBstaticForKfsAcitvity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        Logger.d("BB_STATISTICS_FORKFS_GET__服务器未响应");
                         Toast.makeText(BBstaticForKfsAcitvity.this, "服务器未响应", Toast.LENGTH_SHORT).show();
                     }
 
@@ -109,9 +112,16 @@ public class BBstaticForKfsAcitvity extends BaseActivity {
                     public void onResponse(String response, int id) {
                         BBstaticForKfsListEntity bBstaticForKfsListEntity = new Gson().fromJson(response, BBstaticForKfsListEntity.class);
                         if(bBstaticForKfsListEntity.getCode()==200){
-                           agentbaobei = bBstaticForKfsListEntity.getData().getAgentbaobei();
-                            Toast.makeText(BBstaticForKfsAcitvity.this, agentbaobei.size()+"", Toast.LENGTH_SHORT).show();
-                            rvBBStaticForKfsAdapter.updata(agentbaobei);
+                            BBstaticForKfsListEntity.DataBean dataBean = bBstaticForKfsListEntity.getData();
+                            if (dataBean == null) {
+
+                                rvBBStaticForKfsAdapter.updata(noData);
+                            } else {
+                                agentbaobei = bBstaticForKfsListEntity.getData().getAgentbaobei();
+                                Toast.makeText(BBstaticForKfsAcitvity.this, agentbaobei.size()+"", Toast.LENGTH_SHORT).show();
+                                rvBBStaticForKfsAdapter.updata(agentbaobei);
+                            }
+
                         }else{
                             Toast.makeText(BBstaticForKfsAcitvity.this, "获取信息失败", Toast.LENGTH_SHORT).show();
 
@@ -130,6 +140,7 @@ public class BBstaticForKfsAcitvity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        Logger.d("KFS_OWN_BUILDING_GET__服务器未响应__token = "+token+"  \n message:"+e.toString());
                         Toast.makeText(BBstaticForKfsAcitvity.this, "服务器未响应", Toast.LENGTH_SHORT).show();
                     }
 

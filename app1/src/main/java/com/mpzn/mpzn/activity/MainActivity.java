@@ -28,6 +28,7 @@ import com.mpzn.mpzn.fragment.UserFragment;
 import com.mpzn.mpzn.utils.CacheUtils;
 import com.mpzn.mpzn.views.BadgeView;
 import com.mpzn.mpzn.views.MyDialog;
+import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
@@ -74,6 +75,7 @@ public class MainActivity extends BaseActivity {
 
 //    String[] mPermissionList = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS};
     private boolean isFromJpush;
+    private boolean isBbJpush;
 
 
     @Override
@@ -106,7 +108,10 @@ public class MainActivity extends BaseActivity {
         fragments = mFragmentManager.getFragments();
         mInflater = LayoutInflater.from(mContext);
 
-
+        isBbJpush = getIntent().getBooleanExtra("bbpush", false);
+        if (isBbJpush) {
+            switchPager(R.id.rb_loupan);
+        }
 
 
 
@@ -168,6 +173,8 @@ public class MainActivity extends BaseActivity {
             setPoint(3);
         }
         upData();
+        //来自报备的推送时，切换到消息记录页面
+
 
         //当程序没有运行时，对极光推送打开进行处理
         isFromJpush = getIntent().getBooleanExtra("jpush", false);
@@ -182,7 +189,8 @@ public class MainActivity extends BaseActivity {
 
     }
     public void upData(){
-        if(MyApplication.getInstance().isLogined) {
+        Logger.d("MyApplication.getInstance() ="+MyApplication.getInstance());
+        if(MyApplication.isLogined) {
             UserMsg mUserMsg = MyApplication.getInstance().mUserMsg;
 
             int usertype = mUserMsg.getmChild();

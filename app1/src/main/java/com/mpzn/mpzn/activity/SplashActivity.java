@@ -18,6 +18,7 @@ import com.mpzn.mpzn.entity.UserMsg;
 import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.service.UpdataVersionService;
 import com.mpzn.mpzn.utils.CacheUtils;
+import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -152,14 +153,15 @@ public class SplashActivity extends BaseActivity {
         final UserMsg mUserMsg = (UserMsg) CacheUtils.getObject(this, "userMsg");
         if (mUserMsg != null) {
             MyApplication.getInstance().mUserMsg = mUserMsg;
-            JPushInterface.setAlias(this, mUserMsg.getPhone()+"_dev", new TagAliasCallback() {
+            JPushInterface.setAlias(this, mUserMsg.getmName()+"_dev", new TagAliasCallback() {
                 @Override
                 public void gotResult(int i, String s, Set<String> set) {
-                    Log.i("jpush_test2", "别名："+mUserMsg.getPhone()+"_dev");
+                    Logger.d("缓存：别名："+mUserMsg.getmName()+"_dev");
+//                    Log.i("jpush_test2", "别名："+mUserMsg.getPhone()+"_dev");
                     //啥也没有
                 }
             });
-            Toast.makeText(SplashActivity.this, mUserMsg.getPhone()+"_dev", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SplashActivity.this, mUserMsg.getmName()+"_dev", Toast.LENGTH_SHORT).show();
 
         }
     }

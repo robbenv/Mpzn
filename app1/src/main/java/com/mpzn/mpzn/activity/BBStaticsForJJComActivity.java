@@ -258,11 +258,11 @@ public class BBStaticsForJJComActivity extends BaseActivity {
     private void setPieView(int total, int successNum, int failureNum) {
         PieGraphView.ItemGroup itemGroup = new PieGraphView.ItemGroup();
         PieGraphView.Item item = new PieGraphView.Item();
-        item.color = Color.BLUE;
+        item.color = 0x9993b0cf;
         item.value = successNum;
         item.id = "报备成功:" + successNum + "%";
         PieGraphView.Item item1 = new PieGraphView.Item();
-        item1.color = Color.RED;
+        item1.color = 0x99c56ea7;
         item1.value = failureNum;
         item1.id = "报备失败:" + failureNum + "%";
         itemGroup.items = new PieGraphView.Item[2];

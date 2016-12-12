@@ -72,4 +72,5 @@ dependencies {
     compile 'org.kymjs.kjframe:kjframe:2.6'
     compile project(':emoji')
     compile project(path: ':emoji2')
+    compile 'com.orhanobut:logger:1.15'
 }

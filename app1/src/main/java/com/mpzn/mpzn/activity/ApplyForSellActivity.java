@@ -201,7 +201,9 @@ public class ApplyForSellActivity extends BaseActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() != 0) {
                     lvSearchTips.setVisibility(View.VISIBLE);
+                    rlBottom.setVisibility(View.GONE);
                 } else {
+                    rlBottom.setVisibility(View.VISIBLE);
                     lvSearchTips.setVisibility(View.GONE);
                 }
                 OkHttpUtils.get()

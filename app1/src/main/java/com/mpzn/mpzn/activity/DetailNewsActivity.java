@@ -440,7 +440,6 @@ public class DetailNewsActivity extends BaseActivity  implements FaceFragment.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         /** attention to this below ,must add this**/
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         Log.d("result", "onActivityResult");

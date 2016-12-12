@@ -12,6 +12,7 @@ import com.baidu.mapapi.SDKInitializer;
 import com.mpzn.mpzn.BuildConfig;
 import com.mpzn.mpzn.activity.AddBBActivity;
 import com.mpzn.mpzn.entity.UserMsg;
+import com.orhanobut.logger.Logger;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
@@ -43,7 +44,7 @@ public class MyApplication extends Application {
     public static String token;
     public static Context mContext;
     public static Boolean isNotFirstRun;
-    public static Boolean isLogined;
+    public static boolean isLogined = false;
     public static UserMsg mUserMsg;
     public static boolean isInfect;
     public static int mScreenWidth;
@@ -73,13 +74,7 @@ public class MyApplication extends Application {
 
         //极光推送初始化SDK
         JPushInterface.init(this);
-//        JPushInterface.setAlias(this, token, new TagAliasCallback() {
-//            @Override
-//            public void gotResult(int i, String s, Set<String> set) {
-//                
-//                //啥也没有
-//            }
-//        });
+
 
         //微信 appid appsecret
         PlatformConfig.setWeixin("wx395a9fb9b698fabc", "c387dcbd2a344a2ece68589b624cceac");
@@ -110,13 +105,14 @@ public class MyApplication extends Application {
     public void setmUserMsg(final UserMsg mUserMsg){
 
         this.mUserMsg=mUserMsg;
-        JPushInterface.setAlias(this, mUserMsg.getPhone()+"_dev", new TagAliasCallback() {
-            @Override
-            public void gotResult(int i, String s, Set<String> set) {
-                Log.i("jpush_test2", "别名："+mUserMsg.getPhone()+"_dev");
-                //啥也没有
-            }
-        });
+//        JPushInterface.setAlias(this, mUserMsg.getmName()+"_dev", new TagAliasCallback() {
+//            @Override
+//            public void gotResult(int i, String s, Set<String> set) {
+//                Toast.makeText(MyApplication.this, "别名："+mUserMsg.getmName()+"_dev", Toast.LENGTH_SHORT).show();
+//                Logger.d( "别名："+mUserMsg.getmName()+"_dev");
+//                //啥也没有
+//            }
+//        });
 
 
     }

@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -21,8 +22,12 @@ import com.mpzn.mpzn.entity.AddBBMsgEntity;
 import com.mpzn.mpzn.entity.SimpleEntity;
 import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.views.MyActionBar;
+import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +133,15 @@ public class AddBBActivity extends BaseActivity {
                             int aid = intent.getIntExtra("Aid", -1);
                             int loupan_index =-1;
 
+                            etName.setText(addBBMsgEntity.getData().getName());
+                            etPhone.setText(addBBMsgEntity.getData().getPhone());
+                            etCname.setText(addBBMsgEntity.getData().getCompanyName());
+
+                            if (loupans == null) {
+                                Toast.makeText(AddBBActivity.this, "您还没有可以报备的楼盘", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
                             for (int i = 0; i < loupans.size(); i++) {
                                 mList.add(loupans.get(i).getSubject());
                                 if(loupans.get(i).getAid()==aid){
@@ -138,9 +152,6 @@ public class AddBBActivity extends BaseActivity {
                             spLoupan.setSelection(loupan_index+1);
 
 
-                            etName.setText(addBBMsgEntity.getData().getName());
-                            etPhone.setText(addBBMsgEntity.getData().getPhone());
-                            etCname.setText(addBBMsgEntity.getData().getCompanyName());
 
                         } else {
                             showCustomProgressDialog(AddBBActivity.this, addBBMsgEntity.getMessage(), R.drawable.toast_error);
@@ -183,7 +194,10 @@ public class AddBBActivity extends BaseActivity {
                             setSize(MyApplication.mScreenWidth/4, MyApplication.mScreenWidth/6).
                             setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).
                             setLabel("正在提交..").setCancellable(false).show();
-
+                    Logger.d("token = "+MyApplication.getInstance().token +"\n khname = "+etKhname.getText().toString().trim()+"\n khphone3 = " +
+                            ""+etKhphone3.getText().toString().trim() +"\n khphone4 = "+etKhphone4.getText().toString().trim() +"\n cname = "+etCname.getText().toString().trim()
+                    +"\n aid = "+loupan.getAid()+"\n subject = "+loupan.getSubject() +" \n phone = "+etPhone.getText().toString().trim()+"\n myname ="+
+                            etName.getText().toString().trim()+"\n khnamep1 = "+etKhnamep1.getText().toString().trim()+"\n khnamep2 = "+etKhnamep2.getText().toString().trim());
                     OkHttpUtils.post()
                             .url(ADDBB)
                             .addParams("token", MyApplication.getInstance().token)
@@ -214,7 +228,7 @@ public class AddBBActivity extends BaseActivity {
                                         takeJpush();//调用服务器接口提醒该发送推送了
                                     } else {
                                         loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD, simpleEntity.getMessage(), false);
-
+                                        Logger.d(simpleEntity.getMessage());
 
                                     }
 
@@ -257,27 +271,40 @@ public class AddBBActivity extends BaseActivity {
     }
 
     private void takeJpush() {
-
+        Logger.d("token = "+ MyApplication.getInstance().token+"   loupanid = "+loupan.getAid() +"   mname = "+MyApplication.getInstance().mUserMsg.getmName());
         OkHttpUtils.post()
                 .url(API.TAKEPUSH)
                 .addParams("token", MyApplication.getInstance().token)
                 .addParams("loupanid", loupan.getAid()+"")
-                .addParams("mname", MyApplication.getInstance().mUserMsg+"")
+                .addParams("mname", MyApplication.getInstance().mUserMsg.getmName())
+//                .addParams("token", "6275f726b1917067169a487b6e9c7e94")
+//                .addParams("loupanid", "5015")
+//                .addParams("mname", "15921811520")
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD, "申请推送失败", false);
+                        Logger.e(e,"message");
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
-                        SimpleEntity simpleEntity = new Gson().fromJson(response, SimpleEntity.class);
-                        if (simpleEntity.getCode() == 200) {
+                        Logger.d("onResponse");
+                        int code = 0;
+                        try {
+                            JSONObject jsonObject=new JSONObject(response);
+                            code = jsonObject.optInt("code");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Logger.d("code = "+code);
+                        if (code == 200) {
                             loadedDismissProgressDialog(AddBBActivity.this, true, loadProgressHUD, "申请推送成功", true);
 
                         } else {
-                            loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD, simpleEntity.getMessage(), false);
+                            loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD,"申请推送失败", false);
 
 
                         }

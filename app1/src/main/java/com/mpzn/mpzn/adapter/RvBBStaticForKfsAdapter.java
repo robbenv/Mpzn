@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.entity.BBstaticForKfsListEntity;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +22,16 @@ import butterknife.ButterKnife;
 /**
  * Created by Icy on 2016/11/14.
  */
-public class RvBBStaticForKfsAdapter extends RecyclerView.Adapter<RvBBStaticForKfsAdapter.MyViewHolder> {
+public class RvBBStaticForKfsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private LayoutInflater mInflater;
     private List<BBstaticForKfsListEntity.DataBean.AgentbaobeiBean> bBstaticForKfsListEntityData = new ArrayList<>();
     private Context mContext;
+
+    public enum ITEM_TYPE {
+        ITEM,
+        NODATA
+    }
 
     public RvBBStaticForKfsAdapter(Context mContext, List<BBstaticForKfsListEntity.DataBean.AgentbaobeiBean> bBstaticForKfsListEntityData) {
         this.mContext = mContext;
@@ -32,40 +39,53 @@ public class RvBBStaticForKfsAdapter extends RecyclerView.Adapter<RvBBStaticForK
     }
 
     public void updata(List<BBstaticForKfsListEntity.DataBean.AgentbaobeiBean> bBstaticForKfsListEntityData) {
-        this.bBstaticForKfsListEntityData.clear();
-        this.bBstaticForKfsListEntityData.addAll(bBstaticForKfsListEntityData);
+
+            this.bBstaticForKfsListEntityData.clear();
+            this.bBstaticForKfsListEntityData.addAll(bBstaticForKfsListEntityData);
+
+
         notifyDataSetChanged();
 
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_rv_bb_rank, parent, false);
-        MyViewHolder myViewHolder = new MyViewHolder(view);
-        return myViewHolder;
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == RvCheckBuildingAdapter.ITEM_TYPE.ITEM.ordinal()) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_rv_bb_rank, parent, false);
+            MyViewHolder myViewHolder = new MyViewHolder(view);
+            return myViewHolder;
+        } else {
+            Logger.d("item_no_data_layout");
+            return new NoDataViewHolder(mInflater.inflate(R.layout.item_no_data_layout, parent, false));
+        }
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if(holder instanceof NoDataViewHolder){
+            return;
+        }
+
+        RvBBStaticForKfsAdapter.MyViewHolder mholder=(RvBBStaticForKfsAdapter.MyViewHolder)holder;
         BBstaticForKfsListEntity.DataBean.AgentbaobeiBean dataBean = bBstaticForKfsListEntityData.get(position);
-        holder.rlIcon.setVisibility(View.GONE);
+        mholder.rlIcon.setVisibility(View.GONE);
         if (position == 0) {
-            holder.tvRankNum.setTextColor(mContext.getResources().getColor(R.color.purple));
+            mholder.tvRankNum.setTextColor(mContext.getResources().getColor(R.color.purple));
         } else {
             if (position == 1) {
-                holder.tvRankNum.setTextColor(mContext.getResources().getColor(R.color.orange));
+                mholder.tvRankNum.setTextColor(mContext.getResources().getColor(R.color.orange));
             } else if (position == 2) {
-                holder.tvRankNum.setTextColor(mContext.getResources().getColor(R.color.red_theme));
+                mholder.tvRankNum.setTextColor(mContext.getResources().getColor(R.color.red_theme));
             }else{
-                holder.tvRankNum.setTextColor(mContext.getResources().getColor(R.color.font_black_2));
+                mholder.tvRankNum.setTextColor(mContext.getResources().getColor(R.color.font_black_2));
 
             }
         }
 
-        holder.tvName.setText(dataBean.getCompany_name());
-        holder.tvBbNum.setText(dataBean.getSuccess() + "");
+        mholder.tvName.setText(dataBean.getCompany_name());
+        mholder.tvBbNum.setText(dataBean.getSuccess() + "");
 
-        holder.tvRankNum.setText("NO." + (position+1));
+        mholder.tvRankNum.setText("NO." + (position+1));
 
 
 
@@ -95,6 +115,27 @@ public class RvBBStaticForKfsAdapter extends RecyclerView.Adapter<RvBBStaticForK
             super(itemView);
             ButterKnife.bind(this, itemView);
 
+        }
+    }
+
+    public class NoDataViewHolder extends RecyclerView.ViewHolder{
+
+        public NoDataViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        //Enum类提供了一个ordinal()方法，返回枚举类型的序数，这里ITEM_TYPE.ITEM.ordinal()代表0， ITEM_TYPE.NODATA.ordinal()代表1
+
+        if(bBstaticForKfsListEntityData.size() == 0) {
+            Logger.d("NODATA");
+            return ITEM_TYPE.NODATA.ordinal();
+        }else{
+            Logger.d("ITEM");
+            return ITEM_TYPE.ITEM.ordinal();
         }
     }
 }

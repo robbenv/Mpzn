@@ -83,12 +83,12 @@ public class LoginEntity implements Parcelable,Serializable{
     public static class DataEntity implements Parcelable,Serializable{
         private int mchid;
         private int mid;
-        private String mname;
+        private String mname;//账户名称
         private String token;
         private String hint;
         private String headimage;
-        private String nickname;
-        private String name;
+        private String nickname;//别名
+        private String name;//真实姓名
 
         public String getNickname() {
             return nickname;

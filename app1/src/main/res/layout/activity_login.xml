@@ -108,6 +108,7 @@
             android:singleLine="true"
             android:inputType="textPassword"
             android:maxLength="20"
+            android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@."
             android:imeOptions="actionGo"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"

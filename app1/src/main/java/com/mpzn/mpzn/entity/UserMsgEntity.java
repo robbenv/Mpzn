@@ -87,6 +87,17 @@ public class UserMsgEntity implements Serializable ,Parcelable{
         private String companyName;
         private String hint;
 
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "name='" + name + '\'' +
+                    ", phone='" + phone + '\'' +
+                    ", email='" + email + '\'' +
+                    ", companyName='" + companyName + '\'' +
+                    ", hint='" + hint + '\'' +
+                    '}';
+        }
+
         protected DataBean(Parcel in) {
             name = in.readString();
             phone = in.readString();
@@ -160,5 +171,14 @@ public class UserMsgEntity implements Serializable ,Parcelable{
             dest.writeString(companyName);
             dest.writeString(hint);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "UserMsgEntity{" +
+                "code=" + code +
+                ", message='" + message + '\'' +
+                ", data=" + data.toString() +
+                '}';
     }
 }

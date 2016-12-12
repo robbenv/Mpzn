@@ -13,6 +13,7 @@ import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.views.MyActionBar;
 import com.mpzn.mpzn.views.MyDialog;
 import com.mpzn.mpzn.views.MyProgressDialog;
+import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -92,7 +93,7 @@ public class CheckBBActivity extends BaseActivity {
                             .execute(new StringCallback() {
                                 @Override
                                 public void onError(Call call, Exception e, int id) {
-
+                                    Logger.d(e.getMessage());
                                     myProgressDialog.afterprogress("服务器未响应");
                                 }
 
@@ -101,9 +102,10 @@ public class CheckBBActivity extends BaseActivity {
                                     SimpleEntity simpleEntity = new Gson().fromJson(response, SimpleEntity.class);
                                     if(simpleEntity.getCode()==200){
                                         myProgressDialog.afterprogress("核验成功！");
-
+                                        Logger.d("核验成功！");
                                     }else{
                                         myProgressDialog.afterprogress(simpleEntity.getMessage());
+                                        Logger.d(simpleEntity.getMessage());
                                     }
                                 }
                             });

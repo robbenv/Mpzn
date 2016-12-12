@@ -361,6 +361,10 @@ public class ProxySellManageActivity extends BaseActivity {
         lv_check_ing.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                if (uncheckList.size() == 0) {
+                    //因为没有数据的view也是一条数据，会造成数组越界
+                    return;
+                }
                 ProxySellListEntity.DataBean data = uncheckList.get(position);
                 if(data.isNoData()){
                     return;
@@ -376,6 +380,10 @@ public class ProxySellManageActivity extends BaseActivity {
         lv_check_suc.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                if (successList.size() == 0) {
+                    //因为没有数据的view也是一条数据，会造成数组越界
+                    return;
+                }
                 ProxySellListEntity.DataBean data = successList.get(position);
                 if(data.isNoData()){
                     return;
@@ -391,6 +399,10 @@ public class ProxySellManageActivity extends BaseActivity {
         lv_check_err.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                if (failList.size() == 0) {
+                    //因为没有数据的view也是一条数据，会造成数组越界
+                    return;
+                }
                 ProxySellListEntity.DataBean data = failList.get(position);
                 if(data.isNoData()){
                     return;

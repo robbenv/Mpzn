@@ -118,7 +118,7 @@ public class MyDataActivity extends BaseActivity {
 
     }
     private void setUserMsg(TextView textView,String getMsg){
-        if(getMsg.length()!=0){
+        if(getMsg == null || getMsg.length()!=0 ){
             textView.setText(getMsg);
             textView.setTextColor(getResources().getColor(R.color.font_black_5));
         }else{
@@ -191,9 +191,10 @@ public class MyDataActivity extends BaseActivity {
        }
         mImageManager.loadCircleImage(mUserMsg.getmIconUrl(),ivMyIcon);
         userMsgEntity= (UserMsgEntity) getObject(mContext,"userMsgEntity");
+//        Log.e("TAG", "userMsgEntity"+userMsgEntity.toString());
         if(userMsgEntity!=null){
             updataView();
-            Log.e("TAG", "userMsgEntity"+userMsgEntity);
+            Log.e("TAG", "userMsgEntity"+userMsgEntity.toString());
         }
         OkHttpUtils.get()
                 .url(API.USERMSG_GET)
@@ -212,7 +213,7 @@ public class MyDataActivity extends BaseActivity {
                         userMsgEntity = new Gson().fromJson(response, UserMsgEntity.class);
                         if(userMsgEntity.getCode()==200){
                             putObject(mContext,"userMsgEntity",userMsgEntity);
-                            Log.i("bug_browse", "onResponse()__userMsgEntity = "+userMsgEntity.getData().getName());
+                            Log.i("TAG", "onResponse()__userMsgEntity = "+userMsgEntity.getData().getName());
                             updataView();
 
                         }else {
@@ -453,4 +454,6 @@ public class MyDataActivity extends BaseActivity {
 
 
     }
+
+
 }

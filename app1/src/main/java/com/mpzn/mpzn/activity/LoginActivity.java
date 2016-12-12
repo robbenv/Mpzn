@@ -48,6 +48,7 @@ import com.mpzn.mpzn.utils.Constant;
 import com.mpzn.mpzn.utils.PermissionsChecker;
 import com.mpzn.mpzn.utils.ViewUtils;
 import com.mpzn.mpzn.views.MyActionBar;
+import com.orhanobut.logger.Logger;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -62,6 +63,8 @@ import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import okhttp3.Call;
@@ -197,7 +200,7 @@ public class LoginActivity extends BaseActivity {
 
         myActionBar.init("登录", R.drawable.return_white, 0);
         myActionBar.setRightText("忘记密码");
-
+        //AccountEntity只是用来自动填上用户账号密码和头像的
         AccountEntity account = (AccountEntity) getObject(mContext, "account");
         if (account != null) {
             etUserPhone.setText(account.getUsername());
@@ -731,12 +734,10 @@ public class LoginActivity extends BaseActivity {
         UserMsg userMsg = new UserMsg();
         userMsg.setmChild(data.getMchid());
         Log.e("TAG", "type" + data.getMchid());
-        if ("".equals(data.getName())) {
+        Logger.d(data.getMname());
             userMsg.setmName(data.getMname());
-        } else {
-            userMsg.setmName(data.getName());
-        }
-
+            userMsg.setName(data.getName());
+            userMsg.setNickName(data.getNickname());
         userMsg.setPhone(data.getMname());
         userMsg.setmId(data.getMid());
         userMsg.setmIconUrl(data.getHeadimage());
@@ -746,9 +747,16 @@ public class LoginActivity extends BaseActivity {
 
 
         putObject(mContext, "userMsg", userMsg);
-        Log.i("bug_browse", "getUserMsg()__name = "+userMsg.getmName());
+        Logger.d("别名："+userMsg.getmName()+"_dev");
+                JPushInterface.setAlias(this, userMsg.getmName()+"_dev", new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                //啥也没有
+
+            }
+        });
         MyApplication.getInstance().setmUserMsg(userMsg);
-        Toast.makeText(mContext, "别名："+userMsg.getPhone()+"_dev", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "别名："+userMsg.getmName()+"_dev", Toast.LENGTH_SHORT).show();
 
 
 

@@ -270,7 +270,7 @@ public class PieGraphView extends View {
                 radius += mGrowProgress * mGrownWidth / 2f;
             }
             calcAngleMiddleInRing(middleAngle, radius, mItemCenter);
-            drawItemCenterIcon(canvas, middleAngle, colors[i], mItemCenter);
+//            drawItemCenterIcon(canvas, middleAngle, colors[i], mItemCenter);
 
             if (sweepStart < rotatedStart) break;
             rotatedEnd -= itemAngle;
@@ -367,13 +367,13 @@ public class PieGraphView extends View {
                 canvas.drawArc(mBigOval, sweepStart, itemAngle, true, mPaintOuter);
                 int middleAngle = (int) (sweepStart + itemAngle / 2);
                 calcAngleMiddleInRing(middleAngle, radius, mItemCenter);
-                drawItemCenterIcon(canvas, middleAngle, colors[i], mItemCenter);
+//                drawItemCenterIcon(canvas, middleAngle, colors[i], mItemCenter);
             } else {
                 itemAngle = endAngle - startAngle;
                 int middleAngle = (int) (startAngle + itemAngle / 2);
                 canvas.drawArc(mBigOval, startAngle, itemAngle, true, mPaintOuter);
                 calcAngleMiddleInRing(middleAngle, radius, mItemCenter);
-                drawItemCenterIcon(canvas, middleAngle , colors[i], mItemCenter);
+//                drawItemCenterIcon(canvas, middleAngle , colors[i], mItemCenter);
                 break;
             }
             endAngle -= itemAngle;
@@ -389,7 +389,8 @@ public class PieGraphView extends View {
     private void rotateToDegree(float targetDegree, boolean smartRotate) {
         // 使得 targetDegree 介于0-360
         targetDegree = (targetDegree + 360) % 360;
-        int targetRotate = (int) -targetDegree;
+//        int targetRotate = (int) -targetDegree;
+        int targetRotate = (int) -targetDegree + 57;
 
         mRotateDelta = targetRotate - mRotation;
         mRotateDelta = mRotateDelta % 360;
@@ -586,7 +587,8 @@ public class PieGraphView extends View {
     }
 
     private void drawItemCenterIcon(Canvas canvas, int middleAngle, int itemColor, Point center) {
-        int color = itemColor / 2;
+//        int color = itemColor / 2;
+        int color = itemColor;
         mItemCenterPaint.setColor(color);
         // 这里当角度非常小的时候，半径有可能显示不完全——超出
         canvas.drawCircle(center.x, center.y, mRingWidth / 4f, mItemCenterPaint);

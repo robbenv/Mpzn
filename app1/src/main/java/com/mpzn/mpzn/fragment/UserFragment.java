@@ -439,8 +439,12 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
            }
 
         mImageManager.loadCircleImageWithWhite(userMsg.getmIconUrl(),user_icon);
-
-        tv_login.setText(userMsg.getmName());
+        if (userMsg.getName() == null || "".equals(userMsg.getName())) {
+            //如果没有用户姓名，就用电话，如果有用户姓名，就用用户姓名
+            tv_login.setText(userMsg.getmName());
+        } else {
+            tv_login.setText(userMsg.getName());
+        }
 
 
         results = new ArrayList<>();

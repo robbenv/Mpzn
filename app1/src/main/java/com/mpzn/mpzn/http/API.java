@@ -11,7 +11,7 @@ public class API {
     public static final String HOMENEWSLIST_GET=API+"/home/news";//没用
     public static final String LOGIN_GET=API+"/user/login";  //首次登录参数: username pass 第二次登录参数：userid token
     public static final String LOGOUT_GET=API+"/user/logout";
-    public static final String NEWDETAIL="http://pan.guyun18.com/android_news.html?aid="; //参数aid
+    public static final String NEWDETAIL="http://pan.guyun18.com/newsDetail.html?aid="; //参数aid
     public static final String BUILDINGINIT_GET="/home/index";//没用
     public static final String BUILDINGLIST_GET=API+"/filter/tofilter";//参数：region="null",price="null",type="null",character="null",page=0
     public static final String BUILDINGDETAIL_GET=API+"/building/buildingdetail";//参数aid
@@ -68,7 +68,7 @@ public class API {
     public static final String BUILDING_PRICE = "http://pan.guyun18.com/jiagezoushi.html";
     public static final String GFTOOL = "http://pan.guyun18.com/gfTool.html";
     public static final String MAP_SEARCH = "http://pan.guyun18.com/mapSearch.html";
-    public static final String TRACK_SETUP = "http://pan.guyun18.com/shoppingYixiang.html?cid=";
+    public static final String TRACK_SETUP = "http://pan.guyun18.com/android_shoppingYixiang.html";
     public static final String CHECK_SELL_GET = API+"/agent/check_loupan_is_daixiao";
     public static final String GET_ICON_GET = API+"/user/account_avatar";
     public static final String WX_REGIST = API+"/Regist/weixinregist";

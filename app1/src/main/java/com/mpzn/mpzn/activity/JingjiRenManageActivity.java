@@ -199,7 +199,7 @@ public class JingjiRenManageActivity extends BaseActivity {
                         .execute(new StringCallback() {
                             @Override
                             public void onError(Call call, Exception e, int id) {
-
+                                loadedDismissProgressDialog(JingjiRenManageActivity.this, false, loadProgressHUD, "加载失败，请检查网络", false);
                             }
 
                             @Override

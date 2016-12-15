@@ -1,6 +1,7 @@
 package com.mpzn.mpzn.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.webkit.WebViewClient;
 import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.base.BaseActivity;
 import com.mpzn.mpzn.views.MyActionBar;
+import com.orhanobut.logger.Logger;
 import com.tb.emoji.Emoji;
 import com.tb.emoji.FaceFragment;
 
@@ -79,9 +81,18 @@ public class WebViewActivity extends BaseActivity implements FaceFragment.OnEmoj
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER); // 取消WebView中滚动或拖动到顶部、底部时的阴影
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY); // 取消滚动条白边效果
         webView.requestFocus();
-
+        Logger.d(url);
         webView.loadUrl(url);
-        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+//                if (cid != null) {
+//                    Logger.d("token = "+token+"\n cid = "+cid);
+//                    view.loadUrl("javascript:getToken('" + token + "',"+cid+")");
+//                }
+            }
+        });
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -98,12 +109,31 @@ public class WebViewActivity extends BaseActivity implements FaceFragment.OnEmoj
 //                token = null;
 //                cid = null;
                 if (cid != null) {
+                    Logger.d("token = "+token+"\n cid = "+cid);
                     view.loadUrl("javascript:getToken('" + token + "',"+cid+")");
                 }
 //                view.loadUrl("javascript:getToken('4a6b34fbc71bbe2841038a5882327a52', 125889)");
 //                view.loadUrl("javascript:getToken()");
                 Log.i("track", "4a6b34fbc71bbe2841038a5882327a52");
 
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+//                if (cid != null) {
+//                    Logger.d("token = "+token+"\n cid = "+cid);
+//                    view.loadUrl("javascript:getToken('" + token + "',"+cid+")");
+//                }
+            }
+
+            @Override
+            public void onPageCommitVisible(WebView view, String url) {
+                super.onPageCommitVisible(view, url);
+//                if (cid != null) {
+//                    Logger.d("token = "+token+"\n cid = "+cid);
+//                    view.loadUrl("javascript:getToken('" + token + "',"+cid+")");
+//                }
             }
         });
         //WebChromeClient主要辅助WebView处理Javascript的对话框、网站图标、网站title、加载进度等

@@ -57,6 +57,7 @@ import com.mpzn.mpzn.utils.ViewUtils;
 import com.mpzn.mpzn.views.DividerItemDecoration;
 import com.mpzn.mpzn.views.SmoothListView.DividerGridItemDecoration;
 import com.mpzn.mpzn.views.WaveView3;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -286,7 +287,7 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
                         Toast.makeText(mContext, "请先登录", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent();
                         intent.setClass(mContext, LoginActivity.class);
-                        getActivity().startActivity(intent);
+                        startActivityForResult(intent, REQCODE_LOGIN);
                     }
 
 
@@ -301,7 +302,7 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
                         Toast.makeText(mContext, "请先登录", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent();
                         intent.setClass(mContext, LoginActivity.class);
-                        getActivity().startActivity(intent);
+                        startActivityForResult(intent, REQCODE_LOGIN);
                     }
 
 
@@ -475,18 +476,18 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
 
         switch (requestCode) {
             case REQCODE_LOGIN:
-                Log.i("bug_browse", "onActivityResult()__REQCODE_LOGIN");
+                Logger.d("onActivityResult()__REQCODE_LOGIN");
                 if(resultCode!=0) {
                     Log.e("TAG", "resultCode"+resultCode);
                     userMsg= data.getParcelableExtra("userMsg");
-                    Log.i("bug_browse", "onActivityResult()__name = "+userMsg.getmName());
+                    Logger.d("onActivityResult()__name = " + userMsg.getmName());
                     upDataView();
 
                 }
 
                 break;
             case REQCODE_SETTING:
-                Log.i("bug_browse", "onActivityResult()__REQCODE_SETTING");
+                Logger.d("onActivityResult()__REQCODE_SETTING");
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         initViewForLogout();
@@ -496,7 +497,7 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
 
                 break;
             case REQCODE_MYDATA:
-                Log.i("bug_browse", "onActivityResult()__REQCODE_MYDATA");
+                Logger.d("onActivityResult()__REQCODE_MYDATA");
                 switch (resultCode) {
                     case  Activity.RESULT_OK:
 
@@ -508,7 +509,7 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
 
                 break;
             case REQCODE_CHANGICON:
-                Log.i("bug_browse", "onActivityResult()__REQCODE_CHANGICON");
+                Logger.d("onActivityResult()__REQCODE_CHANGICON");
                 switch (resultCode) {
                     case  Activity.RESULT_OK:
                         mImageManager.loadCircleImageWithWhite(MyApplication.getInstance().mUserMsg.getmIconUrl(),user_icon);

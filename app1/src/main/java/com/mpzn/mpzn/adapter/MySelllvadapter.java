@@ -72,17 +72,14 @@ public class MySelllvadapter extends BaseListAdapter<MySellListEntity.DataBean> 
         List<MySellListEntity.DataBean> data = getData();
         MySellListEntity.DataBean dataBean = data.get(position);
         viewHolder.tvSubject.setText(dataBean.getSubject());
-        String createdate = formatData("yyyy-MM-dd", dataBean.getCreatedate());
+        String createdate = formatData("yyyy-MM-dd HH:mm", dataBean.getCreatedate());
         viewHolder.tvData.setText("(" + createdate + ")");
         viewHolder.tvKfsname.setText(dataBean.getKfsname());
         String isChecked = "";
-        if (dataBean.getChecked() == 1 && dataBean.getStatus() == 1) {
+        if (dataBean.getChecked() == 1) {
             isChecked = "已通过";
             viewHolder.tvIschecked.setTextColor(mContext.getResources().getColor(R.color.blue));
-        } else if(dataBean.getChecked() == 1 && dataBean.getStatus() == 0){
-            isChecked = "未通过";
-            viewHolder.tvIschecked.setTextColor(mContext.getResources().getColor(R.color.red_theme));
-        } else if(dataBean.getChecked() == 0 ){
+        }  else if(dataBean.getChecked() == 0 ){
             isChecked = "待审核";
             viewHolder.tvIschecked.setTextColor(mContext.getResources().getColor(R.color.orange));
         }

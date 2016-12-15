@@ -210,10 +210,13 @@
         <activity android:name=".activity.HandleProxySellActivity" />
         <activity android:name=".activity.BBSearchActivity" />
         <activity android:name=".activity.UserTrackActivity"></activity>
-        
-        <!-- 友盟统计相关 -->
-        <meta-data android:value="YOUR_APP_KEY" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="Channel ID" android:name="UMENG_CHANNEL"/>
+
+        <!-- 友盟统计相关 appkey在上面已经写过,这里写渠道号-->
+        <!--<meta-data android:value="YOUR_APP_KEY" android:name="UMENG_APPKEY"/>-->
+
+        <meta-data android:value="${UMENG_CHANNEL_VALUE}"
+                    android:name="UMENG_CHANNEL"/>
+
     </application>
 
 </manifest>

@@ -1,3 +1,4 @@
+
 package com.mpzn.mpzn.fragment;
 
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -58,6 +60,7 @@ import com.mpzn.mpzn.views.FilterView.entity.FilterEntity;
 import com.mpzn.mpzn.views.FilterView.entity.FilterTwoEntity;
 import com.mpzn.mpzn.views.FilterView.entity.ModelUtil;
 import com.mpzn.mpzn.views.circleindicator.CircleIndicator;
+import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -151,7 +154,7 @@ public class HomeFragment extends BaseFragment {
     private boolean isScrollIdle = true; // ListView是否在滑动
     private boolean isStickyTop = false; // 是否吸附在顶部
     private boolean isSmooth = false; // 没有吸附的前提下，是否在滑动
-    private int titleViewHeight = 64; // 标题栏的高度
+    private int titleViewHeight = 0; // 标题栏的高度
     private int titleViewHeight_v19 = 50;
     private int filterPosition = -1; // 点击FilterView的位置：分类(0)、排序(1)、筛选(2)
 
@@ -241,17 +244,16 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void initLayoutParams() {
 
+        //后面加的那个值我也不知道咋来的，别问我。。。反正这个值是对的
         if(MyApplication.isInfect){
-            Log.i(TAG, "initLayoutParams()__isInfect");
-            titleViewHeight=40+px2dip(ViewUtils.getStatusBarHeight());
-//            titleViewHeight = 50+px2dip(ViewUtils.getStatusBarHeight());
+            titleViewHeight=px2dip(ViewUtils.getStatusBarHeight() + FV_HEIGHT) + 7;
+            Logger.d("initLayoutParams()__isInfect __"+titleViewHeight);
         }else{
 
-            Log.i(TAG, "initLayoutParams()__noInfect");
-            titleViewHeight = titleViewHeight_v19;
+            titleViewHeight = 45;
+            Logger.d("initLayoutParams()__noInfect __"+titleViewHeight);
         }
         filterViewHome.setVisibility(View.GONE);
-        Toast.makeText(getActivity(), "new1", Toast.LENGTH_SHORT).show();
     }
 
     //更新信息
@@ -286,6 +288,7 @@ public class HomeFragment extends BaseFragment {
                     public void onError(Call call, Exception e, int id) {
                         homeEntityData= (HomeEntity.DataBean) CacheUtils.getObject(mContext, "HomeData");
                         updata(homeEntityData);
+                        Logger.d(e.getMessage());
                         Toast.makeText(mContext, "首页信息获取失败...", Toast.LENGTH_SHORT).show();
 
                     }
@@ -296,8 +299,10 @@ public class HomeFragment extends BaseFragment {
                         if(homeEntity.getCode()==200){
                             homeEntityData = homeEntity.getData();
                             updata(homeEntityData);
+                            Logger.d("200");
                             CacheUtils.putObject(mContext,"HomeData",homeEntityData);
                         }else{
+                            Logger.d("不是200");
                             homeEntityData= (HomeEntity.DataBean) CacheUtils.getObject(mContext, "HomeData");
                             updata(homeEntityData);
                         }
@@ -334,7 +339,7 @@ public class HomeFragment extends BaseFragment {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-
+                        Logger.d(e.getMessage());
                         Toast.makeText(mContext, "楼盘列表获取数据失败...", Toast.LENGTH_SHORT).show();
                         buildingData= (List<BuildingEntity>) CacheUtils.getObject(mContext,"BuildingData");
                         initBuildingList(buildingData);
@@ -347,11 +352,11 @@ public class HomeFragment extends BaseFragment {
                         BuildingList buildingList = new Gson().fromJson(response, BuildingList.class);
                         if(buildingList.getCode()==200) {
                             buildingData = buildingList.getData();
-                            Log.i(TAG+"test", "onResponse()__data = " + buildingList);
+                            Logger.d("onResponse()__data = " + buildingList);
                             initBuildingList(buildingData);
                             CacheUtils.putObject(mContext,"BuildingData",buildingData);
                         }else{
-                            Log.i(TAG+"test", "onResponse()__buildingList.getCode()");
+                            Logger.d("onResponse()__buildingList.getCode()");
                             buildingData= (List<BuildingEntity>) CacheUtils.getObject(mContext,"BuildingData");
                             initBuildingList(buildingData);
                         }
@@ -486,6 +491,26 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void bindListener() {
+
+//        ViewTreeObserver observer = filterViewHome.getViewTreeObserver();
+//        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                filterViewHome.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                filterHeight = filterViewHome.getMeasuredHeight();
+//
+//                if(MyApplication.isInfect){
+//                    titleViewHeight=px2dip(ViewUtils.getStatusBarHeight() + filterHeight);
+//                    Logger.d("initLayoutParams()__isInfect __"+titleViewHeight);
+//                }else{
+//
+//                    titleViewHeight = 40 + px2dip(ViewUtils.getStatusBarHeight());
+//                    Logger.d("initLayoutParams()__noInfect __"+titleViewHeight);
+//                }
+//            }
+//
+//        });
+
         banner_home_top.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -516,7 +541,6 @@ public class HomeFragment extends BaseFragment {
                     filterData.getCategory().get(4).setSelectedFilterEntity(new FilterEntity("不限","1"));
                     fillAdapter(getCategoryBuildingData(filterData.getCategory().get(4)));
                     smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1, 0);
-//                    lvBuilding.smoothScrollToPositionFromTop(filterViewPosition, dip2px(titleViewHeight));
 
                 }else if("写字楼".equals(item)){
                     isClick = true;
@@ -525,7 +549,6 @@ public class HomeFragment extends BaseFragment {
                     filterData.getCategory().get(5).setSelectedFilterEntity(new FilterEntity("不限","1"));
                     fillAdapter(getCategoryBuildingData(filterData.getCategory().get(5)));
                     smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1, 0);
-//                    lvBuilding.smoothScrollToPositionFromTop(filterViewPosition + 1, dip2px(titleViewHeight) + FV_HEIGHT);
 
                 }else if("地图找房".equals(item)){
                     Intent intent = new Intent();
@@ -744,7 +767,6 @@ public class HomeFragment extends BaseFragment {
             public void onFilterClick(int position) {
                 filterPosition = position;
                 isSmooth = true;
-//                lvBuilding.smoothScrollToPositionFromTop(filterViewPosition, dip2px(titleViewHeight));
                 smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1 , 0);
 
             }
@@ -773,7 +795,8 @@ public class HomeFragment extends BaseFragment {
                     @Override
                     public void run() {
                         //不要问我为什么偏移量是这个值，我也不知道，反正这个值就对了
-                          view.smoothScrollToPositionFromTop(filterViewPosition + 1, dip2px(titleViewHeight) + FV_HEIGHT + 40);
+//                          view.smoothScrollToPositionFromTop(filterViewPosition + 1, dip2px(titleViewHeight) + FV_HEIGHT + 40);
+                        view.smoothScrollToPositionFromTop(filterViewPosition, dip2px(titleViewHeight));
                         isClick = false;
                     }
                 });
@@ -809,7 +832,7 @@ public class HomeFragment extends BaseFragment {
             }
 
             // 处理筛选是否吸附在顶部
-            Log.i(TAG+"test", "onScroll()__titleViewHeight = " + titleViewHeight + "     filterViewTopSpace = " + filterViewTopSpace);
+            Log.d("larry", "onScroll()__titleViewHeight = " + titleViewHeight + "     filterViewTopSpace = " + filterViewTopSpace);
             if (filterViewTopSpace > titleViewHeight) {
                 isStickyTop = false; // 没有吸附在顶部
                 filterViewHome.setVisibility(View.GONE);
@@ -857,7 +880,8 @@ public class HomeFragment extends BaseFragment {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                view.smoothScrollToPositionFromTop(filterViewPosition + 1, dip2px(titleViewHeight) + FV_HEIGHT + 40);
+//                view.smoothScrollToPositionFromTop(filterViewPosition + 1, dip2px(titleViewHeight) + FV_HEIGHT + 40);
+                view.smoothScrollToPositionFromTop(filterViewPosition, dip2px(titleViewHeight));
             }
         });
     }

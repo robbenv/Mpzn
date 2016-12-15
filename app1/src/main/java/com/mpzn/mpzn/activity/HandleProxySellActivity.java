@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -128,7 +129,7 @@ public class HandleProxySellActivity extends BaseActivity{
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-
+                        Toast.makeText(HandleProxySellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

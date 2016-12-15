@@ -27,6 +27,7 @@ import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.application.MyApplication;
 import com.mpzn.mpzn.utils.ImageManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.umeng.analytics.MobclickAgent;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -74,12 +75,14 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onPause() {
         super.onPause();
         JPushInterface.onPause(this);
+        MobclickAgent.onPause(this);//友盟启动次数统计
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         JPushInterface.onResume(this);
+        MobclickAgent.onResume(this);
     }
 
     @Override

@@ -44,6 +44,7 @@ import com.mpzn.mpzn.utils.PermissionsChecker;
 import com.mpzn.mpzn.views.MyActionBar;
 import com.mpzn.mpzn.views.MyDialog;
 import com.mpzn.mpzn.views.MyProgressDialog;
+import com.orhanobut.logger.Logger;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -194,7 +195,6 @@ public class DetailNewhouseActivity extends BaseActivity {
     }
 
     public void updataView() {
-        Toast.makeText(DetailNewhouseActivity.this, "aid" + aid, Toast.LENGTH_SHORT).show();
         if (aid != -1) {
             OkHttpUtils
                     .get()
@@ -310,8 +310,7 @@ public class DetailNewhouseActivity extends BaseActivity {
         mPermissionsChecker = new PermissionsChecker(this);
         Intent intent = getIntent();
         aid = intent.getIntExtra("Aid", -1);
-        Log.i("Proxy_test34", "initData()__aid = " + aid);
-        Log.i(TAG, "initData()__aid = " + aid);
+        Logger.d("token = "+MyApplication.getInstance().token+"\n  aid = "+aid);
         initAbtract();
         updataView();
         initStarCheckBox();
@@ -547,6 +546,7 @@ public class DetailNewhouseActivity extends BaseActivity {
         tvDetailBottomLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Logger.d("token = "+MyApplication.getInstance().token +"\n aid ="+aid);
 
                 final MyProgressDialog myProgressDialog = new MyProgressDialog(mContext);
                 myProgressDialog.show();
@@ -560,7 +560,7 @@ public class DetailNewhouseActivity extends BaseActivity {
                             @Override
                             public void onError(Call call, Exception e, int id) {
                                 myProgressDialog.afterprogress("联网失败");
-
+                                Logger.d(e.getMessage());
                             }
 
                             @Override
@@ -581,7 +581,7 @@ public class DetailNewhouseActivity extends BaseActivity {
                                             final MyProgressDialog myProgressDialog1 = new MyProgressDialog(mContext);
                                             myProgressDialog1.show();
                                             myProgressDialog1.setContent("正在申请代销...");
-
+                                            Logger.d("token = "+MyApplication.getInstance().token +"\n aid ="+aid);
                                             OkHttpUtils.post()
                                                     .url(API.APPLYBUILDING_POST)
                                                     .addParams("token", MyApplication.getInstance().token)
@@ -591,6 +591,7 @@ public class DetailNewhouseActivity extends BaseActivity {
                                                         @Override
                                                         public void onError(Call call, Exception e, int id) {
                                                             myProgressDialog1.afterprogress("服务器未响应");
+                                                            Logger.d(e.getMessage());
                                                         }
 
                                                         @Override
@@ -598,10 +599,10 @@ public class DetailNewhouseActivity extends BaseActivity {
                                                             CheckStarEntity checkStarEntity = new Gson().fromJson(response, CheckStarEntity.class);
                                                             if (checkStarEntity.getCode() == 200) {
                                                                 myProgressDialog1.afterprogress("申请代销成功!");
-
+                                                                Logger.d("代销成功");
                                                             } else {
                                                                 myProgressDialog1.afterprogress("申请代销失败," + checkStarEntity.getMessage());
-
+                                                                Logger.d(checkStarEntity.getMessage()+"");
                                                             }
                                                         }
                                                     });
@@ -612,6 +613,7 @@ public class DetailNewhouseActivity extends BaseActivity {
                                     myDialog.show();
 
                                 } else {
+                                    Logger.d(simpleEntity.getMessage()+"");
                                     myProgressDialog.afterprogress(simpleEntity.getMessage());
                                 }
 

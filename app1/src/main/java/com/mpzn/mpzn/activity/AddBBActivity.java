@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -31,17 +32,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import cn.jpush.android.api.JPushInterface;
-import cn.jpush.android.api.TagAliasCallback;
 import okhttp3.Call;
 
 import static com.mpzn.mpzn.http.API.ADDBB;
-import static com.mpzn.mpzn.utils.ViewUtils.dip2px;
 import static com.mpzn.mpzn.utils.ViewUtils.loadedDismissProgressDialog;
 import static com.mpzn.mpzn.utils.ViewUtils.showCustomProgressDialog;
 
@@ -72,6 +68,10 @@ public class AddBBActivity extends BaseActivity {
     EditText etCname;
     @Bind(R.id.aciton_bar)
     MyActionBar acitonBar;
+//    @Bind(R.id.bt_add_pt)
+//    Button btAddPt;
+    @Bind(R.id.activity_add_bb)
+    LinearLayout activityAddBb;
     private boolean isAddPt;
     private List<String> mList = new ArrayList();
     List<AddBBMsgEntity.DataBean.LoupansBean> loupans;
@@ -119,19 +119,19 @@ public class AddBBActivity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-
+                        loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD, "加载失败，请检查网络", false);
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e("TAG", "response"+response);
+                        Log.e("TAG", "response" + response);
                         AddBBMsgEntity addBBMsgEntity = new Gson().fromJson(response, AddBBMsgEntity.class);
                         if (addBBMsgEntity.getCode() == 200) {
                             loupans = addBBMsgEntity.getData().getLoupans();
 
                             Intent intent = getIntent();
                             int aid = intent.getIntExtra("Aid", -1);
-                            int loupan_index =-1;
+                            int loupan_index = -1;
 
                             etName.setText(addBBMsgEntity.getData().getName());
                             etPhone.setText(addBBMsgEntity.getData().getPhone());
@@ -144,13 +144,12 @@ public class AddBBActivity extends BaseActivity {
 
                             for (int i = 0; i < loupans.size(); i++) {
                                 mList.add(loupans.get(i).getSubject());
-                                if(loupans.get(i).getAid()==aid){
-                                    loupan_index=i;
+                                if (loupans.get(i).getAid() == aid) {
+                                    loupan_index = i;
                                 }
                             }
                             arrayAdapter.notifyDataSetChanged();
-                            spLoupan.setSelection(loupan_index+1);
-
+                            spLoupan.setSelection(loupan_index + 1);
 
 
                         } else {
@@ -191,13 +190,13 @@ public class AddBBActivity extends BaseActivity {
 
                 } else {
                     loadProgressHUD = KProgressHUD.create(AddBBActivity.this).
-                            setSize(MyApplication.mScreenWidth/4, MyApplication.mScreenWidth/6).
+                            setSize(MyApplication.mScreenWidth / 4, MyApplication.mScreenWidth / 6).
                             setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).
                             setLabel("正在提交..").setCancellable(false).show();
-                    Logger.d("token = "+MyApplication.getInstance().token +"\n khname = "+etKhname.getText().toString().trim()+"\n khphone3 = " +
-                            ""+etKhphone3.getText().toString().trim() +"\n khphone4 = "+etKhphone4.getText().toString().trim() +"\n cname = "+etCname.getText().toString().trim()
-                    +"\n aid = "+loupan.getAid()+"\n subject = "+loupan.getSubject() +" \n phone = "+etPhone.getText().toString().trim()+"\n myname ="+
-                            etName.getText().toString().trim()+"\n khnamep1 = "+etKhnamep1.getText().toString().trim()+"\n khnamep2 = "+etKhnamep2.getText().toString().trim());
+                    Logger.d("token = " + MyApplication.getInstance().token + "\n khname = " + etKhname.getText().toString().trim() + "\n khphone3 = " +
+                            "" + etKhphone3.getText().toString().trim() + "\n khphone4 = " + etKhphone4.getText().toString().trim() + "\n cname = " + etCname.getText().toString().trim()
+                            + "\n aid = " + loupan.getAid() + "\n subject = " + loupan.getSubject() + " \n phone = " + etPhone.getText().toString().trim() + "\n myname =" +
+                            etName.getText().toString().trim() + "\n khnamep1 = " + etKhnamep1.getText().toString().trim() + "\n khnamep2 = " + etKhnamep2.getText().toString().trim());
                     OkHttpUtils.post()
                             .url(ADDBB)
                             .addParams("token", MyApplication.getInstance().token)
@@ -241,15 +240,22 @@ public class AddBBActivity extends BaseActivity {
         cbAddPt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     llPeitong.setVisibility(View.VISIBLE);
                     isAddPt = true;
-                }else{
+                } else {
                     llPeitong.setVisibility(View.GONE);
                     isAddPt = false;
                 }
             }
         });
+
+//        btAddPt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
         spLoupan.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -271,11 +277,11 @@ public class AddBBActivity extends BaseActivity {
     }
 
     private void takeJpush() {
-        Logger.d("token = "+ MyApplication.getInstance().token+"   loupanid = "+loupan.getAid() +"   mname = "+MyApplication.getInstance().mUserMsg.getmName());
+        Logger.d("token = " + MyApplication.getInstance().token + "   loupanid = " + loupan.getAid() + "   mname = " + MyApplication.getInstance().mUserMsg.getmName());
         OkHttpUtils.post()
                 .url(API.TAKEPUSH)
                 .addParams("token", MyApplication.getInstance().token)
-                .addParams("loupanid", loupan.getAid()+"")
+                .addParams("loupanid", loupan.getAid() + "")
                 .addParams("mname", MyApplication.getInstance().mUserMsg.getmName())
 //                .addParams("token", "6275f726b1917067169a487b6e9c7e94")
 //                .addParams("loupanid", "5015")
@@ -285,7 +291,7 @@ public class AddBBActivity extends BaseActivity {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD, "申请推送失败", false);
-                        Logger.e(e,"message");
+                        Logger.e(e, "message");
                     }
 
                     @Override
@@ -293,18 +299,18 @@ public class AddBBActivity extends BaseActivity {
                         Logger.d("onResponse");
                         int code = 0;
                         try {
-                            JSONObject jsonObject=new JSONObject(response);
+                            JSONObject jsonObject = new JSONObject(response);
                             code = jsonObject.optInt("code");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                        Logger.d("code = "+code);
+                        Logger.d("code = " + code);
                         if (code == 200) {
-                            loadedDismissProgressDialog(AddBBActivity.this, true, loadProgressHUD, "申请推送成功", true);
+//                            loadedDismissProgressDialog(AddBBActivity.this, true, loadProgressHUD, "申请推送成功", true);
 
                         } else {
-                            loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD,"申请推送失败", false);
+                            loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD, "申请推送失败", false);
 
 
                         }
@@ -315,5 +321,10 @@ public class AddBBActivity extends BaseActivity {
     }
 
 
-
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

@@ -104,7 +104,7 @@ public class CheckBBActivity extends BaseActivity {
                                         myProgressDialog.afterprogress("核验成功！");
                                         Logger.d("核验成功！");
                                     }else{
-                                        myProgressDialog.afterprogress(simpleEntity.getMessage());
+                                        myProgressDialog.afterprogress("报备失败:"+simpleEntity.getMessage());
                                         Logger.d(simpleEntity.getMessage());
                                     }
                                 }

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.mpzn.mpzn.R;
-import com.mpzn.mpzn.adapter.RvCheckBuildingAdapter;
+import com.mpzn.mpzn.adapter.StartAndBrowseAdapter;
 import com.mpzn.mpzn.adapter.VpRecyclerViewAdapter;
 import com.mpzn.mpzn.application.MyApplication;
 import com.mpzn.mpzn.base.BaseActivity;
@@ -61,13 +61,13 @@ public class StarAndBrowseActivity extends BaseActivity {
     private RecyclerView rv_Browse;
     private KProgressHUD loadProgressHUD;
 
-    private RvCheckBuildingAdapter currentAdapter;
+    private StartAndBrowseAdapter currentAdapter;
 
     public List<StarBuildingEntity.DataBean> starBuildingList = new ArrayList<>();
-    private RvCheckBuildingAdapter rvStarAdapter;
+    private StartAndBrowseAdapter rvStarAdapter;
 
     public List<StarBuildingEntity.DataBean> browseBuildingList = new ArrayList<>();
-    private RvCheckBuildingAdapter rvBrowseAdapter;
+    private StartAndBrowseAdapter rvBrowseAdapter;
     private VpRecyclerViewAdapter vpStarBrowseAdapter;
 
 
@@ -105,12 +105,12 @@ public class StarAndBrowseActivity extends BaseActivity {
         rv_Browse = new RecyclerView(mContext);
 
 
-        rvStarAdapter = new RvCheckBuildingAdapter(mContext, starBuildingList,"收藏");
+        rvStarAdapter = new StartAndBrowseAdapter(mContext, starBuildingList,"收藏");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         rv_Star.setLayoutManager(linearLayoutManager);
         rv_Star.setAdapter(rvStarAdapter);
 
-        rvBrowseAdapter = new RvCheckBuildingAdapter(mContext, browseBuildingList,"浏览");
+        rvBrowseAdapter = new StartAndBrowseAdapter(mContext, browseBuildingList,"浏览");
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         rv_Browse.setLayoutManager(linearLayoutManager1);
         rv_Browse.setAdapter(rvBrowseAdapter);
@@ -153,7 +153,7 @@ public class StarAndBrowseActivity extends BaseActivity {
                         List<StarBuildingEntity.DataBean> starBuildingEntityData = starBuildingEntity.getData();
                         if (starBuildingEntity.getCode() == 200) {
                             starBuildingList.addAll(starBuildingEntityData);
-                            rvStarAdapter.updata(starBuildingList);
+                            rvStarAdapter.updata(starBuildingList, false);
                         }else{
 
                         }
@@ -181,7 +181,7 @@ public class StarAndBrowseActivity extends BaseActivity {
                         if (starBuildingEntity.getCode() == 200) {
                             browseBuildingList.addAll(starBuildingEntityData);
                             Log.i("bug_browse", "onResponse()__list = browseBuildingList.size = "+browseBuildingList.size());
-                            rvBrowseAdapter.updata(browseBuildingList);
+                            rvBrowseAdapter.updata(browseBuildingList, false);
 
                         } else {
 
@@ -395,10 +395,10 @@ public class StarAndBrowseActivity extends BaseActivity {
                                 loadedDismissProgressDialog(StarAndBrowseActivity.this, true, loadProgressHUD, finalSuccussMsg, false);
                                 if(vpStarBrowse.getCurrentItem()==0) {
                                     starBuildingList.removeAll(deleteList);
-                                    currentAdapter.updata(starBuildingList);
+                                    currentAdapter.updata(starBuildingList, false);
                                 }else {
                                     browseBuildingList.removeAll(deleteList);
-                                    currentAdapter.updata(browseBuildingList);
+                                    currentAdapter.updata(browseBuildingList, false);
                                 }
 
 

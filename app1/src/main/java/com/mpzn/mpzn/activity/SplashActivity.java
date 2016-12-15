@@ -161,7 +161,7 @@ public class SplashActivity extends BaseActivity {
                     //啥也没有
                 }
             });
-            Toast.makeText(SplashActivity.this, mUserMsg.getmName()+"_dev", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(SplashActivity.this, mUserMsg.getmName()+"_dev", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -178,6 +178,7 @@ public class SplashActivity extends BaseActivity {
             token = "0";
             CacheUtils.putString(mContext, "token", token);
             MyApplication.getInstance().setIsLogined(false);
+            Toast.makeText(SplashActivity.this, "用户缓存不存在或已失效，请重新登陆", Toast.LENGTH_SHORT).show();
         }
         mHandler.sendEmptyMessageDelayed(TOMAIN, 1000);
 

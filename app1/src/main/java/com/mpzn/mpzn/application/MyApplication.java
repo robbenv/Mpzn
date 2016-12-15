@@ -3,16 +3,17 @@ package com.mpzn.mpzn.application;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Config;
-import android.util.Log;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.mpzn.mpzn.BuildConfig;
-import com.mpzn.mpzn.activity.AddBBActivity;
 import com.mpzn.mpzn.entity.UserMsg;
 import com.orhanobut.logger.Logger;
+import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
@@ -23,16 +24,12 @@ import com.zhy.http.okhttp.https.HttpsUtils;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import cn.jpush.android.api.JPushInterface;
-import cn.jpush.android.api.TagAliasCallback;
-import de.greenrobot.event.EventBus;
 import okhttp3.OkHttpClient;
 
 import static com.mpzn.mpzn.utils.CacheUtils.getBoolean;
-import static com.mpzn.mpzn.utils.ViewUtils.loadedDismissProgressDialog;
 
 /**
  * Created by Icy on 2016/7/11.
@@ -50,6 +47,7 @@ public class MyApplication extends Application {
     public static int mScreenWidth;
     public static int mScreenHeight;
     private UMShareAPI mShareAPI;
+    private MobclickAgent.UMAnalyticsConfig umAnalyticsConfig;
 
 
     @Override
@@ -61,13 +59,13 @@ public class MyApplication extends Application {
 
         getIsNotFirstRun();
 
-        isInfect=Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        isInfect=Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT;
 
         mScreenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
         mScreenHeight = mContext.getResources().getDisplayMetrics().heightPixels;
 
         // 注册全局异常处理
-//        CrashHandler.getInstance().init(this);
+        CrashHandler.getInstance().init(this);
 
         //初始化OkHttp联网
         initOkHttp();
@@ -87,7 +85,10 @@ public class MyApplication extends Application {
 
         //授权
         SHARE_MEDIA platform = SHARE_MEDIA.WEIXIN;
-//        mShareAPI.doOauthVerify(this, platform, umAuthListener);
+
+        //友盟统计多渠道数据
+        umAnalyticsConfig = new MobclickAgent.UMAnalyticsConfig(mContext, "57a00dede0f55a7e29002b87", AnalyticsConfig.getChannel(mContext));
+        MobclickAgent. startWithConfigure(umAnalyticsConfig);
 
 
     }
@@ -199,5 +200,7 @@ public class MyApplication extends Application {
             Toast.makeText(getApplicationContext(), "取消授权", Toast.LENGTH_SHORT).show();
         }
     };
+
+
 
 }

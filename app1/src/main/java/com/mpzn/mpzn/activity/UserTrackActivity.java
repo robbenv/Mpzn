@@ -3,6 +3,8 @@ package com.mpzn.mpzn.activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,6 +44,8 @@ public class UserTrackActivity extends BaseActivity {
     EditText etSearch;
     private TrackListAdapter adapter;
     private List<UserTrackEntity.DataBean> datalist = new ArrayList<UserTrackEntity.DataBean>();
+    private String keyWords = "";
+
 
     @Override
     public int getLayoutId() {
@@ -82,9 +86,28 @@ public class UserTrackActivity extends BaseActivity {
                 Log.i("track", "onItemClick()__cid = "+datalist.get(position).getCid());
                 intent.putExtra("cid", datalist.get(position).getCid()+"");
                 int id = datalist.get(position).getCid();
-                String url = API.TRACK_SETUP + id;
-                intent.putExtra("url","http://pan.guyun18.com/android_shoppingYixiang.html");
+                String url = API.TRACK_SETUP;
+                intent.putExtra("url",url);
                 mContext.startActivity(intent);
+            }
+        });
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                datalist.clear();
+                keyWords = charSequence.toString();
+                getData();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
     }
@@ -100,7 +123,7 @@ public class UserTrackActivity extends BaseActivity {
         OkHttpUtils.get()
                 .url(API.TRACK_USER_LIST)
                 .addParams("token", MyApplication.getInstance().token)
-                .addParams("keywords", "")
+                .addParams("keywords", keyWords)
                 .build()
                 .execute(new StringCallback() {
                     @Override

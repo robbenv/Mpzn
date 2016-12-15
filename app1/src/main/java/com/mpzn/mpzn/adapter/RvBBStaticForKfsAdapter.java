@@ -10,7 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mpzn.mpzn.R;
+import com.mpzn.mpzn.activity.BBstaticForKfsAcitvity;
 import com.mpzn.mpzn.entity.BBstaticForKfsListEntity;
+import com.mpzn.mpzn.utils.ImageManager;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -39,8 +41,7 @@ public class RvBBStaticForKfsAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void updata(List<BBstaticForKfsListEntity.DataBean.AgentbaobeiBean> bBstaticForKfsListEntityData) {
-
-            this.bBstaticForKfsListEntityData.clear();
+        this.bBstaticForKfsListEntityData.clear();
             this.bBstaticForKfsListEntityData.addAll(bBstaticForKfsListEntityData);
 
 
@@ -55,7 +56,6 @@ public class RvBBStaticForKfsAdapter extends RecyclerView.Adapter<RecyclerView.V
             MyViewHolder myViewHolder = new MyViewHolder(view);
             return myViewHolder;
         } else {
-            Logger.d("item_no_data_layout");
             return new NoDataViewHolder(mInflater.inflate(R.layout.item_no_data_layout, parent, false));
         }
     }
@@ -68,7 +68,6 @@ public class RvBBStaticForKfsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         RvBBStaticForKfsAdapter.MyViewHolder mholder=(RvBBStaticForKfsAdapter.MyViewHolder)holder;
         BBstaticForKfsListEntity.DataBean.AgentbaobeiBean dataBean = bBstaticForKfsListEntityData.get(position);
-        mholder.rlIcon.setVisibility(View.GONE);
         if (position == 0) {
             mholder.tvRankNum.setTextColor(mContext.getResources().getColor(R.color.purple));
         } else {
@@ -81,9 +80,15 @@ public class RvBBStaticForKfsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             }
         }
+        if (dataBean.getHead_image() == null || "".equals(dataBean.getHead_image())) {
+//            mholder.ivIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_default_circle));
+
+        } else {
+            ((BBstaticForKfsAcitvity)mContext).mImageManager.loadCircleImageWithWhite(dataBean.getHead_image(),mholder.ivIcon);
+        }
 
         mholder.tvName.setText(dataBean.getCompany_name());
-        mholder.tvBbNum.setText(dataBean.getSuccess() + "");
+        mholder.tvBbNum.setText(dataBean.getCount() + "");
 
         mholder.tvRankNum.setText("NO." + (position+1));
 
@@ -131,10 +136,8 @@ public class RvBBStaticForKfsAdapter extends RecyclerView.Adapter<RecyclerView.V
         //Enum类提供了一个ordinal()方法，返回枚举类型的序数，这里ITEM_TYPE.ITEM.ordinal()代表0， ITEM_TYPE.NODATA.ordinal()代表1
 
         if(bBstaticForKfsListEntityData.size() == 0) {
-            Logger.d("NODATA");
             return ITEM_TYPE.NODATA.ordinal();
         }else{
-            Logger.d("ITEM");
             return ITEM_TYPE.ITEM.ordinal();
         }
     }

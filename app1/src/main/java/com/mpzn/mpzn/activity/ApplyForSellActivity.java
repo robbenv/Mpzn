@@ -40,6 +40,7 @@ import com.mpzn.mpzn.listener.EndLessOnScrollListener;
 import com.mpzn.mpzn.listener.OnRecyclerItemClickListener;
 import com.mpzn.mpzn.utils.CacheUtils;
 import com.mpzn.mpzn.views.MyActionBar;
+import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -158,7 +159,7 @@ public class ApplyForSellActivity extends BaseActivity {
                                 rvBuilding.setVisibility(View.VISIBLE);
                             }
                             applyForSellListData.addAll(applyForSellList.getData());
-                            rvAdapter.notifyDataSetChanged();
+                            rvAdapter.updata(applyForSellListData, false);
                         }
                     }
                 });
@@ -206,6 +207,8 @@ public class ApplyForSellActivity extends BaseActivity {
                     rlBottom.setVisibility(View.VISIBLE);
                     lvSearchTips.setVisibility(View.GONE);
                 }
+
+                Logger.d("token = "+MyApplication.getInstance().token + " \n subject"+etSearch.getText().toString().trim());
                 OkHttpUtils.get()
                         .url(API.APPLYBUILDING_TIPS_GET)
                         .addParams("token",MyApplication.getInstance().token)
@@ -269,13 +272,11 @@ public class ApplyForSellActivity extends BaseActivity {
 //            }
 //        });
 
-
         rvBuilding.addOnScrollListener(new EndLessOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int currentPage) {
                 Log.e("TAG", "currentMaxOffset" + currentMaxOffset);
                 getData(currentMaxOffset + 1, subject);
-
             }
         });
 
@@ -322,6 +323,7 @@ public class ApplyForSellActivity extends BaseActivity {
                 for (StarBuildingEntity.DataBean data : applyForSellListData) {
                     if (data.getCheck()) {
                         deleteList.add(data);
+                        //拼凑aid字符串传给服务器用
                         if (aids == "") {
                             aids = aids + data.getAid();
                         } else {
@@ -353,7 +355,7 @@ public class ApplyForSellActivity extends BaseActivity {
                             @Override
                             public void onError(Call call, Exception e, int id) {
                                 loadedDismissProgressDialog(ApplyForSellActivity.this, false, loadProgressHUD, "加载失败，请检查网络", false);
-
+                                cbAll.setChecked(false);
                             }
 
                             @Override
@@ -364,13 +366,16 @@ public class ApplyForSellActivity extends BaseActivity {
 
                                     applyForSellListData.removeAll(deleteList);
 
-                                    rvAdapter.updata(applyForSellListData);
+                                    rvAdapter.updata(applyForSellListData, true);
 
                                 } else {
                                     loadedDismissProgressDialog(ApplyForSellActivity.this, false, loadProgressHUD, checkStarEntity.getMessage(), false);
 
                                 }
+                                cbAll.setChecked(false);
                             }
+
+
                         });
 
 
@@ -388,6 +393,13 @@ public class ApplyForSellActivity extends BaseActivity {
                     }
                 }
                 btnCommitNum.setText("去申请(" + count + ")");
+            }
+
+            @Override
+            public void onPageAllDelete() {
+                currentMaxOffset = 0;
+                Logger.d("onPageAllDelete");
+                getData(currentMaxOffset, "");
             }
         });
 

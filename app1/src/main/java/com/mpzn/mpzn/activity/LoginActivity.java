@@ -756,7 +756,7 @@ public class LoginActivity extends BaseActivity {
             }
         });
         MyApplication.getInstance().setmUserMsg(userMsg);
-        Toast.makeText(mContext, "别名："+userMsg.getmName()+"_dev", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, "别名："+userMsg.getmName()+"_dev", Toast.LENGTH_SHORT).show();
 
 
 

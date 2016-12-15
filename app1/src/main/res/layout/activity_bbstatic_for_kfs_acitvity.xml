@@ -33,24 +33,36 @@
         android:layout_height="60dp"
         android:padding="10dp"
         >
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/sp_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:spinnerMode="dropdown"
+            android:background="@color/transparent"
+            />
         <TextView
             android:id="@+id/tv_content_title"
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_centerHorizontal="true"
-            android:text="总Rank榜"
+            android:text="排行榜"
             android:textSize="16sp"
             android:textColor="@color/orange"/>
 
-        <TextView
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/sp_range"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableRight="@drawable/hg"
-            android:text="带看成功量"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:id="@+id/textView2" />
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:spinnerMode="dropdown"
+            android:background="@color/transparent"
+            />
 
     </RelativeLayout>
 

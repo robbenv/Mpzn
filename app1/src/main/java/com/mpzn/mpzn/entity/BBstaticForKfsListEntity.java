@@ -7,10 +7,11 @@ import java.util.List;
  */
 public class BBstaticForKfsListEntity {
 
+
     /**
      * code : 200
      * message : success
-     * data : {"agentbaobei":[{"company_name":"","total":95,"success":1},{"company_name":"1","total":1,"success":0},{"company_name":"121212","total":1,"success":0},{"company_name":"123123","total":1,"success":0},{"company_name":"99","total":1,"success":0},{"company_name":"qqq","total":1,"success":0},{"company_name":"xixixiixi","total":1,"success":0},{"company_name":"万凯","total":9,"success":0},{"company_name":"万凯投资","total":668,"success":1},{"company_name":"上海XX地产有限公司","total":1,"success":0},{"company_name":"上海XX地产经纪有限公司","total":1,"success":0},{"company_name":"上海万侯网络科技有限公司","total":3,"success":1},{"company_name":"上海万候网络科技有限公司","total":2,"success":1},{"company_name":"上海万凯投资管理有限公司","total":16,"success":1},{"company_name":"上海中原物业顾问有效公司","total":1,"success":0},{"company_name":"上海中原物业顾问有限公司","total":8,"success":0},{"company_name":"上海友情岁月投资管理有限公司","total":2,"success":0},{"company_name":"上海壹宝电子商务有限公司","total":1,"success":0},{"company_name":"上海奔跑投资管理有限公司","total":1,"success":0},{"company_name":"上海巨众投资管理有限公司","total":6,"success":1},{"company_name":"上海曦越","total":1,"success":0},{"company_name":"上海立家房地产经纪事务所","total":3,"success":1},{"company_name":"上海聚硬投资有限公司","total":2,"success":1},{"company_name":"上海鎏翔投资管理有限公司","total":7,"success":0},{"company_name":"上海骏凌投资有限公司","total":1,"success":0},{"company_name":"中原地产","total":10,"success":0},{"company_name":"中原地产工商铺","total":1,"success":0},{"company_name":"供货商","total":2,"success":0},{"company_name":"公司","total":1,"success":0},{"company_name":"卖盘指南","total":1,"success":0},{"company_name":"哈哈哈","total":1,"success":0},{"company_name":"嘻嘻嘻","total":1,"success":0},{"company_name":"好的呀","total":1,"success":0},{"company_name":"宝原9","total":1,"success":0},{"company_name":"客户","total":1,"success":0},{"company_name":"很哇塞","total":1,"success":0},{"company_name":"志盈投资管理有限公司","total":1,"success":0},{"company_name":"恒居地产","total":2,"success":1},{"company_name":"我的","total":1,"success":0},{"company_name":"远行佳地产","total":2,"success":1},{"company_name":"鎏翔","total":3,"success":0},{"company_name":"鎏翔投资","total":67,"success":0},{"company_name":"鎏翔投资渠道","total":8,"success":0},{"company_name":"链家","total":8,"success":0},{"company_name":"锦圆实业","total":1,"success":0}]}
+     * data : {"agentbaobei":[{"company_name":"上海中原物业顾问有限公司","count":8,"agent_id":4671,"head_image":""},{"company_name":"三千石地产","count":2,"agent_id":3846,"head_image":""}]}
      */
 
     private int code;
@@ -54,14 +55,16 @@ public class BBstaticForKfsListEntity {
 
         public static class AgentbaobeiBean {
             /**
-             * company_name :
-             * total : 95
-             * success : 1
+             * company_name : 上海中原物业顾问有限公司
+             * count : 8
+             * agent_id : 4671
+             * head_image :
              */
 
             private String company_name;
-            private int total;
-            private int success;
+            private int count;
+            private int agent_id;
+            private String head_image;
 
             public String getCompany_name() {
                 return company_name;
@@ -71,20 +74,28 @@ public class BBstaticForKfsListEntity {
                 this.company_name = company_name;
             }
 
-            public int getTotal() {
-                return total;
+            public int getCount() {
+                return count;
             }
 
-            public void setTotal(int total) {
-                this.total = total;
+            public void setCount(int count) {
+                this.count = count;
             }
 
-            public int getSuccess() {
-                return success;
+            public int getAgent_id() {
+                return agent_id;
             }
 
-            public void setSuccess(int success) {
-                this.success = success;
+            public void setAgent_id(int agent_id) {
+                this.agent_id = agent_id;
+            }
+
+            public String getHead_image() {
+                return head_image;
+            }
+
+            public void setHead_image(String head_image) {
+                this.head_image = head_image;
             }
         }
     }

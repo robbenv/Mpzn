@@ -34,6 +34,7 @@ import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.views.AddJJRComFragmentDialog;
 import com.mpzn.mpzn.views.MyActionBar;
 import com.mpzn.mpzn.views.MyDialog;
+import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -378,7 +379,7 @@ public class MyDataActivity extends BaseActivity {
                 setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).
                 setLabel("正在提交...").setCancellable(true).show();
 
-        Log.e("TAG", "paramskey"+paramskey+"commitMsg"+commitMsg);
+        Logger.d("paramskey"+paramskey+"commitMsg"+commitMsg);
         OkHttpUtils.post()
                 .url(API.COMMITUSERMSG_POST)
                 .addParams("token",MyApplication.getInstance().token)

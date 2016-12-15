@@ -14,12 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mpzn.mpzn.R;
-import com.mpzn.mpzn.activity.ApplyForSellActivity;
 import com.mpzn.mpzn.activity.DetailNewhouseActivity;
-import com.mpzn.mpzn.activity.StarAndBrowseActivity;
 import com.mpzn.mpzn.base.BaseActivity;
 import com.mpzn.mpzn.entity.StarBuildingEntity;
-import com.mpzn.mpzn.http.API;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -34,7 +31,7 @@ import static com.mpzn.mpzn.utils.DateUtil.formatData;
  * Created by Icy on 2016/9/26.
  */
 
-public class RvCheckBuildingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class StartAndBrowseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     private Button button;
@@ -53,7 +50,7 @@ public class RvCheckBuildingAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
 
-    public RvCheckBuildingAdapter(Context mContext, List<StarBuildingEntity.DataBean> starBuildingList,String fromType ) {
+    public StartAndBrowseAdapter(Context mContext, List<StarBuildingEntity.DataBean> starBuildingList, String fromType ) {
         this.mContext = mContext;
         this.starBuildingList=starBuildingList;
         noData.add(new StarBuildingEntity.DataBean());

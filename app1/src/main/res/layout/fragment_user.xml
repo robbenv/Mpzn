@@ -70,6 +70,7 @@
 
             <TextView
                 android:id="@+id/tv_login"
+                android:ellipsize="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/lijidenglu"
@@ -78,7 +79,6 @@
                 android:layout_above="@+id/center"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="10dp"
-                android:ellipsize = "marquee"
                 android:singleLine="true" />
 
         </RelativeLayout>

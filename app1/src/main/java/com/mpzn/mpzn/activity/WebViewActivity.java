@@ -83,6 +83,8 @@ public class WebViewActivity extends BaseActivity implements FaceFragment.OnEmoj
         webView.requestFocus();
         Logger.d(url);
         webView.loadUrl(url);
+
+        //WebChromeClient主要辅助WebView处理Javascript的对话框、网站图标、网站title、加载进度等
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -94,6 +96,8 @@ public class WebViewActivity extends BaseActivity implements FaceFragment.OnEmoj
             }
         });
 
+
+
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -104,7 +108,7 @@ public class WebViewActivity extends BaseActivity implements FaceFragment.OnEmoj
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                Log.i("track", "onPageFinished()__cid = "+cid);
+                Logger.d("token = "+token+"\n cid = "+cid);
 //                view.loadUrl("javascript:xixi()");
 //                token = null;
 //                cid = null;
@@ -136,7 +140,6 @@ public class WebViewActivity extends BaseActivity implements FaceFragment.OnEmoj
 //                }
             }
         });
-        //WebChromeClient主要辅助WebView处理Javascript的对话框、网站图标、网站title、加载进度等
 
 
 

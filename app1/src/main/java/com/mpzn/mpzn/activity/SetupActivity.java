@@ -251,11 +251,12 @@ public class SetupActivity extends BaseActivity {
         upDataDialog.show();
         upDataDialog.setTitle("更新 " + version);
         upDataDialog.setCommit("更新");
-        upDataDialog.setContent(data.getUpdate_content());
+        String content = data.getUpdate_content().replace("\\n", "\n");
+        Log.e("TAG", "content = " + data.getUpdate_content());
+        upDataDialog.setContent(content);
         upDataDialog.setCommitListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String url = data.getSoft_address();
                 String fileName = url.substring(url.lastIndexOf("/") + 1);
                 File apkfile = new File(Environment.

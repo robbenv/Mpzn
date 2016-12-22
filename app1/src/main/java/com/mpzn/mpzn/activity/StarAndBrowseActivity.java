@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.mpzn.mpzn.R;
-import com.mpzn.mpzn.adapter.StartAndBrowseAdapter;
+import com.mpzn.mpzn.adapter.RvCheckBuildingAdapter;
 import com.mpzn.mpzn.adapter.VpRecyclerViewAdapter;
 import com.mpzn.mpzn.application.MyApplication;
 import com.mpzn.mpzn.base.BaseActivity;
@@ -35,7 +35,6 @@ import java.util.List;
 import butterknife.Bind;
 import okhttp3.Call;
 
-import static com.mpzn.mpzn.utils.ViewUtils.dip2px;
 import static com.mpzn.mpzn.utils.ViewUtils.loadedDismissProgressDialog;
 
 public class StarAndBrowseActivity extends BaseActivity {
@@ -61,13 +60,13 @@ public class StarAndBrowseActivity extends BaseActivity {
     private RecyclerView rv_Browse;
     private KProgressHUD loadProgressHUD;
 
-    private StartAndBrowseAdapter currentAdapter;
+    private RvCheckBuildingAdapter currentAdapter;
 
     public List<StarBuildingEntity.DataBean> starBuildingList = new ArrayList<>();
-    private StartAndBrowseAdapter rvStarAdapter;
+    private RvCheckBuildingAdapter rvStarAdapter;
 
     public List<StarBuildingEntity.DataBean> browseBuildingList = new ArrayList<>();
-    private StartAndBrowseAdapter rvBrowseAdapter;
+    private RvCheckBuildingAdapter rvBrowseAdapter;
     private VpRecyclerViewAdapter vpStarBrowseAdapter;
 
 
@@ -105,12 +104,12 @@ public class StarAndBrowseActivity extends BaseActivity {
         rv_Browse = new RecyclerView(mContext);
 
 
-        rvStarAdapter = new StartAndBrowseAdapter(mContext, starBuildingList,"收藏");
+        rvStarAdapter = new RvCheckBuildingAdapter(mContext, starBuildingList,"收藏");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         rv_Star.setLayoutManager(linearLayoutManager);
         rv_Star.setAdapter(rvStarAdapter);
 
-        rvBrowseAdapter = new StartAndBrowseAdapter(mContext, browseBuildingList,"浏览");
+        rvBrowseAdapter = new RvCheckBuildingAdapter(mContext, browseBuildingList,"浏览");
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         rv_Browse.setLayoutManager(linearLayoutManager1);
         rv_Browse.setAdapter(rvBrowseAdapter);

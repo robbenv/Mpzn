@@ -82,4 +82,7 @@ public class API {
     public static final String BBCOMPANY=API + "/baobei/agenttongji";
     public static final String FILTER_LOUPAN = API + "/baobei/tongji_loupan_list";
     public static final String TRACK_USER_LIST = API + "/baobei/tracking_list";
+    public static final String BBList = API + "/baobei/baobeilist";
+
+    //http://appi.mpzn.com/index.php/baobei/baobeilist
 }

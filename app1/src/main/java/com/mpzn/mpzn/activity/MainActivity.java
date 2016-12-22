@@ -155,7 +155,6 @@ public class MainActivity extends BaseActivity {
         transaction.show(fragment);
         transaction.commit();
         mCurrentFragment = fragment;
-
     }
 
 

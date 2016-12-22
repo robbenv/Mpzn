@@ -35,6 +35,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 import static com.mpzn.mpzn.http.API.ADDBB;
@@ -225,6 +226,7 @@ public class AddBBActivity extends BaseActivity {
                                     if (simpleEntity.getCode() == 200) {
                                         loadedDismissProgressDialog(AddBBActivity.this, true, loadProgressHUD, "报备成功", true);
                                         takeJpush();//调用服务器接口提醒该发送推送了
+                                        EventBus.getDefault().postSticky(simpleEntity);
                                     } else {
                                         loadedDismissProgressDialog(AddBBActivity.this, false, loadProgressHUD, simpleEntity.getMessage(), false);
                                         Logger.d(simpleEntity.getMessage());

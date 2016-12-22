@@ -76,6 +76,7 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startMain();
+        //更新的service
         StartService();
 
     }
@@ -108,6 +109,7 @@ public class SplashActivity extends BaseActivity {
     public void StartService() {
         Intent intent = new Intent();
         intent.setClass(this, UpdataVersionService.class);  //启动自动更新服务
+        Logger.d("StartService");
         startService(intent);
     }
 

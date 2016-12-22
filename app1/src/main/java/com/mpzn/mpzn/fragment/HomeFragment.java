@@ -1,18 +1,14 @@
-
 package com.mpzn.mpzn.fragment;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -27,6 +23,8 @@ import android.widget.Toast;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
 import com.google.gson.Gson;
 import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.activity.AddBBActivity;
@@ -38,14 +36,13 @@ import com.mpzn.mpzn.activity.WebViewActivity;
 import com.mpzn.mpzn.adapter.HomeTopBannerViewHolder;
 import com.mpzn.mpzn.adapter.MainHomeBuildingLvAdapter;
 import com.mpzn.mpzn.adapter.MainHomeGvAdapter;
-import com.mpzn.mpzn.adapter.MainHomeTopViewPagerAdapter;
 import com.mpzn.mpzn.application.MyApplication;
 import com.mpzn.mpzn.base.BaseFragment;
+import com.mpzn.mpzn.entity.BblistEntity;
 import com.mpzn.mpzn.entity.BuildingFilterEntity;
 import com.mpzn.mpzn.entity.BuildingList;
-import com.mpzn.mpzn.entity.BuildingTJEntity;
 import com.mpzn.mpzn.entity.HomeEntity;
-import com.mpzn.mpzn.entity.HomeNewsEntity;
+import com.mpzn.mpzn.entity.SimpleEntity;
 import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.utils.ACache;
 import com.mpzn.mpzn.utils.CacheUtils;
@@ -59,18 +56,18 @@ import com.mpzn.mpzn.views.FilterView.entity.FilterData;
 import com.mpzn.mpzn.views.FilterView.entity.FilterEntity;
 import com.mpzn.mpzn.views.FilterView.entity.FilterTwoEntity;
 import com.mpzn.mpzn.views.FilterView.entity.ModelUtil;
-import com.mpzn.mpzn.views.circleindicator.CircleIndicator;
 import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 import okhttp3.Call;
 
 import static com.mpzn.mpzn.R.id.filterView_home;
@@ -78,10 +75,8 @@ import static com.mpzn.mpzn.utils.Constant.RESCODE_JINGJICOM;
 import static com.mpzn.mpzn.utils.Constant.RESCODE_JINGJIREN;
 import static com.mpzn.mpzn.utils.DateUtil.formatData;
 import static com.mpzn.mpzn.utils.ViewUtils.dip2px;
-import static com.mpzn.mpzn.utils.ViewUtils.getStatusBarHeight;
 import static com.mpzn.mpzn.utils.ViewUtils.px2dip;
 import static com.mpzn.mpzn.utils.ViewUtils.setListViewHeightBasedOnChildren;
-import static com.mpzn.mpzn.views.FilterView.entity.ModelUtil.getCategory2rdData;
 import static com.mpzn.mpzn.views.FilterView.entity.ModelUtil.getCategoryBuildingData;
 
 /**
@@ -100,6 +95,8 @@ public class HomeFragment extends BaseFragment {
     FilterView filterViewHome;
     @Bind(R.id.top_shadow)
     View topShadow;
+    @Bind(R.id.refresh)
+    MaterialRefreshLayout refresh;
 
     private View fragment_home;
     private GridView gv_home;
@@ -120,13 +117,11 @@ public class HomeFragment extends BaseFragment {
     private LayoutInflater mInflater;
 
     private HomeEntity.DataBean homeEntityData;  //首页信息
-    private List<HomeEntity.DataBean.BaobeilistBean> baobeilist=new ArrayList<>(); //首页信息中的报备信息
+    private List<HomeEntity.DataBean.BaobeilistBean> baobeilist = new ArrayList<>(); //首页信息中的报备信息
     private List<HomeEntity.DataBean.RecommendlistBean> recommendlist = new ArrayList<>(); //首页信息中的推荐楼盘
-    private List<HomeEntity.DataBean.TopnewslistBean> topnewslist=new ArrayList<>(); //首页信息中的顶部滚动
-    private List<HomeEntity.DataBean.NewsBean> homeNewslist=new ArrayList<>();
+    private List<HomeEntity.DataBean.TopnewslistBean> topnewslist = new ArrayList<>(); //首页信息中的顶部滚动
+    private List<HomeEntity.DataBean.NewsBean> homeNewslist = new ArrayList<>();
     private List<BuildingEntity> buildingData = new ArrayList<>();
-
-
 
 
     private String buildingFilterJson;
@@ -140,8 +135,7 @@ public class HomeFragment extends BaseFragment {
 
 
     private ArrayAdapter<String> lv_zx_Adapter;
-    private List<String> zxs =new ArrayList<>();
-
+    private List<String> zxs = new ArrayList<>();
 
 
     private HeaderFilterViewView headerFilterViewView;
@@ -166,7 +160,28 @@ public class HomeFragment extends BaseFragment {
     private int filterHeight;
     private boolean isClick = false;
 
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            //切换到对应的ViewPager指定的页面
+            Logger.d("更新咯");
+            updataBbList();
+            mHandler.sendEmptyMessageDelayed(0, 500000);
+        }
+    };
 
+    public HomeFragment() {
+        //注册EventBus
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);//反注册EventBus
+        mHandler.removeCallbacksAndMessages(null);
+    }
 
     @Override
     public View getLayourView(LayoutInflater inflater, ViewGroup container) {
@@ -180,7 +195,7 @@ public class HomeFragment extends BaseFragment {
         text_search_hint = (TextView) actionBarHome.findViewById(R.id.text_search_hint);
         //顶部轮播
         piece_top_vp = mInflater.inflate(R.layout.home_piece_vp_top, null);
-        banner_home_top = (ConvenientBanner)piece_top_vp.findViewById(R.id.banner_home_top);
+        banner_home_top = (ConvenientBanner) piece_top_vp.findViewById(R.id.banner_home_top);
 
         lvBuilding.addHeaderView(piece_top_vp);
 
@@ -238,6 +253,8 @@ public class HomeFragment extends BaseFragment {
             switchSearchPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
         }
 
+
+
     }
 
 
@@ -245,20 +262,20 @@ public class HomeFragment extends BaseFragment {
     public void initLayoutParams() {
 
         //后面加的那个值我也不知道咋来的，别问我。。。反正这个值是对的
-        if(MyApplication.isInfect){
-            titleViewHeight=px2dip(ViewUtils.getStatusBarHeight() + FV_HEIGHT) + 7;
-            Logger.d("initLayoutParams()__isInfect __"+titleViewHeight);
-        }else{
+        if (MyApplication.isInfect) {
+            titleViewHeight = px2dip(ViewUtils.getStatusBarHeight() + FV_HEIGHT) + 7;
+            Logger.d("initLayoutParams()__isInfect __" + titleViewHeight);
+        } else {
 
             titleViewHeight = 45;
-            Logger.d("initLayoutParams()__noInfect __"+titleViewHeight);
+//            Logger.d("initLayoutParams()__noInfect __"+titleViewHeight);
         }
         filterViewHome.setVisibility(View.GONE);
     }
 
     //更新信息
-    public void updata(HomeEntity.DataBean homeEntityData){
-        if(homeEntityData==null){
+    public void updata(HomeEntity.DataBean homeEntityData) {
+        if (homeEntityData == null) {
             return;
         }
 
@@ -276,92 +293,11 @@ public class HomeFragment extends BaseFragment {
     }
 
 
-
     @Override
     public void initData() {
 
-        OkHttpUtils.get()
-                .url(API.HOME_GET)
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        homeEntityData= (HomeEntity.DataBean) CacheUtils.getObject(mContext, "HomeData");
-                        updata(homeEntityData);
-                        Logger.d(e.getMessage());
-                        Toast.makeText(mContext, "首页信息获取失败...", Toast.LENGTH_SHORT).show();
-
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        HomeEntity homeEntity = new Gson().fromJson(response, HomeEntity.class);
-                        if(homeEntity.getCode()==200){
-                            homeEntityData = homeEntity.getData();
-                            updata(homeEntityData);
-                            Logger.d("200");
-                            CacheUtils.putObject(mContext,"HomeData",homeEntityData);
-                        }else{
-                            Logger.d("不是200");
-                            homeEntityData= (HomeEntity.DataBean) CacheUtils.getObject(mContext, "HomeData");
-                            updata(homeEntityData);
-                        }
-
-                    }
-                });
-
-//        //请求楼盘筛选参数
-//        OkHttpUtils
-//                .get()
-//                .url(API.BUILDINGINIT_GET)
-//                .build()
-//                .execute(new StringCallback() {
-//                    @Override
-//                    public void onError(Call call, Exception e, int id) {
-//                        Toast.makeText(mContext, "获取数据失败...", Toast.LENGTH_SHORT).show();
-//
-//                    }
-//
-//                    @Override
-//                    public void onResponse(String response, int id) {
-//
-//                        buildingFilterJson = response;
-//                        initBuildingFilter();
-//
-//                    }
-//                });
-
-        OkHttpUtils
-                .get()
-                .url(API.BUILDINGLIST_GET)
-                .addParams("page","total")
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Logger.d(e.getMessage());
-                        Toast.makeText(mContext, "楼盘列表获取数据失败...", Toast.LENGTH_SHORT).show();
-                        buildingData= (List<BuildingEntity>) CacheUtils.getObject(mContext,"BuildingData");
-                        initBuildingList(buildingData);
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        Log.i(TAG+"test1", "onResponse()__");
-
-                        BuildingList buildingList = new Gson().fromJson(response, BuildingList.class);
-                        if(buildingList.getCode()==200) {
-                            buildingData = buildingList.getData();
-                            Logger.d("onResponse()__data = " + buildingList);
-                            initBuildingList(buildingData);
-                            CacheUtils.putObject(mContext,"BuildingData",buildingData);
-                        }else{
-                            Logger.d("onResponse()__buildingList.getCode()");
-                            buildingData= (List<BuildingEntity>) CacheUtils.getObject(mContext,"BuildingData");
-                            initBuildingList(buildingData);
-                        }
-                    }
-                });
+        getHomeData();
+        getBuildingData();
 
         // 筛选数据
         filterData = new FilterData();
@@ -371,15 +307,82 @@ public class HomeFragment extends BaseFragment {
 
         // 设置筛选数据
         filterViewHome.setFilterData(getActivity(), filterData);
+        //报备信息每歌五分钟获取一次
+        mHandler.sendEmptyMessage(1);
 
+    }
 
+    private void getBuildingData() {
+        OkHttpUtils
+                .get()
+                .url(API.BUILDINGLIST_GET)
+                .addParams("page", "total")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Logger.d(e.getMessage());
+                        Toast.makeText(mContext, "楼盘列表获取数据失败...", Toast.LENGTH_SHORT).show();
+                        buildingData = (List<BuildingEntity>) CacheUtils.getObject(mContext, "BuildingData");
+                        initBuildingList(buildingData);
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.i(TAG + "test1", "onResponse()__");
+
+                        BuildingList buildingList = new Gson().fromJson(response, BuildingList.class);
+                        if (buildingList.getCode() == 200) {
+                            buildingData = buildingList.getData();
+//                            Logger.d("onResponse()__data = " + buildingList);
+                            initBuildingList(buildingData);
+                            CacheUtils.putObject(mContext, "BuildingData", buildingData);
+                        } else {
+                            Logger.d("onResponse()__buildingList.getCode()");
+                            buildingData = (List<BuildingEntity>) CacheUtils.getObject(mContext, "BuildingData");
+                            initBuildingList(buildingData);
+                        }
+                    }
+                });
+    }
+
+    private void getHomeData() {
+        OkHttpUtils.get()
+                .url(API.HOME_GET)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        homeEntityData = (HomeEntity.DataBean) CacheUtils.getObject(mContext, "HomeData");
+                        updata(homeEntityData);
+                        Logger.d(e.getMessage());
+                        Toast.makeText(mContext, "首页信息获取失败...", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        HomeEntity homeEntity = new Gson().fromJson(response, HomeEntity.class);
+                        if (homeEntity.getCode() == 200) {
+                            homeEntityData = homeEntity.getData();
+                            updata(homeEntityData);
+//                            Logger.d("200");
+                            CacheUtils.putObject(mContext, "HomeData", homeEntityData);
+                        } else {
+                            Logger.d("不是200");
+                            homeEntityData = (HomeEntity.DataBean) CacheUtils.getObject(mContext, "HomeData");
+                            updata(homeEntityData);
+                        }
+
+                    }
+                });
     }
 
 
     //初始化首页顶部栏
     private void initTopBanner(List<HomeEntity.DataBean.TopnewslistBean> topnewslist) {
-        List<String> imgurls=new ArrayList<>();
-        for(HomeEntity.DataBean.TopnewslistBean data:topnewslist){
+        List<String> imgurls = new ArrayList<>();
+        for (HomeEntity.DataBean.TopnewslistBean data : topnewslist) {
             imgurls.add(data.getThumb());
         }
         banner_home_top.setPages(
@@ -398,47 +401,50 @@ public class HomeFragment extends BaseFragment {
     //初始化报备信息
     private void initBaobeiXinxi(List<HomeEntity.DataBean.BaobeilistBean> baobeilist) {
         List<String> baobeis = new ArrayList<>();
-        for(int i=0;i<baobeilist.size();i++){
+        baobeis.clear();
+        Logger.d(baobeis);
+        for (int i = 0; i < baobeilist.size(); i++) {
             HomeEntity.DataBean.BaobeilistBean baobeilistBean = baobeilist.get(i);
-            String msg = baobeilistBean.getXingming()+"于"+ formatData("MM-dd HH:mm",baobeilistBean.getBaobeitime())+"对"+baobeilistBean.getSubject()+"报备成功!";
+            String msg = baobeilistBean.getXingming() + "于" + formatData("MM-dd HH:mm", baobeilistBean.getBaobeitime()) + "对" + baobeilistBean.getSubject() + "报备成功!";
             baobeis.add(msg);
         }
 
         autoScrollView.setmTexts(baobeis);
     }
-   //初始化 推荐楼盘
+
+    //初始化 推荐楼盘
     private void initPieceTuijian(List<HomeEntity.DataBean.RecommendlistBean> recommendlist) {
 
 
-            for (int i = 0; i < 3; i++) {
-                TextView tv1 = (TextView) items.get(i).findViewById(R.id.tv1);
-                TextView tv2 = (TextView) items.get(i).findViewById(R.id.tv2);
-                TextView tv3 = (TextView) items.get(i).findViewById(R.id.tv3);
-                ImageView img = (ImageView) items.get(i).findViewById(R.id.img);
-                tv1.setText(recommendlist.get(i).getSubject());
-                tv3.setText(recommendlist.get(i).getDj()+"元/㎡");
-                if(i==2){
-                    img.setMinimumHeight(dip2px(310));
-                }else{
-                    img.setMinimumHeight(dip2px(150));
-                }
-                mImageManager.loadUrlImage(recommendlist.get(i).getThumb(), img);
-
+        for (int i = 0; i < 3; i++) {
+            TextView tv1 = (TextView) items.get(i).findViewById(R.id.tv1);
+            TextView tv2 = (TextView) items.get(i).findViewById(R.id.tv2);
+            TextView tv3 = (TextView) items.get(i).findViewById(R.id.tv3);
+            ImageView img = (ImageView) items.get(i).findViewById(R.id.img);
+            tv1.setText(recommendlist.get(i).getSubject());
+            tv3.setText(recommendlist.get(i).getDj() + "元/㎡");
+            if (i == 2) {
+                img.setMinimumHeight(dip2px(310));
+            } else {
+                img.setMinimumHeight(dip2px(150));
             }
+            mImageManager.loadUrlImage(recommendlist.get(i).getThumb(), img);
+
+        }
 
 
     }
+
     //初始化 首页新闻
     private void initZixuntoutiao(List<HomeEntity.DataBean.NewsBean> homeNewslist) {
+        zxs.clear();
+        for (int i = 0; i < homeNewslist.size(); i++) {
+            zxs.add("[" + homeNewslist.get(i).getTitle() + "]" + homeNewslist.get(i).getSubject());
+        }
 
-            for (int i = 0; i < homeNewslist.size(); i++) {
-                zxs.add("[" + homeNewslist.get(i).getTitle() + "]" + homeNewslist.get(i).getSubject());
-            }
+        lv_zx_Adapter.notifyDataSetChanged();
 
-            lv_zx_Adapter.notifyDataSetChanged();
-
-            setListViewHeightBasedOnChildren(lv_zixuntoutiao);
-
+        setListViewHeightBasedOnChildren(lv_zixuntoutiao);
 
 
     }
@@ -460,7 +466,7 @@ public class HomeFragment extends BaseFragment {
 
     //初始化 楼盘数据
     private void initBuildingList(List<BuildingEntity> buildingListData) {
-        if(buildingListData==null||buildingListData.size()==0){
+        if (buildingListData == null || buildingListData.size() == 0) {
             return;
         }
         ModelUtil.setBuildingData(buildingListData);
@@ -469,21 +475,22 @@ public class HomeFragment extends BaseFragment {
 
     /**
      * 获取控件的高度或者宽度  isHeight=true则为测量该控件的高度，isHeight=false则为测量该控件的宽度
+     *
      * @param view
      * @param isHeight
      * @return
      */
-    public int getViewHeight(View view, boolean isHeight){
+    public int getViewHeight(View view, boolean isHeight) {
         int result;
-        if(view==null)return 0;
-        if(isHeight){
-            int h = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-            view.measure(h,0);
-            result =view.getMeasuredHeight();
-        }else{
-            int w = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-            view.measure(0,w);
-            result =view.getMeasuredWidth();
+        if (view == null) return 0;
+        if (isHeight) {
+            int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+            view.measure(h, 0);
+            result = view.getMeasuredHeight();
+        } else {
+            int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+            view.measure(0, w);
+            result = view.getMeasuredWidth();
         }
         return result;
     }
@@ -491,6 +498,25 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void bindListener() {
+
+        //下拉刷新
+        refresh.setMaterialRefreshListener(new MaterialRefreshListener() {
+            @Override
+            public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
+                actionBarHome.setVisibility(View.GONE);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refresh.finishRefresh();
+                        actionBarHome.setVisibility(View.VISIBLE);
+                        getHomeData();
+                        getBuildingData();
+                        //停止刷新效果
+                    }
+                }, 1000);
+            }
+        });
 
 //        ViewTreeObserver observer = filterViewHome.getViewTreeObserver();
 //        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -526,71 +552,77 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = mainHomeGvAdapter.getItem(position);
-                if("住宅".equals(item)){
+                if ("住宅".equals(item)) {
                     isClick = true;
                     Log.i(TAG, "onItemClick()__住宅");
                     filterData.getCategory().get(1).setSelected(true);
-                    filterData.getCategory().get(1).setSelectedFilterEntity(new FilterEntity("不限","1"));
+                    filterData.getCategory().get(1).setSelectedFilterEntity(new FilterEntity("不限", "1"));
                     fillAdapter(getCategoryBuildingData(filterData.getCategory().get(1)));
                     smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1, 0);
 
-                }else if("商铺".equals(item)){
+                } else if ("商铺".equals(item)) {
                     isClick = true;
                     Log.i(TAG, "onItemClick()__商铺");
                     filterData.getCategory().get(4).setSelected(true);
-                    filterData.getCategory().get(4).setSelectedFilterEntity(new FilterEntity("不限","1"));
+                    filterData.getCategory().get(4).setSelectedFilterEntity(new FilterEntity("不限", "1"));
                     fillAdapter(getCategoryBuildingData(filterData.getCategory().get(4)));
                     smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1, 0);
 
-                }else if("写字楼".equals(item)){
+                } else if ("写字楼".equals(item)) {
                     isClick = true;
                     Log.i(TAG, "onItemClick()__写字楼");
                     filterData.getCategory().get(5).setSelected(true);
-                    filterData.getCategory().get(5).setSelectedFilterEntity(new FilterEntity("不限","1"));
+                    filterData.getCategory().get(5).setSelectedFilterEntity(new FilterEntity("不限", "1"));
                     fillAdapter(getCategoryBuildingData(filterData.getCategory().get(5)));
                     smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1, 0);
 
-                }else if("地图找房".equals(item)){
+                } else if ("地图找房".equals(item)) {
                     Intent intent = new Intent();
                     intent.setClass(mContext, WebViewActivity.class);
-                    intent.putExtra("title",item);
-                    intent.putExtra("url",API.MAP_SEARCH);
+                    intent.putExtra("title", item);
+                    intent.putExtra("url", API.MAP_SEARCH);
+                    if (MyApplication.getInstance().token != null) {
+                        intent.putExtra("token", MyApplication.getInstance().token);
+                    } else {
+                        intent.putExtra("token", MyApplication.getInstance().token);
+                    }
+                    intent.putExtra("cid", "");
                     getActivity().startActivity(intent);
 
-                }else if("新房团购".equals(item)){
+                } else if ("新房团购".equals(item)) {
                     Toast.makeText(mContext, "暂未开放，敬请期待", Toast.LENGTH_SHORT).show();
 
-                }else if("楼盘报备".equals(item)){
-                    if(MyApplication.getInstance().isLogined) {
+                } else if ("楼盘报备".equals(item)) {
+                    if (MyApplication.getInstance().isLogined) {
                         int userType = MyApplication.getInstance().mUserMsg.getmChild();
-                        if(userType==RESCODE_JINGJIREN||userType==RESCODE_JINGJICOM) {
+                        if (userType == RESCODE_JINGJIREN || userType == RESCODE_JINGJICOM) {
                             Intent intent = new Intent();
                             intent.setClass(mContext, AddBBActivity.class);
                             getActivity().startActivity(intent);
-                        }else{
+                        } else {
                             Toast.makeText(mContext, "开发商用户没有权限报备", Toast.LENGTH_SHORT).show();
                         }
-                    }else{
+                    } else {
                         Toast.makeText(mContext, "请先登录", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent();
                         intent.setClass(mContext, LoginActivity.class);
                         getActivity().startActivity(intent);
                     }
 
-                }else if("房价走势".equals(item)){
+                } else if ("房价走势".equals(item)) {
                     Intent intent = new Intent();
                     intent.setClass(mContext, WebViewActivity.class);
-                    intent.putExtra("title",item);
-                    intent.putExtra("url",API.BUILDING_PRICE);
+                    intent.putExtra("title", item);
+                    intent.putExtra("url", API.BUILDING_PRICE);
                     getActivity().startActivity(intent);
 
-                }else if("购房工具".equals(item)){
+                } else if ("购房工具".equals(item)) {
 //                    Toast.makeText(mContext, "暂未开放，敬请期待", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent();
                     intent.setClass(mContext, WebViewActivity.class);
-                    intent.putExtra("title",item);
-                    intent.putExtra("url",API.GFTOOL);
+                    intent.putExtra("title", item);
+                    intent.putExtra("url", API.GFTOOL);
                     getActivity().startActivity(intent);
 
                 }
@@ -606,7 +638,6 @@ public class HomeFragment extends BaseFragment {
                 getActivity().startActivity(intent);
             }
         });
-
 
 
         switchSearchPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -652,9 +683,9 @@ public class HomeFragment extends BaseFragment {
         actionBarHome.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(v.getAlpha()!=0){
+                if (v.getAlpha() != 0) {
                     lvBuilding.smoothScrollToPosition(0);
-                }else{
+                } else {
                     Intent intent = new Intent(mContext, SearchActivity.class);
                     intent.putExtra("type", actionBarHome.leftTitle.getText());
                     startActivity(intent);
@@ -708,16 +739,16 @@ public class HomeFragment extends BaseFragment {
         lvBuilding.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position - filterViewPosition -1<0){
+                if (position - filterViewPosition - 1 < 0) {
                     return;
                 }
-                BuildingEntity dataEntity = mainHomeBuildingLvAdapter.getData().get(position - filterViewPosition -1);
-                if(dataEntity.isNoData()){
+                BuildingEntity dataEntity = mainHomeBuildingLvAdapter.getData().get(position - filterViewPosition - 1);
+                if (dataEntity.isNoData()) {
                     return;
                 }
                 Intent intent = new Intent();
                 intent.putExtra("Aid", dataEntity.getAid());
-                intent.putExtra("Name",dataEntity.getSubject());
+                intent.putExtra("Name", dataEntity.getSubject());
                 intent.setClass(getActivity(), DetailNewhouseActivity.class);
                 getActivity().startActivity(intent);
             }
@@ -748,7 +779,6 @@ public class HomeFragment extends BaseFragment {
         });
 
 
-
         // (真正的)筛选视图点击
         filterViewHome.setOnFilterClickListener(new FilterView.OnFilterClickListener() {
             @Override
@@ -767,7 +797,7 @@ public class HomeFragment extends BaseFragment {
             public void onFilterClick(int position) {
                 filterPosition = position;
                 isSmooth = true;
-                smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1 , 0);
+                smoothScrollToPositionFromTop(lvBuilding, filterViewPosition + 1, 0);
 
             }
         });
@@ -778,16 +808,15 @@ public class HomeFragment extends BaseFragment {
     }
 
 
-
     AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(final AbsListView view, int scrollState) {
             isScrollIdle = (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE);
 
             if (isScrollIdle && isClick) {
-            Log.i("Proxy_test34", "onScrollStateChanged()__titleViewHeight = "+titleViewHeight + "   filterViewTopSpace = "+filterViewTopSpace);
+                Log.i("Proxy_test34", "onScrollStateChanged()__titleViewHeight = " + titleViewHeight + "   filterViewTopSpace = " + filterViewTopSpace);
 
-                Log.i(TAG+"test", "onScrollStateChanged()__scrollState == SCROLL_STATE_IDLE && isClick");
+                Log.i(TAG + "test", "onScrollStateChanged()__scrollState == SCROLL_STATE_IDLE && isClick");
 //                view.setOnScrollListener(null);
 
                 // Fix for scrolling bug
@@ -805,11 +834,10 @@ public class HomeFragment extends BaseFragment {
         }
 
 
-
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             if (isScrollIdle && adViewTopSpace < 0) {
-                Log.i(TAG+"test", "onScroll()__return");
+                Log.i(TAG + "test", "onScroll()__return");
                 return;
             }
 
@@ -836,7 +864,7 @@ public class HomeFragment extends BaseFragment {
             if (filterViewTopSpace > titleViewHeight) {
                 isStickyTop = false; // 没有吸附在顶部
                 filterViewHome.setVisibility(View.GONE);
-            } else if(itemHeaderFilterView != null){
+            } else if (itemHeaderFilterView != null) {
                 isStickyTop = true; // 吸附在顶部
                 filterViewHome.setVisibility(View.VISIBLE);
             }
@@ -856,9 +884,8 @@ public class HomeFragment extends BaseFragment {
 
             // 处理标题栏颜色渐变
             //adViewTopSpace实际上是轮拨图底部的距离
+            Log.i("testScroll", "adViewTopSpace = "+adViewTopSpace);
             actionBarHome.setChangeWithScroll(200 - adViewTopSpace, topShadow);
-
-
         }
 
 
@@ -901,10 +928,10 @@ public class HomeFragment extends BaseFragment {
 
         if (list == null || list.size() == 0) {
             Log.i("Proxy_test344", "fillAdapter()__list为null");
-            int height = MyApplication.mScreenHeight-dip2px(titleViewHeight + 50 + 45); // 95 = 标题栏高度 ＋ FilterView+底部bar的高度
+            int height = MyApplication.mScreenHeight - dip2px(titleViewHeight + 50 + 45); // 95 = 标题栏高度 ＋ FilterView+底部bar的高度
             mainHomeBuildingLvAdapter.setData(ModelUtil.getNoDataEntity(height));
         } else {
-            Log.i("Proxy_test344", "fillAdapter()__list.size = "+list.size());
+            Log.i("Proxy_test344", "fillAdapter()__list.size = " + list.size());
             mainHomeBuildingLvAdapter.setData(list);
         }
     }
@@ -920,6 +947,8 @@ public class HomeFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         banner_home_top.startTurning(2000);
+//        Logger.d("onResume");
+//        updataBbList();
     }
 
 
@@ -928,6 +957,56 @@ public class HomeFragment extends BaseFragment {
 
     }
 
+    @Subscribe(sticky = true)
+    public void onUserEvent(SimpleEntity simpleEntity) {
+        Logger.d("onUserEvent()__");
+
+        updataBbList();
+
+    }
+
+    private void updataBbList() {
+        OkHttpUtils
+                .get()
+                .url(API.BBList)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Logger.d(e.getMessage());
+                        Toast.makeText(mContext, "有新的实时报备信息，但更新失败", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.i(TAG + "test1", "onResponse()__");
+                        BblistEntity bblistEntity = new Gson().fromJson(response, BblistEntity.class);
+
+                        if (bblistEntity.getCode() == 200) {
+                            List<String> bblistEntities = bblistEntity.getData();
+//                            Logger.d(bblistEntities);
+                            autoScrollView.setmTexts(bblistEntities);
+                        } else {
+                            Logger.d("onResponse()__buildingList.getCode()");
+                            Toast.makeText(mContext, "有新的失败报备信息，但获取失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
 
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
+        return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 }

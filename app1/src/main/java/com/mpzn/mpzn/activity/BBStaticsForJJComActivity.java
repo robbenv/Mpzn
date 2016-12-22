@@ -260,11 +260,11 @@ public class BBStaticsForJJComActivity extends BaseActivity {
         PieGraphView.Item item = new PieGraphView.Item();
         item.color = 0x9993b0cf;
         item.value = successNum;
-        item.id = "报备成功:" + successNum + "%";
+        item.id = "带看成功:" + successNum + "%";
         PieGraphView.Item item1 = new PieGraphView.Item();
         item1.color = 0x99c56ea7;
         item1.value = failureNum;
-        item1.id = "报备失败:" + failureNum + "%";
+        item1.id = "带看失败:" + failureNum + "%";
         itemGroup.items = new PieGraphView.Item[2];
         itemGroup.items[0] = item;
         itemGroup.items[1] = item1;
@@ -320,13 +320,13 @@ public class BBStaticsForJJComActivity extends BaseActivity {
                 if (!isCom) {
                     if (position == 0) {
                         type = "all";
-                        tvContentTitle.setText("总Rank榜");
+                        tvContentTitle.setText("总排行榜");
                     } else if (position == 1) {
                         type = "month";
-                        tvContentTitle.setText("月Rank榜");
+                        tvContentTitle.setText("月排行榜");
                     } else if (position == 2) {
                         type = "week";
-                        tvContentTitle.setText("周Rank榜");
+                        tvContentTitle.setText("周排行榜");
                     }
                     updataJingjiren(type);
                 } else {
@@ -388,13 +388,13 @@ public class BBStaticsForJJComActivity extends BaseActivity {
 
                     if (position == 0) {
                         type = "all";
-                        tvContentTitle.setText("总Rank榜");
+                        tvContentTitle.setText("总排行榜");
                     } else if (position == 1) {
                         type = "month";
-                        tvContentTitle.setText("月Rank榜");
+                        tvContentTitle.setText("月排行榜");
                     } else if (position == 2) {
                         type = "week";
-                        tvContentTitle.setText("周Rank榜");
+                        tvContentTitle.setText("周排行榜");
                     }
 //                    currentAdapter = rvOwnAdapter;
                 } else if (position == 1) {

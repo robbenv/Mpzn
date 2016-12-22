@@ -2,6 +2,7 @@ package com.mpzn.mpzn.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -23,22 +24,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
 import com.google.gson.Gson;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.adapter.ApplyForSellTipsLvAdapter;
 import com.mpzn.mpzn.adapter.RvCheckBuildingAdapter;
-import com.mpzn.mpzn.adapter.SearchLvTipsAdapter;
 import com.mpzn.mpzn.application.MyApplication;
 import com.mpzn.mpzn.base.BaseActivity;
 import com.mpzn.mpzn.entity.ApplyForSellTipsEntity;
 import com.mpzn.mpzn.entity.CheckStarEntity;
-import com.mpzn.mpzn.entity.SearchTipsList;
 import com.mpzn.mpzn.entity.StarBuildingEntity;
 import com.mpzn.mpzn.http.API;
-import com.mpzn.mpzn.listener.EndLessOnScrollListener;
-import com.mpzn.mpzn.listener.OnRecyclerItemClickListener;
-import com.mpzn.mpzn.utils.CacheUtils;
 import com.mpzn.mpzn.views.MyActionBar;
 import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -77,6 +75,9 @@ public class ApplyForSellActivity extends BaseActivity {
     ImageView ivLoadAlert;
     @Bind(R.id.lv_search_tips)
     ListView lvSearchTips;
+    @Bind(R.id.refresh)
+    MaterialRefreshLayout refresh;
+
     private RvCheckBuildingAdapter rvAdapter;
     private List<StarBuildingEntity.DataBean> applyForSellListData = new ArrayList<>();
     private int currentMaxOffset = 0;
@@ -84,7 +85,7 @@ public class ApplyForSellActivity extends BaseActivity {
     private LinearLayoutManager linearLayoutManager;
     private String subject;   //搜索条件
 
-    private List<ApplyForSellTipsEntity.DataBean> tipsList=new ArrayList<>();
+    private List<ApplyForSellTipsEntity.DataBean> tipsList = new ArrayList<>();
     private ApplyForSellTipsLvAdapter searchLvTipsAdapter;
 
     @Override
@@ -107,6 +108,7 @@ public class ApplyForSellActivity extends BaseActivity {
         rvBuilding.setLayoutManager(linearLayoutManager);
         rvBuilding.setAdapter(rvAdapter);
 
+
     }
 
     @Override
@@ -121,9 +123,6 @@ public class ApplyForSellActivity extends BaseActivity {
         String subject = intent.getStringExtra("subject");
         etSearch.setText(subject);
         getData(currentMaxOffset, subject);
-
-
-
     }
 
 
@@ -169,6 +168,37 @@ public class ApplyForSellActivity extends BaseActivity {
 
     @Override
     public void bindListener() {
+
+        refresh.setMaterialRefreshListener(new MaterialRefreshListener() {
+            @Override
+            public void onRefresh(final MaterialRefreshLayout materialRefreshLayout) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        materialRefreshLayout.finishRefresh();
+                        Toast.makeText(ApplyForSellActivity.this, "刷新完成", Toast.LENGTH_SHORT).show();
+                        getData(0, subject);
+                        //停止刷新效果
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onRefreshLoadMore(final MaterialRefreshLayout materialRefreshLayout) {
+                super.onRefreshLoadMore(materialRefreshLayout);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        materialRefreshLayout.finishRefreshLoadMore();
+                        getData(currentMaxOffset + 1, subject);
+                        //停止刷新效果
+                    }
+                }, 1000);
+
+            }
+        });
+
+
         acitonBar.setLROnClickListener(null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,10 +238,10 @@ public class ApplyForSellActivity extends BaseActivity {
                     lvSearchTips.setVisibility(View.GONE);
                 }
 
-                Logger.d("token = "+MyApplication.getInstance().token + " \n subject"+etSearch.getText().toString().trim());
+                Logger.d("token = " + MyApplication.getInstance().token + " \n subject" + etSearch.getText().toString().trim());
                 OkHttpUtils.get()
                         .url(API.APPLYBUILDING_TIPS_GET)
-                        .addParams("token",MyApplication.getInstance().token)
+                        .addParams("token", MyApplication.getInstance().token)
                         .addParams("subject", etSearch.getText().toString().trim())
                         .build()
                         .execute(new StringCallback() {
@@ -223,7 +253,7 @@ public class ApplyForSellActivity extends BaseActivity {
                             @Override
                             public void onResponse(String response, int id) {
                                 ApplyForSellTipsEntity searchTipsList = new Gson().fromJson(response, ApplyForSellTipsEntity.class);
-                                if (searchTipsList.getCode()==200) {
+                                if (searchTipsList.getCode() == 200) {
                                     tipsList = searchTipsList.getData();
                                     searchLvTipsAdapter.setData(tipsList);
 
@@ -249,13 +279,13 @@ public class ApplyForSellActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ApplyForSellTipsEntity.DataBean data = tipsList.get(position);
-                if(data.isNoData()){
+                if (data.isNoData()) {
                     return;
                 }
                 Intent intent = new Intent();
-                intent.setClass(mContext,DetailNewhouseActivity.class);
-                intent.putExtra("Aid",data.getAid());
-                intent.putExtra("Name",data.getSubject());
+                intent.setClass(mContext, DetailNewhouseActivity.class);
+                intent.putExtra("Aid", data.getAid());
+                intent.putExtra("Name", data.getSubject());
                 startActivity(intent);
             }
         });
@@ -272,13 +302,13 @@ public class ApplyForSellActivity extends BaseActivity {
 //            }
 //        });
 
-        rvBuilding.addOnScrollListener(new EndLessOnScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int currentPage) {
-                Log.e("TAG", "currentMaxOffset" + currentMaxOffset);
-                getData(currentMaxOffset + 1, subject);
-            }
-        });
+//        rvBuilding.addOnScrollListener(new EndLessOnScrollListener(linearLayoutManager) {
+//            @Override
+//            public void onLoadMore(int currentPage) {
+//                Log.e("TAG", "currentMaxOffset" + currentMaxOffset);
+//                getData(currentMaxOffset + 1, subject);
+//            }
+//        });
 
         cbAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -302,7 +332,7 @@ public class ApplyForSellActivity extends BaseActivity {
                 if (subject == "") {
                     subject = null;
                 }
-                if(lvSearchTips.getVisibility()==View.VISIBLE){
+                if (lvSearchTips.getVisibility() == View.VISIBLE) {
                     lvSearchTips.setVisibility(View.GONE);
                 }
                 getData(0, subject);
@@ -339,7 +369,7 @@ public class ApplyForSellActivity extends BaseActivity {
                 }
 
                 loadProgressHUD = KProgressHUD.create(ApplyForSellActivity.this).
-                        setSize(MyApplication.mScreenWidth/4, MyApplication.mScreenWidth/6).
+                        setSize(MyApplication.mScreenWidth / 4, MyApplication.mScreenWidth / 6).
                         setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).
                         setLabel("正在申请代销...").setCancellable(false).show();
 

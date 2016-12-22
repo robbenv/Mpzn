@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="报备成功"
+            android:text="带看成功"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
             android:textSize="15sp"
@@ -45,7 +45,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="报备失败"
+            android:text="带看失败"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
             android:textSize="15sp"

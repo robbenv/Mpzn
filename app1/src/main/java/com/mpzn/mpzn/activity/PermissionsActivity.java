@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.utils.PermissionsChecker;
+import com.orhanobut.logger.Logger;
 
 /**
  * 权限获取页面
@@ -53,6 +54,7 @@ public class PermissionsActivity extends AppCompatActivity {
     }
 
     @Override protected void onResume() {
+//        Logger.d("onResume");
         super.onResume();
         if (isRequireCheck) {
             String[] permissions = getPermissions();
@@ -78,6 +80,7 @@ public class PermissionsActivity extends AppCompatActivity {
 
     // 全部权限均已获取
     private void allPermissionsGranted() {
+//        Logger.d("allPermissionsGranted");
         setResult(PERMISSIONS_GRANTED);
         finish();
     }
@@ -93,6 +96,7 @@ public class PermissionsActivity extends AppCompatActivity {
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        Logger.d("onRequestPermissionsResult");
         if (requestCode == PERMISSION_REQUEST_CODE && hasAllPermissionsGranted(grantResults)) {
             isRequireCheck = true;
             allPermissionsGranted();

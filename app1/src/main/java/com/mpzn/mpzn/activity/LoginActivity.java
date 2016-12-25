@@ -38,6 +38,7 @@ import com.mpzn.mpzn.base.BaseActivity;
 import com.mpzn.mpzn.entity.AccountEntity;
 import com.mpzn.mpzn.entity.LoginEntity;
 import com.mpzn.mpzn.entity.LoginEvent;
+import com.mpzn.mpzn.entity.RegistEntity;
 import com.mpzn.mpzn.entity.SimpleEntity;
 import com.mpzn.mpzn.entity.UserMsg;
 import com.mpzn.mpzn.http.API;
@@ -47,6 +48,7 @@ import com.mpzn.mpzn.utils.Constant;
 import com.mpzn.mpzn.utils.PermissionsChecker;
 import com.mpzn.mpzn.utils.ViewUtils;
 import com.mpzn.mpzn.views.MyActionBar;
+import com.orhanobut.logger.Logger;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -57,13 +59,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import okhttp3.Call;
 
+import static com.mpzn.mpzn.application.MyApplication.mUserMsg;
 import static com.mpzn.mpzn.utils.CacheUtils.getObject;
 import static com.mpzn.mpzn.utils.CacheUtils.putObject;
 import static com.mpzn.mpzn.utils.Constant.REQCODE_REGISTER_SEND_CODE;
@@ -123,6 +129,7 @@ public class LoginActivity extends BaseActivity {
 
     private String openid;
     private String wx_name;
+    private String wx_headimage;
 
     private static final int resultCode = 1001;
     private static final int MSG_SENDMSG = 9;
@@ -153,8 +160,8 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
             Toast.makeText(getApplicationContext(), "授权成功", Toast.LENGTH_SHORT).show();
+            Log.i("weixin1", "onComplete()__data = "+data.toString());
             getUMUserMessager(platform, data);
-
         }
 
         @Override
@@ -167,6 +174,9 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText(getApplicationContext(), "取消授权", Toast.LENGTH_SHORT).show();
         }
     };
+    private final int REGIST = 0;
+    private int status;
+    private final int BIND = 1;
 
 
     @Override
@@ -190,7 +200,7 @@ public class LoginActivity extends BaseActivity {
 
         myActionBar.init("登录", R.drawable.return_white, 0);
         myActionBar.setRightText("忘记密码");
-
+        //AccountEntity只是用来自动填上用户账号密码和头像的
         AccountEntity account = (AccountEntity) getObject(mContext, "account");
         if (account != null) {
             etUserPhone.setText(account.getUsername());
@@ -267,30 +277,13 @@ public class LoginActivity extends BaseActivity {
         dialog_view.btnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OkHttpUtils.post()
-                        .url(API.WX_REGIST)
-                        .addParams("user", dialog_view.etPhone.getText().toString())
-                        .addParams("weixin_openid", openid)
-                        .addParams("message", dialog_view.etCode.getText().toString())
-                        .build()
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onError(Call call, Exception e, int id) {
-
-                            }
-
-                            @Override
-                            public void onResponse(String response, int id) {
-                                SimpleEntity simpleEntity = new Gson().fromJson(response, SimpleEntity.class);
-                                if (simpleEntity.getCode() == 200) {
-                                    dialog.dismiss();
-                                    Toast.makeText(LoginActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    dialog_view.btnCommit.setEnabled(false);
-                                    dialog_view.tvTips.setText(simpleEntity.getMessage());
-                                }
-                            }
-                        });
+                switch (status) {
+                    case REGIST:
+                        registWX();
+                        break;
+                    case BIND:
+                        bindWX();
+                }
 
             }
         });
@@ -332,6 +325,7 @@ public class LoginActivity extends BaseActivity {
                                         dialog_view.btnCheck.setEnabled(true);
                                         dialog_view.etCode.setText("");
                                         dialog_view.etPass.setText("");
+                                        status = REGIST;
                                     } else {
                                         dialog_view.tvTips.setText("该手机号已注册，请输入密码以绑定");
                                         dialog_view.btnCheck.setEnabled(false);
@@ -341,6 +335,7 @@ public class LoginActivity extends BaseActivity {
                                         dialog_view.btnCheck.setEnabled(false);
                                         dialog_view.etCode.setText("");
                                         dialog_view.etPass.setText("");
+                                        status = BIND;
                                     }
                                 }
                             });
@@ -385,6 +380,64 @@ public class LoginActivity extends BaseActivity {
         dialog_view.etCode.addTextChangedListener(textWatcher);
         dialog_view.etPass.addTextChangedListener(textWatcher);
 
+    }
+
+    private void bindWX() {
+        OkHttpUtils.post()
+                .url(API.BIND_WX)
+                .addParams("user", dialog_view.etPhone.getText().toString())
+                .addParams("weixin_openid", openid)
+                .addParams("message", dialog_view.etCode.getText().toString())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        SimpleEntity simpleEntity = new Gson().fromJson(response, SimpleEntity.class);
+                        if (simpleEntity.getCode() == 200) {
+                            Log.i("weixin", "onResponse()__success");
+                            dialog.dismiss();
+                            Toast.makeText(LoginActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.i("weixin", "onResponse()__false");
+                            dialog_view.btnCommit.setEnabled(false);
+                            dialog_view.tvTips.setText(simpleEntity.getMessage());
+                        }
+                    }
+                });
+    }
+
+    private void registWX() {
+        OkHttpUtils.post()
+                .url(API.WX_REGIST)
+                .addParams("user", dialog_view.etPhone.getText().toString())
+                .addParams("weixin_openid", openid)
+                .addParams("message", dialog_view.etCode.getText().toString())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        SimpleEntity simpleEntity = new Gson().fromJson(response, SimpleEntity.class);
+                        if (simpleEntity.getCode() == 200) {
+                            Log.i("weixin", "onResponse()__success");
+                            dialog.dismiss();
+                            Toast.makeText(LoginActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.i("weixin", "onResponse()__false");
+                            dialog_view.btnCommit.setEnabled(false);
+                            dialog_view.tvTips.setText(simpleEntity.getMessage());
+                        }
+                    }
+                });
     }
 
 
@@ -681,8 +734,12 @@ public class LoginActivity extends BaseActivity {
         UserMsg userMsg = new UserMsg();
         userMsg.setmChild(data.getMchid());
         Log.e("TAG", "type" + data.getMchid());
+        Logger.d(data.getMname());
+            userMsg.setmName(data.getMname());
+            userMsg.setName(data.getName());
+            userMsg.setNickName(data.getNickname());
+        userMsg.setPhone(data.getMname());
         userMsg.setmId(data.getMid());
-        userMsg.setmName(data.getMname());
         userMsg.setmIconUrl(data.getHeadimage());
 
         Bundle bundle = new Bundle();
@@ -690,7 +747,19 @@ public class LoginActivity extends BaseActivity {
 
 
         putObject(mContext, "userMsg", userMsg);
+        Logger.d("别名："+userMsg.getmName()+"_dev");
+                JPushInterface.setAlias(this, userMsg.getmName()+"_dev", new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                //啥也没有
+
+            }
+        });
         MyApplication.getInstance().setmUserMsg(userMsg);
+//        Toast.makeText(mContext, "别名："+userMsg.getmName()+"_dev", Toast.LENGTH_SHORT).show();
+
+
+
         MyApplication.getInstance().setIsLogined(true);
 
         intent.putExtras(bundle);
@@ -741,13 +810,15 @@ public class LoginActivity extends BaseActivity {
 
         mShareAPI.doOauthVerify(this, platform, umAuthListener);
 
+
+
         //删除授权
         //mShareAPI.deleteOauth(this, platform, umdelAuthListener);
 
 
     }
 
-    public void getUMUserMessager(SHARE_MEDIA platform, Map<String, String> data) {
+    public void getUMUserMessager(final SHARE_MEDIA platform, Map<String, String> data) {
         mShareAPI = UMShareAPI.get(this);
         if (platform == SHARE_MEDIA.WEIXIN) {
             Log.e("微信登录", "openid：" + data.get("openid"));
@@ -781,6 +852,24 @@ public class LoginActivity extends BaseActivity {
                                 loadedDismissProgressDialog(LoginActivity.this, false, loadProgressHUD, loginEntity.getMessage(), false);
 
                             } else {
+                                Log.i("weixin1", "onResponse()__对话框");
+                                mShareAPI.getPlatformInfo(LoginActivity.this, platform, new UMAuthListener() {
+                                    @Override
+                                    public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                                        wx_name = map.get("nickname");
+                                        wx_headimage = map.get("headimgurl");
+                                    }
+
+                                    @Override
+                                    public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+
+                                    }
+
+                                    @Override
+                                    public void onCancel(SHARE_MEDIA share_media, int i) {
+
+                                    }
+                                });
                                 loadProgressHUD.dismiss();
                                 dialog.show();
 

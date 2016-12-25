@@ -1,5 +1,6 @@
 package com.mpzn.mpzn.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -15,11 +16,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dss886.emotioninputdetector.library.EmotionInputDetector;
 import com.google.gson.Gson;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.mpzn.mpzn.R;
@@ -30,8 +33,12 @@ import com.mpzn.mpzn.entity.MessageEntity;
 import com.mpzn.mpzn.entity.NewsEntity;
 import com.mpzn.mpzn.entity.SimpleEntity;
 import com.mpzn.mpzn.http.API;
+import com.mpzn.mpzn.utils.PermissionsChecker;
 import com.mpzn.mpzn.utils.ViewUtils;
 import com.mpzn.mpzn.views.MyActionBar;
+import com.tb.emoji.Emoji;
+import com.tb.emoji.EmojiUtil;
+import com.tb.emoji.FaceFragment;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -40,18 +47,20 @@ import com.umeng.socialize.media.UMImage;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.IOException;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 
-import static com.mpzn.mpzn.utils.ViewUtils.dip2px;
 import static com.mpzn.mpzn.utils.ViewUtils.loadedDismissProgressDialog;
 
 /**
  * Created by Icy on 2016/8/16.
  */
-public class DetailNewsActivity extends BaseActivity {
-    @Bind(R.id.action_bar)
+public class DetailNewsActivity extends BaseActivity  implements FaceFragment.OnEmojiClickListener {
+
+    @Bind(R.id.my_action_bar)
     MyActionBar actionBar;
     @Bind(R.id.wv_news_detail)
     WebView wvNewsDetail;
@@ -65,10 +74,21 @@ public class DetailNewsActivity extends BaseActivity {
     TextView tvReviewSend;
     @Bind(R.id.review_et_bar)
     LinearLayout reviewEtBar;
+
+
+    @Bind(R.id.bt_emoji)
+    Button btEmoji;
+    @Bind(R.id.container)
+    FrameLayout container;
     @Bind(R.id.rl_root_view)
-    RelativeLayout rlRootView;
+    LinearLayout rlRootView;
+
     @Bind(R.id.btn_open_review)
     Button btnOpenReview;
+
+    private FaceFragment faceFragment;
+
+    private EmotionInputDetector mDetector;
 
 
     private String newsEntityJson;
@@ -81,6 +101,13 @@ public class DetailNewsActivity extends BaseActivity {
     private KProgressHUD loadProgressHUD;
 
     private MessageEntity messageEntity;
+
+    static final String[] mPermissionList = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS};
+
+    // 权限检测器
+    private PermissionsChecker mPermissionsChecker;
+
+    private static final int REQUEST_CODE = 0; // 请求码
 
 
     private UMShareListener umShareListener = new UMShareListener() {
@@ -108,7 +135,6 @@ public class DetailNewsActivity extends BaseActivity {
     };
 
 
-
     @Override
     public int getLayoutId() {
         return R.layout.activity_detail_news;
@@ -117,7 +143,7 @@ public class DetailNewsActivity extends BaseActivity {
     @Override
     public void initHolder() {
         initSystemBar(this, R.color.fafafa);
-
+        faceFragment = FaceFragment.Instance();
     }
 
     @Override
@@ -182,11 +208,11 @@ public class DetailNewsActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        mPermissionsChecker = new PermissionsChecker(this);
         Intent intent = getIntent();
         newsAid = intent.getIntExtra("NewsAid", -1);
 
         initAbtract();
-
 
 
         contentUrl = API.NEWDETAIL + newsAid;
@@ -200,7 +226,7 @@ public class DetailNewsActivity extends BaseActivity {
 
         OkHttpUtils.get()
                 .url(API.NEWSABTRACT_GET)
-                .addParams("aid",newsAid+"")
+                .addParams("aid", newsAid + "")
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -211,7 +237,7 @@ public class DetailNewsActivity extends BaseActivity {
                     @Override
                     public void onResponse(String response, int id) {
                         AbstractEntity abstractEntity = new Gson().fromJson(response, AbstractEntity.class);
-                        if(abstractEntity.getCode()==200){
+                        if (abstractEntity.getCode() == 200) {
                             messageEntity = abstractEntity.getData();
                         }
 
@@ -252,20 +278,20 @@ public class DetailNewsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if(messageEntity!=null){
+                if (messageEntity != null) {
 
-                    String imgUrl=messageEntity.getThumb();
+                    String imgUrl = messageEntity.getThumb();
                     if (imgUrl == null || imgUrl == "") {
                         imgUrl = "http://www.mpzn.com/userfiles/image/20160216/16153634da8575901d4313.png";
                     }
 
-                new ShareAction(DetailNewsActivity.this).setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE)
-                        .withTitle(messageEntity.getSubject())
-                        .withText(messageEntity.getAbstractX())
-                        .withMedia(new UMImage(DetailNewsActivity.this, imgUrl))
-                        .withTargetUrl(messageEntity.getUrl())
-                        .setCallback(umShareListener)
-                        .open();
+                    new ShareAction(DetailNewsActivity.this).setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE)
+                            .withTitle(messageEntity.getSubject())
+                            .withText(messageEntity.getAbstractX())
+                            .withMedia(new UMImage(DetailNewsActivity.this, imgUrl))
+                            .withTargetUrl(messageEntity.getUrl())
+                            .setCallback(umShareListener)
+                            .open();
                 }
 
             }
@@ -275,6 +301,13 @@ public class DetailNewsActivity extends BaseActivity {
         tvReviewBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mDetector = EmotionInputDetector.with(DetailNewsActivity.this)
+                        .setEmotionView(container)
+                        .bindToContent(wvNewsDetail)
+                        .bindToEditText(etReview)
+                        .bindToEmotionButton(btEmoji)
+                        .bindtoFragment(faceFragment)
+                        .build();
                 reviewEtBar.setVisibility(View.VISIBLE);
                 etReview.requestFocus();
 
@@ -285,8 +318,8 @@ public class DetailNewsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(mContext,ReviewListActivity.class);
-                intent.putExtra("Aid",newsAid);
+                intent.setClass(mContext, ReviewListActivity.class);
+                intent.putExtra("Aid", newsAid);
                 startActivity(intent);
             }
         });
@@ -296,11 +329,14 @@ public class DetailNewsActivity extends BaseActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 InputMethodManager imm = (InputMethodManager) etReview.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (!hasFocus) {
+                    Log.i("Emoji_test1", "onFocusChange()__!hasFocus");
                     reviewEtBar.setVisibility(View.GONE);
                     etReview.setText(null);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
+                    mDetector.hideEmotionLayout(false);
 
                 } else {
+                    Log.i("Emoji_test1", "onFocusChange()__hasFocus");
                     imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
 
                 }
@@ -354,7 +390,7 @@ public class DetailNewsActivity extends BaseActivity {
             return;
         }
         loadProgressHUD = KProgressHUD.create(DetailNewsActivity.this).
-                setSize(MyApplication.mScreenWidth/4, MyApplication.mScreenWidth/6).
+                setSize(MyApplication.mScreenWidth / 4, MyApplication.mScreenWidth / 6).
                 setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).
                 setLabel("正在发表...").setCancellable(true).show();
         OkHttpUtils.post()
@@ -388,10 +424,15 @@ public class DetailNewsActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (etReview.hasFocus()) {
+        if (mDetector != null && mDetector.interceptBackPress()) {
+            Log.i("Emoji_test1", "onBackPressed()__!mDetector.interceptBackPress()");
+            //do nothing
+        } else if (etReview.hasFocus()) {
+            Log.i("Emoji_test1", "onBackPressed()__etReview.hasFocus()");
             reviewEtBar.setVisibility(View.GONE);
             etReview.setText(null);
         } else {
+            Log.i("Emoji_test1", "onBackPressed()__noFous");
             super.onBackPressed();
         }
 
@@ -399,12 +440,78 @@ public class DetailNewsActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         /** attention to this below ,must add this**/
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         Log.d("result", "onActivityResult");
+
+        // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
+        if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
+            finish();
+        }
     }
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 
+    @Override
+    public void onEmojiDelete() {
+        String text = etReview.getText().toString();
+        if (text.isEmpty()) {
+            return;
+        }
+        if ("]".equals(text.substring(text.length() - 1, text.length()))) {
+            int index = text.lastIndexOf("[");
+            if (index == -1) {
+                int action = KeyEvent.ACTION_DOWN;
+                int code = KeyEvent.KEYCODE_DEL;
+                KeyEvent event = new KeyEvent(action, code);
+                etReview.onKeyDown(KeyEvent.KEYCODE_DEL, event);
+//                displayTextView();
+                return;
+            }
+            etReview.getText().delete(index, text.length());
+//            displayTextView();
+            return;
+        }
+        int action = KeyEvent.ACTION_DOWN;
+        int code = KeyEvent.KEYCODE_DEL;
+        KeyEvent event = new KeyEvent(action, code);
+        etReview.onKeyDown(KeyEvent.KEYCODE_DEL, event);
+    }
+
+    @Override
+    public void onEmojiClick(Emoji emoji) {
+        if (emoji != null) {
+            int index = etReview.getSelectionStart();
+            Editable editable = etReview.getEditableText();
+            Log.i("Emoji_test", "onEmojiClick()__index = " + index);
+            if (index < 0) {
+                editable.append(emoji.getContent());
+            } else {
+                try {
+                    EmojiUtil.handlerEmojiText(etReview, emoji.getContent(), this, false);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 缺少权限时, 进入权限配置页面
+        if (mPermissionsChecker.lacksPermissions(mPermissionList)) {
+            startPermissionsActivity();
+        }
+    }
+
+    private void startPermissionsActivity() {
+        PermissionsActivity.startActivityForResult(this, REQUEST_CODE, mPermissionList);
+    }
 }

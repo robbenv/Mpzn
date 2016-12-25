@@ -10,6 +10,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -71,6 +73,8 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             } catch (InterruptedException e) {
                 Log.e("TAG", e.toString());
             }
+            //调用友盟API保存统计数据
+            MobclickAgent.onKillProcess(mContext);
             //退出程序
             MyApplication.getInstance().exit();
             android.os.Process.killProcess(android.os.Process.myPid());

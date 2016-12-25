@@ -7,6 +7,7 @@ package com.mpzn.mpzn.base;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mpzn.mpzn.utils.ImageManager;
+import com.orhanobut.logger.Logger;
 
 import butterknife.ButterKnife;
 
@@ -35,6 +37,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        Logger.d("onCreateView");
         view = getLayourView(inflater, container);
         mInflater=inflater;
         ButterKnife.bind(this, view);
@@ -105,5 +108,9 @@ public abstract class BaseFragment extends Fragment {
         playShortToast(getResources().getString(res));
     }
 
-
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+//        Logger.d("onActivityCreated");
+    }
 }

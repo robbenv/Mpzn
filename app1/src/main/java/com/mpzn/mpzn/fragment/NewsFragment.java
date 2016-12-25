@@ -100,6 +100,7 @@ public class NewsFragment extends BaseFragment{
         action_bar = (MyActionBar)fragment_news.findViewById(R.id.action_bar);
         action_bar.init("资讯",0,R.drawable.search_white);
 
+
         lv_news = (SmoothListView)fragment_news.findViewById(R.id.lv_news);
         lv_news.setRefreshEnable(true);
         lv_news.setLoadMoreEnable(true);

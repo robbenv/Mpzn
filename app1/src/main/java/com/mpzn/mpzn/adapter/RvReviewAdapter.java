@@ -2,6 +2,9 @@ package com.mpzn.mpzn.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +22,25 @@ import com.mpzn.mpzn.entity.ReviewListEntity;
 import com.mpzn.mpzn.entity.SimpleEntity;
 import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.utils.ImageManager;
+import com.tb.emoji.Emoji;
+import com.tb.emoji.EmojiUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 
 import static com.mpzn.mpzn.utils.DateUtil.formatData;
+import static com.tb.emoji.EmojiUtil.decodeSampledBitmapFromResource;
+import static com.tb.emoji.EmojiUtil.dip2px;
 
 /**
  * Created by Icy on 2016/10/9.
@@ -39,6 +51,7 @@ public class RvReviewAdapter extends RecyclerView.Adapter<RvReviewAdapter.RvView
 
     private Context mContext;
     private List<ReviewListEntity.DataBean> reviewdatalist;
+    private boolean isList;
 
     public RvReviewAdapter(Context mContext, List<ReviewListEntity.DataBean> reviewdatalist) {
         this.mContext = mContext;
@@ -63,8 +76,14 @@ public class RvReviewAdapter extends RecyclerView.Adapter<RvReviewAdapter.RvView
     public void onBindViewHolder(final RvViewHolder holder, int position) {
         final ReviewListEntity.DataBean dataBean = reviewdatalist.get(position);
         ((ReviewListActivity) mContext).mImageManager.loadCircleImage(dataBean.getHeadimage(), holder.imgIcon);
-        holder.tvContent.setText(dataBean.getContent());
-        holder.tvDate.setText(formatData("yyyy-MM-dd", dataBean.getCreatedate()));
+        isList = true;
+        try {
+            EmojiUtil.handlerEmojiText(holder.tvContent, dataBean.getContent(), mContext, isList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        holder.tvContent.setText(dataBean.getContent());
+        holder.tvDate.setText(formatData("yyyy-MM-dd HH:mm:ss", dataBean.getCreatedate()));
         holder.tvName.setText(dataBean.getMname());
         holder.tvFovor.setText(dataBean.getFavour()+"");
 
@@ -161,4 +180,6 @@ public class RvReviewAdapter extends RecyclerView.Adapter<RvReviewAdapter.RvView
             ButterKnife.bind(this, itemView);
         }
     }
+
+
 }

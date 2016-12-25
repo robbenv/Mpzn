@@ -76,7 +76,7 @@ public class MyBBlvadapter extends BaseListAdapter<MyBBEntity.DataBean> {
         viewHolder.tvName.setText(dataBean.getKhname());
         viewHolder.tvPhone.setText("("+dataBean.getKhphone()+")");
 
-        viewHolder.tvBuildingDate.setText(dataBean.getSubject()+" "+formatData("yyyy-MM-dd", dataBean.getBaobeitime()));
+        viewHolder.tvBuildingDate.setText(dataBean.getSubject()+" \n"+formatData("yyyy-MM-dd HH:mm", dataBean.getBaobeitime()));
         String  isChecked="未核验";
         if(dataBean.getJdaotime()>0){
             isChecked="已核验";

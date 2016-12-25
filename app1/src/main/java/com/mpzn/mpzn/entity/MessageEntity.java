@@ -13,6 +13,22 @@ import java.io.Serializable;
 
 public class MessageEntity implements Serializable,Parcelable{
 
+    @Override
+    public String toString() {
+        return "MessageEntity{" +
+                "abstractX='" + abstractX + '\'' +
+                ", aid=" + aid +
+                ", subject='" + subject + '\'' +
+                ", thumb='" + thumb + '\'' +
+                ", url='" + url + '\'' +
+                ", type='" + type + '\'' +
+                ", creatDate=" + creatDate +
+                '}';
+    }
+
+    public MessageEntity() {
+    }
+
     /**
      * abstract : 关于产权证上到底写谁的名字主要有5种做法，不同的方案可能导致不同的法律后果。恋爱中的男女应当对此有清晰的认识，然后再根据自己家庭和对方的实际情况选择适合的方案，以免仓促决定后，家庭、恋人反目，产生 ...
      * aid : 134
@@ -20,6 +36,8 @@ public class MessageEntity implements Serializable,Parcelable{
      * thumb : http://appi.mpzn.com/userfiles/image/icon.png
      * url : http://appi.mpzn.com/index.php/news/newsdetail/aid/134
      */
+
+
 
     @SerializedName("abstract")
     private String abstractX;

@@ -215,4 +215,36 @@ public class DataCleanManager {
         return getFormatSize(getFolderSize(file));
     }
 
+    private static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
+
+    //======================================================
+
+    public static void clearAllCache(Context context) {
+        deleteDir(context.getCacheDir());
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            deleteDir(context.getExternalCacheDir());
+        }
+    }
+
+    public static String getTotalCacheSize(Context context) throws Exception {
+        long cacheSize = getFolderSize(context.getCacheDir());
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            cacheSize += getFolderSize(context.getExternalCacheDir());
+        }
+        return getFormatSize(cacheSize);
+    }
+
+
+
 }

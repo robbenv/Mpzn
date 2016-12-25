@@ -54,14 +54,14 @@ public class RvBbRankAdapter extends RecyclerView.Adapter<RvBbRankAdapter.MyView
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
         BbRankListEntity.DataBean.BrokersbaobeiBean brokersbaobeiBean = bbRankList.get(position);
-        if(position==1) {
+        if(position==0) {
             holder.ivHat.setVisibility(View.VISIBLE);
             holder.tvRankNum.setTextColor(mContext.getResources().getColor(R.color.purple));
         }else {
             holder.ivHat.setVisibility(View.INVISIBLE);
-           if(position==2){
+           if(position==1){
                 holder.tvRankNum.setTextColor(mContext.getResources().getColor(R.color.orange));
-            }else if(position==3){
+            }else if(position==2){
                 holder.tvRankNum.setTextColor(mContext.getResources().getColor(R.color.red_theme));
             }
         }
@@ -69,12 +69,9 @@ public class RvBbRankAdapter extends RecyclerView.Adapter<RvBbRankAdapter.MyView
         ((BBStaticsForJJComActivity)mContext).mImageManager.loadCircleImage(brokersbaobeiBean.getImage(),holder.ivIcon);
         holder.tvName.setText(brokersbaobeiBean.getXingming());
         holder.tvBbNum.setText(brokersbaobeiBean.getSuccess()+"");
-        if(position==0){
-            holder.tvRankNum.setText("");
 
-        }else {
-            holder.tvRankNum.setText("NO." + position);
-        }
+            holder.tvRankNum.setText("NO." + (position + 1));
+
 
 
     }

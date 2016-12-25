@@ -2,10 +2,12 @@ package com.mpzn.mpzn.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.code19.library.CipherUtils;
 import com.code19.library.ImageUtils;
 import com.google.gson.Gson;
@@ -31,6 +34,9 @@ import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.http.MyStringCallBack;
 import com.mpzn.mpzn.utils.CacheUtils;
 import com.mpzn.mpzn.utils.PermissionsChecker;
+import com.yuyh.library.imgsel.ImageLoader;
+import com.yuyh.library.imgsel.ImgSelActivity;
+import com.yuyh.library.imgsel.ImgSelConfig;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -42,6 +48,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,6 +65,7 @@ public class ChangIconActivity extends BaseActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
 
     };
+    private static final int REQUEST_CODE_PHOTE = 5;
 
     private PermissionsChecker mPermissionsChecker; // 权限检测器
 
@@ -67,10 +75,20 @@ public class ChangIconActivity extends BaseActivity {
     Button btnAddImage;
 
     private Bitmap mBitmap;
-    protected static final int CHOOSE_PICTURE = 3;
+    protected static final int CHOOSE_PICTURE = 0;
     protected static final int TAKE_PICTURE = 1;
     protected static Uri tempUri;
     private static final int CROP_SMALL_PICTURE = 2;
+
+    // 自定义图片加载器
+    private ImageLoader loader = new ImageLoader() {
+        @Override
+        public void displayImage(Context context, String path, ImageView imageView) {
+            // TODO 在这边可以自定义图片加载库来加载ImageView，例如Glide、Picasso、ImageLoader等
+            Glide.with(context).load(path).into(imageView);
+        }
+    };
+
 
     private Handler handler=new Handler(){
         @Override
@@ -154,13 +172,45 @@ public class ChangIconActivity extends BaseActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Log.i("Photo_test1", "onClick()__");
                 switch (which) {
                     case CHOOSE_PICTURE: // 选择本地照片
-                        Intent openAlbumIntent = new Intent(
-                                Intent.ACTION_GET_CONTENT);
-                        openAlbumIntent.setType("image/*");
-                        //用startActivityForResult方法，待会儿重写onActivityResult()方法，拿到图片做裁剪操作
-                        startActivityForResult(openAlbumIntent, CHOOSE_PICTURE);
+//                        Intent openAlbumIntent = new Intent(
+//                                Intent.ACTION_GET_CONTENT);
+//                        Log.i("Photo_test1", "onClick()__选择本地图片");
+//                        openAlbumIntent.setType("image/*");
+//                        //用startActivityForResult方法，待会儿重写onActivityResult()方法，拿到图片做裁剪操作
+//                        startActivityForResult(openAlbumIntent, CHOOSE_PICTURE);
+
+                        // 自由配置选项
+                        ImgSelConfig config = new ImgSelConfig.Builder(ChangIconActivity.this, loader)
+                                // 是否多选
+                                .multiSelect(false)
+                                // “确定”按钮背景色
+                                .btnBgColor(Color.parseColor("#ee4433"))
+                                // “确定”按钮文字颜色
+                                .btnTextColor(Color.WHITE)
+                                // 使用沉浸式状态栏
+                                .statusBarColor(Color.parseColor("#ee4433"))
+                                // 返回图标ResId
+                                .backResId(R.drawable.return_gray)
+                                // 标题
+                                .title("图片")
+                                // 标题文字颜色
+                                .titleColor(Color.WHITE)
+                                // TitleBar背景色
+                                .titleBgColor(Color.parseColor("#ee4433"))
+                                // 裁剪大小。needCrop为true的时候配置
+                                .cropSize(1, 1, 240, 240)
+                                .needCrop(true)
+                                // 第一个是否显示相机
+                                .needCamera(false)
+                                // 最大选择图片数量
+                                .maxNum(9)
+                                .build();
+
+                        // 跳转到图片选择器
+                        ImgSelActivity.startActivity(ChangIconActivity.this, config, REQUEST_CODE_PHOTE);
                         break;
                     case TAKE_PICTURE: // 拍照
                         Intent openCameraIntent = new Intent(
@@ -184,22 +234,40 @@ public class ChangIconActivity extends BaseActivity {
             finish();
         }
 
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == MainActivity.RESULT_OK) {
-            switch (requestCode) {
-                case TAKE_PICTURE:
-                    cutImage(tempUri); // 对图片进行裁剪处理
-                    break;
-                case CHOOSE_PICTURE:
-                    cutImage(data.getData()); // 对图片进行裁剪处理
-                    break;
-                case CROP_SMALL_PICTURE:
-                    if (data != null) {
-                        setImageToView(data); // 让刚才选择裁剪得到的图片显示在界面上
-                    }
-                    break;
+        // 图片选择结果回调
+        if (requestCode == REQUEST_CODE_PHOTE && resultCode == RESULT_OK && data != null) {
+            List<String> pathList = data.getStringArrayListExtra(ImgSelActivity.INTENT_RESULT);
+            for (String path : pathList) {
+//                tvResult.append(path + "\n");
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                mBitmap = BitmapFactory.decodeFile(path, options);
+                if (mBitmap != null) {
+                    //这里图片是方形的，可以用一个工具类处理成圆形（很多头像都是圆形，这种工具类网上很多不再详述）
+                    ivImage.setImageBitmap(mBitmap);//显示图片
+
+                    saveBitmapFile(mBitmap);   //保存到本地 路径为Environment.getExternalStorageDirectory()+"/temp_image.jpg"
+                }
+
             }
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == MainActivity.RESULT_OK) {
+//            switch (requestCode) {
+//                case TAKE_PICTURE:
+//                    cutImage(tempUri); // 对图片进行裁剪处理
+//                    break;
+//                case CHOOSE_PICTURE:
+//                    cutImage(data.getData()); // 对图片进行裁剪处理
+//                    break;
+//                case CROP_SMALL_PICTURE:
+//                    if (data != null) {
+//                        setImageToView(data); // 让刚才选择裁剪得到的图片显示在界面上
+//                    }
+//                    break;
+//            }
+//        }
     }
     /**
      * 裁剪图片方法实现

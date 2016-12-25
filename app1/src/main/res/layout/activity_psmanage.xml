@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    tools:context="com.mpzn.mpzn.activity.ProxySellManageActivity">
+    <com.mpzn.mpzn.views.MyActionBar
+        android:layout_weight="0"
+        android:id="@+id/aciton_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/fafafa"
+        app:title_color="@color/font_black_2">
+
+    </com.mpzn.mpzn.views.MyActionBar>
+    <View style="@style/divider_1"/>
+    <android.support.design.widget.TabLayout
+        android:layout_weight="0"
+        android:id="@+id/tab_vp_proxy_sell"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:tabIndicatorColor="@color/red_theme"
+        app:tabSelectedTextColor="@color/red_theme"
+        app:tabTextColor="@color/font_black_3" >
+    </android.support.design.widget.TabLayout>
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        >
+
+        <com.mpzn.mpzn.views.CustomViewPager
+            android:id="@+id/vp_proxy_sell"
+            android:layout_below="@id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.mpzn.mpzn.views.CustomViewPager>
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/coners_radius_5dp_gray"
+            android:hint="输入楼盘名或者经济公司名称"
+            android:textColorHint="@color/font_black_4"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="@color/font_black_3"
+            android:drawableRight="@drawable/search_gray" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_select_all"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/tv_select_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_black_2"
+            android:text="全选"
+            android:layout_toLeftOf="@+id/cb_all"
+            android:layout_margin="10dp"
+            android:layout_centerVertical="true"
+            android:textSize="14sp"
+            />
+
+        <CheckBox
+            android:id="@+id/cb_all"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            style="@style/StarDeleteCheckboxTheme"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:layout_marginRight="39dp"
+
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_with_vp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        >
+        <Button
+            android:id="@+id/btn_refuse"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:background="@drawable/btn_bg_red_to_darkred"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/white"
+            android:text="拒绝申请"
+            android:textSize="14sp"
+            android:layout_margin="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            />
+
+
+        <Button
+            android:id="@+id/btn_access"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:background="@drawable/btn_bg_orang_to_gray"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:text="通过审核"
+            android:textSize="14sp"
+            android:layout_margin="10dp"
+            />
+
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:background="@drawable/coners_radius_5dp_blue"
+            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/white"
+            android:text="删除申请"
+            android:textSize="14sp"
+            android:layout_margin="10dp" />
+    </RelativeLayout>
+
+</LinearLayout>

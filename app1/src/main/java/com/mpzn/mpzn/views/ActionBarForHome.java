@@ -4,6 +4,7 @@ import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,11 +134,18 @@ public class ActionBarForHome extends RelativeLayout{
     public void setChangeWithScroll(int top, final View shadow){
 
                 if (top > 0) {
+                    //top应该是广告顶部超出上边界的距离
+                    //开始滑动了
+                    Log.i("testScroll", "top > 0");
                     top_cut_line.setVisibility(View.INVISIBLE);
                     aciton_bar_bg.setVisibility(INVISIBLE);
                     text_search_hint.setText(null);
                     isAtTop = false;
+                } else if (top > 200){
+                    Log.i("testScroll", "top > 200");
                 } else {
+                    //没有滑动的情况
+                    Log.i("testScroll", "top 小于 0");
                     isAtTop = true;
                     ActionBarForHome.this.setMode(true);
 
@@ -145,11 +153,13 @@ public class ActionBarForHome extends RelativeLayout{
 
 
                 if (top <= magin) {
+                    //滑动但是又没渐变效果又没完成的时候
+                    Log.i("testScroll", "top <= magin");
                     if(shadow!=null) {
                         shadow.setVisibility(View.GONE);
                     }
                     float percent = (float) (magin - top) / magin;
-
+                    Log.i("testScroll", "percent = "+percent);
                     if (top <= 0) {
                         percent = 1f;   //防止滑到顶部y反弹为负值5
                     }
@@ -171,7 +181,8 @@ public class ActionBarForHome extends RelativeLayout{
                     int evaluate = (Integer) evaluator.evaluate(1 - percent, 0XFF525252, 0XFFFFFFFF);
                     leftTitle.setTextColor(evaluate);
                 } else {
-
+                    //渐变效果完成了
+                    Log.i("testScroll", "top 大于 magin");
                     action_bar_root.setBackgroundColor(getResources().getColor(R.color.red_theme));
                     if(shadow!=null) {
                         shadow.setVisibility(View.VISIBLE);
@@ -190,7 +201,7 @@ public class ActionBarForHome extends RelativeLayout{
         if (action_bar.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) action_bar.getLayoutParams();
             p.setMargins(left,  0, right, dip2px(5));
-            this.requestLayout();
+            action_bar.requestLayout();
         }
 
     }

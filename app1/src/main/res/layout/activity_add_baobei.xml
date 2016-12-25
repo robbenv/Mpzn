@@ -167,9 +167,10 @@
                 android:orientation="vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:orientation="horizontal">
                 <TextView
+                    android:id="@+id/bt_add_pt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="添加陪同"
@@ -180,9 +181,10 @@
                     android:textSize="17sp" />
                     <CheckBox
                         android:id="@+id/cb_add_pt"
-                        style="@style/OpenCloseCheckboxTheme"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:button="@null"
+                        android:drawableRight="@drawable/openclose_checkbox_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_marginRight="15dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"

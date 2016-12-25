@@ -83,10 +83,28 @@ public class LoginEntity implements Parcelable,Serializable{
     public static class DataEntity implements Parcelable,Serializable{
         private int mchid;
         private int mid;
-        private String mname;
+        private String mname;//账户名称
         private String token;
         private String hint;
         private String headimage;
+        private String nickname;//别名
+        private String name;//真实姓名
+
+        public String getNickname() {
+            return nickname;
+        }
+
+        public void setNickname(String nickname) {
+            this.nickname = nickname;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
 
         protected DataEntity(Parcel in) {
             mchid = in.readInt();
@@ -95,6 +113,9 @@ public class LoginEntity implements Parcelable,Serializable{
             token = in.readString();
             hint = in.readString();
             headimage = in.readString();
+            nickname = in.readString();
+
+            name = in.readString();
         }
 
         public static final Creator<DataEntity> CREATOR = new Creator<DataEntity>() {
@@ -170,6 +191,8 @@ public class LoginEntity implements Parcelable,Serializable{
             dest.writeString(token);
             dest.writeString(hint);
             dest.writeString(headimage);
+            dest.writeString(nickname);
+            dest.writeString(name);
         }
     }
 }

@@ -115,6 +115,9 @@ public class BBStatisticsActivity extends BaseActivity {
                         AddBBMsgEntity addBBMsgEntity = new Gson().fromJson(response, AddBBMsgEntity.class);
                         if (addBBMsgEntity.getCode() == 200) {
                             loupans = addBBMsgEntity.getData().getLoupans();
+                            if (loupans == null) {
+                                return;
+                            }
                             for (int i = 0; i < loupans.size(); i++) {
                                 mList.add(loupans.get(i).getSubject());
                             }

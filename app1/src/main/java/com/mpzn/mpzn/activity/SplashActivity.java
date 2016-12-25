@@ -12,21 +12,33 @@ import com.google.gson.Gson;
 import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.application.MyApplication;
 import com.mpzn.mpzn.base.BaseActivity;
+import com.mpzn.mpzn.entity.JPushNotificationEntity;
 import com.mpzn.mpzn.entity.LoginEntity;
 import com.mpzn.mpzn.entity.UserMsg;
 import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.service.UpdataVersionService;
 import com.mpzn.mpzn.utils.CacheUtils;
+import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.util.Set;
+
 import butterknife.Bind;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
+
+import static com.mpzn.mpzn.application.MyApplication.mUserMsg;
 
 public class SplashActivity extends BaseActivity {
 
+    private static final String TAG = "SplashActivity";
     private final int TOMAIN = 1;
     private final int TOGUID = -1;
+
+    private boolean isFromJpush;
     @Bind(R.id.iv_splash_bg)
     ImageView ivSplashBg;
     private LoginEntity loginEntity;
@@ -37,7 +49,24 @@ public class SplashActivity extends BaseActivity {
             if (msg.what == TOGUID) {
                 startActivity(new Intent(SplashActivity.this, GuideActivity.class));
             } else {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                isFromJpush = getIntent().getBooleanExtra("jpush", false);
+                if (isFromJpush) {
+                    intent.putExtra("jpush", true);
+                    Log.i(TAG+"test", "id = "+ getIntent().getIntExtra("Aid", -1));
+                    String name = getIntent().getStringExtra("Name");
+                    int aId = getIntent().getIntExtra("Aid", -1);
+                    String type = intent.getStringExtra("Type");
+                    intent.putExtra("Name", name);
+                    intent.putExtra("Aid", aId);
+                    JPushNotificationEntity jPushNotificationEntity = new JPushNotificationEntity();
+                    jPushNotificationEntity.setType(type);
+                    jPushNotificationEntity.setId(String.valueOf(aId));
+                    EventBus.getDefault().postSticky(jPushNotificationEntity);
+                }
+                startActivity(intent);
+
             }
             finish();
         }
@@ -47,6 +76,7 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startMain();
+        //更新的service
         StartService();
 
     }
@@ -79,6 +109,7 @@ public class SplashActivity extends BaseActivity {
     public void StartService() {
         Intent intent = new Intent();
         intent.setClass(this, UpdataVersionService.class);  //启动自动更新服务
+        Logger.d("StartService");
         startService(intent);
     }
 
@@ -121,9 +152,19 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void getUserMsg() {
-        UserMsg mUserMsg = (UserMsg) CacheUtils.getObject(this, "userMsg");
+        final UserMsg mUserMsg = (UserMsg) CacheUtils.getObject(this, "userMsg");
         if (mUserMsg != null) {
             MyApplication.getInstance().mUserMsg = mUserMsg;
+            JPushInterface.setAlias(this, mUserMsg.getmName()+"_dev", new TagAliasCallback() {
+                @Override
+                public void gotResult(int i, String s, Set<String> set) {
+                    Logger.d("缓存：别名："+mUserMsg.getmName()+"_dev");
+//                    Log.i("jpush_test2", "别名："+mUserMsg.getPhone()+"_dev");
+                    //啥也没有
+                }
+            });
+//            Toast.makeText(SplashActivity.this, mUserMsg.getmName()+"_dev", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -139,6 +180,7 @@ public class SplashActivity extends BaseActivity {
             token = "0";
             CacheUtils.putString(mContext, "token", token);
             MyApplication.getInstance().setIsLogined(false);
+            Toast.makeText(SplashActivity.this, "用户缓存不存在或已失效，请重新登陆", Toast.LENGTH_SHORT).show();
         }
         mHandler.sendEmptyMessageDelayed(TOMAIN, 1000);
 

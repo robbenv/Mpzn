@@ -1,8 +1,11 @@
 package com.mpzn.mpzn.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +24,7 @@ import com.bm.library.PhotoView;
 import com.dalong.francyconverflow.FancyCoverFlow;
 import com.google.gson.Gson;
 import com.kaopiz.kprogresshud.KProgressHUD;
+
 import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.adapter.BuildingDetailTopVpAdapter;
 import com.mpzn.mpzn.adapter.MyFancyCoverFlowAdapter;
@@ -36,10 +40,13 @@ import com.mpzn.mpzn.entity.MessageEntity;
 import com.mpzn.mpzn.entity.SimpleEntity;
 import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.listener.OnRecyclerItemClickListener;
+import com.mpzn.mpzn.utils.PermissionsChecker;
 import com.mpzn.mpzn.views.MyActionBar;
 import com.mpzn.mpzn.views.MyDialog;
 import com.mpzn.mpzn.views.MyProgressDialog;
+import com.orhanobut.logger.Logger;
 import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
@@ -61,6 +68,7 @@ import static com.mpzn.mpzn.utils.ViewUtils.showCustomProgressDialog;
 public class DetailNewhouseActivity extends BaseActivity {
 
 
+    private static final String TAG = "DetailNewhouseActivity";
     @Bind(R.id.vp_detail_house_top)
     ViewPager vpDetailHouseTop;
     @Bind(R.id.tv_detail_house_des)
@@ -126,6 +134,16 @@ public class DetailNewhouseActivity extends BaseActivity {
     private BuildingDetailTopVpAdapter buildingDetailTopVpAdapter;
     private MessageEntity messageEntity;
 
+    static final String[] mPermissionList = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS};
+
+    // 权限检测器
+    private PermissionsChecker mPermissionsChecker;
+
+    private static final int REQUEST_CODE = 0; // 请求码
+
+
+//    private UMShareAPI mShareAPI;
+
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onResult(SHARE_MEDIA platform) {
@@ -154,6 +172,7 @@ public class DetailNewhouseActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        mShareAPI = UMShareAPI.get(this);
     }
 
     @Override
@@ -176,7 +195,6 @@ public class DetailNewhouseActivity extends BaseActivity {
     }
 
     public void updataView() {
-        Toast.makeText(DetailNewhouseActivity.this, "aid" + aid, Toast.LENGTH_SHORT).show();
         if (aid != -1) {
             OkHttpUtils
                     .get()
@@ -289,18 +307,25 @@ public class DetailNewhouseActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        mPermissionsChecker = new PermissionsChecker(this);
         Intent intent = getIntent();
         aid = intent.getIntExtra("Aid", -1);
+        Logger.d("token = "+MyApplication.getInstance().token+"\n  aid = "+aid);
         initAbtract();
         updataView();
         initStarCheckBox();
         initTwoBtn();
+        addBrowseList();
 
     }
 
-    private void initAbtract() {
-        OkHttpUtils.get()
-                .url(API.BUILDINGABTRACT_GET)
+    private void addBrowseList() {
+        if (token == null || "".equals(token)) {
+            return;
+        }
+        OkHttpUtils.post()
+                .url(API.ADDBROWSE_POST)
+                .addParams("token", token)
                 .addParams("aid", aid + "")
                 .build()
                 .execute(new StringCallback() {
@@ -311,12 +336,31 @@ public class DetailNewhouseActivity extends BaseActivity {
 
                     @Override
                     public void onResponse(String response, int id) {
+
+                    }
+                });
+    }
+
+    private void initAbtract() {
+        OkHttpUtils.get()
+                .url(API.BUILDINGABTRACT_GET)
+                .addParams("aid", aid + "")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Log.i("Proxy_test34", "onError()__");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
                         AbstractEntity abstractEntity = new Gson().fromJson(response, AbstractEntity.class);
                         if (abstractEntity.getCode() == 200) {
+                            Log.i("Proxy_test34", "onResponse()__200");
                             messageEntity = abstractEntity.getData();
+                            Log.i("Proxy_test34", "onResponse()__messageEntity = " + messageEntity.toString());
+                            Log.i(TAG, "onResponse()__messageEntity = " + messageEntity);
                             myActionBar.init(messageEntity.getSubject(), R.drawable.return_red, R.drawable.share);
-
-
                         }
 
                     }
@@ -355,24 +399,24 @@ public class DetailNewhouseActivity extends BaseActivity {
 
     }
 
-    private void initTwoBtn(){
-        if(MyApplication.isLogined){
-            if(MyApplication.getInstance().mUserMsg.getmChild()==RESCODE_JINGJIREN){
+    private void initTwoBtn() {
+        if (MyApplication.isLogined) {
+            if (MyApplication.getInstance().mUserMsg.getmChild() == RESCODE_JINGJIREN) {
 
                 tvDetailBottomLeft.setEnabled(false);
                 tvDetailBottomRight.setEnabled(true);
 
-            }else if(MyApplication.getInstance().mUserMsg.getmChild()==RESCODE_JINGJICOM){
+            } else if (MyApplication.getInstance().mUserMsg.getmChild() == RESCODE_JINGJICOM) {
 
                 tvDetailBottomLeft.setEnabled(true);
                 tvDetailBottomRight.setEnabled(true);
 
-            }else{
+            } else {
                 tvDetailBottomLeft.setEnabled(false);
                 tvDetailBottomRight.setEnabled(false);
 
             }
-        }else{
+        } else {
             tvDetailBottomLeft.setEnabled(false);
             tvDetailBottomRight.setEnabled(false);
         }
@@ -383,19 +427,26 @@ public class DetailNewhouseActivity extends BaseActivity {
         myActionBar.setLROnClickListener(null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //6.0版本需要检查权限
                 if (messageEntity != null) {
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_APN_SETTINGS};
+                        ActivityCompat.requestPermissions(DetailNewhouseActivity.this, mPermissionList, 123);
+                    }
 
                     String imgUrl = messageEntity.getThumb();
                     if (imgUrl == null || imgUrl == "") {
                         imgUrl = "http://www.mpzn.com/userfiles/image/20160216/16153634da8575901d4313.png";
                     }
 
+
+                    Log.i("bug_browse", "onClick()__id = " + messageEntity.getAid());
                     new ShareAction(DetailNewhouseActivity.this).setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE)
                             .withTitle(messageEntity.getSubject())
                             .withText(messageEntity.getAbstractX())
                             .withMedia(new UMImage(DetailNewhouseActivity.this, imgUrl))
-                            .withTargetUrl(messageEntity.getUrl())
+//                            .withTargetUrl(messageEntity.getUrl())
+                            .withTargetUrl("http://www.mpzn.com/mobile/archive.php?aid=" + messageEntity.getAid())
                             .setCallback(umShareListener)
                             .open();
                 }
@@ -469,7 +520,7 @@ public class DetailNewhouseActivity extends BaseActivity {
             public void onItemClick(RecyclerView.ViewHolder vh) {
                 aid = buildingEntitydata.getMorebuilding().get(vh.getLayoutPosition()).getAid();
                 Intent intent = new Intent();
-                intent.putExtra("Aid",aid);
+                intent.putExtra("Aid", aid);
                 intent.setClass(mContext, DetailNewhouseActivity.class);
                 startActivity(intent);
 
@@ -495,26 +546,27 @@ public class DetailNewhouseActivity extends BaseActivity {
         tvDetailBottomLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Logger.d("token = "+MyApplication.getInstance().token +"\n aid ="+aid);
 
                 final MyProgressDialog myProgressDialog = new MyProgressDialog(mContext);
                 myProgressDialog.show();
                 myProgressDialog.setContent("正在申请代销");
                 OkHttpUtils.get()
                         .url(API.CHECK_SELL_GET)
-                        .addParams("aid",aid+"")
-                        .addParams("token",MyApplication.getInstance().token)
+                        .addParams("aid", aid + "")
+                        .addParams("token", MyApplication.getInstance().token)
                         .build()
                         .execute(new StringCallback() {
                             @Override
                             public void onError(Call call, Exception e, int id) {
                                 myProgressDialog.afterprogress("联网失败");
-
+                                Logger.d(e.getMessage());
                             }
 
                             @Override
                             public void onResponse(String response, int id) {
                                 SimpleEntity simpleEntity = new Gson().fromJson(response, SimpleEntity.class);
-                                if(simpleEntity.getCode()==1300){
+                                if (simpleEntity.getCode() == 1300) {
                                     myProgressDialog.dismiss();
 
                                     final MyDialog myDialog = new MyDialog(mContext);
@@ -529,16 +581,17 @@ public class DetailNewhouseActivity extends BaseActivity {
                                             final MyProgressDialog myProgressDialog1 = new MyProgressDialog(mContext);
                                             myProgressDialog1.show();
                                             myProgressDialog1.setContent("正在申请代销...");
-
+                                            Logger.d("token = "+MyApplication.getInstance().token +"\n aid ="+aid);
                                             OkHttpUtils.post()
                                                     .url(API.APPLYBUILDING_POST)
                                                     .addParams("token", MyApplication.getInstance().token)
-                                                    .addParams("aid", aid+"")
+                                                    .addParams("aid", aid + "")
                                                     .build()
                                                     .execute(new StringCallback() {
                                                         @Override
                                                         public void onError(Call call, Exception e, int id) {
                                                             myProgressDialog1.afterprogress("服务器未响应");
+                                                            Logger.d(e.getMessage());
                                                         }
 
                                                         @Override
@@ -546,10 +599,10 @@ public class DetailNewhouseActivity extends BaseActivity {
                                                             CheckStarEntity checkStarEntity = new Gson().fromJson(response, CheckStarEntity.class);
                                                             if (checkStarEntity.getCode() == 200) {
                                                                 myProgressDialog1.afterprogress("申请代销成功!");
-
+                                                                Logger.d("代销成功");
                                                             } else {
-                                                                myProgressDialog1.afterprogress("申请代销失败,"+checkStarEntity.getMessage());
-
+                                                                myProgressDialog1.afterprogress("申请代销失败," + checkStarEntity.getMessage());
+                                                                Logger.d(checkStarEntity.getMessage()+"");
                                                             }
                                                         }
                                                     });
@@ -559,7 +612,8 @@ public class DetailNewhouseActivity extends BaseActivity {
                                     });
                                     myDialog.show();
 
-                                }else{
+                                } else {
+                                    Logger.d(simpleEntity.getMessage()+"");
                                     myProgressDialog.afterprogress(simpleEntity.getMessage());
                                 }
 
@@ -576,8 +630,8 @@ public class DetailNewhouseActivity extends BaseActivity {
                 myProgressDialog.setContent("正在检测是否可添加报备");
                 OkHttpUtils.get()
                         .url(API.CHECK_IS_ADD_GET)
-                        .addParams("token",token)
-                        .addParams("aid",aid+"")
+                        .addParams("token", token)
+                        .addParams("aid", aid + "")
                         .build()
                         .execute(new StringCallback() {
                             @Override
@@ -588,18 +642,17 @@ public class DetailNewhouseActivity extends BaseActivity {
                             @Override
                             public void onResponse(String response, int id) {
                                 SimpleEntity simpleEntity = new Gson().fromJson(response, SimpleEntity.class);
-                                if(simpleEntity.getCode()==200){
+                                if (simpleEntity.getCode() == 200) {
                                     myProgressDialog.dismiss();
                                     Intent intent = new Intent();
-                                    intent.putExtra("Aid",aid);
-                                    intent.setClass(mContext,AddBBActivity.class);
+                                    intent.putExtra("Aid", aid);
+                                    intent.setClass(mContext, AddBBActivity.class);
                                     startActivity(intent);
-                                }else{
+                                } else {
                                     myProgressDialog.afterprogress(simpleEntity.getMessage());
                                 }
                             }
                         });
-
 
 
             }
@@ -701,6 +754,31 @@ public class DetailNewhouseActivity extends BaseActivity {
             starBuilding();
         } else if ((!cbStar.isChecked()) && cid != 0) {
             disStarBuilding();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 缺少权限时, 进入权限配置页面
+        if (mPermissionsChecker.lacksPermissions(mPermissionList)) {
+            startPermissionsActivity();
+        }
+
+    }
+
+    private void startPermissionsActivity() {
+        PermissionsActivity.startActivityForResult(this, REQUEST_CODE, mPermissionList);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
+        if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
+            finish();
         }
     }
 }

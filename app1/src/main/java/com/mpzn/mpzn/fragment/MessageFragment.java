@@ -1,6 +1,10 @@
 package com.mpzn.mpzn.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,14 +24,19 @@ import com.mpzn.mpzn.activity.WebViewActivity;
 import com.mpzn.mpzn.adapter.RvMessageAdapter;
 import com.mpzn.mpzn.application.MyApplication;
 import com.mpzn.mpzn.base.BaseFragment;
+import com.mpzn.mpzn.base.BaseListAdapter;
 import com.mpzn.mpzn.entity.AbstractEntity;
+import com.mpzn.mpzn.entity.BBmessage;
 import com.mpzn.mpzn.entity.JPushNotificationEntity;
 import com.mpzn.mpzn.entity.MessageEntity;
+import com.mpzn.mpzn.helper.JpushMessageDBHelper;
 import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.listener.OnRecyclerItemClickListener;
+import com.mpzn.mpzn.receiver.JPushReceiver;
 import com.mpzn.mpzn.utils.CacheUtils;
 import com.mpzn.mpzn.utils.ViewUtils;
 import com.mpzn.mpzn.views.MyActionBar;
+import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -51,6 +60,7 @@ import static com.mpzn.mpzn.receiver.JPushReceiver.TYPE_NEWS;
  */
 public class MessageFragment extends BaseFragment {
     public static String TAG = "tag_building_fragment";
+
     @Bind(R.id.state_bar)
     View stateBar;
     @Bind(R.id.my_action_bar)
@@ -65,11 +75,15 @@ public class MessageFragment extends BaseFragment {
     private RvMessageAdapter rvMessageAdapter;
     private LinearLayoutManager linearLayoutManager;
 
+    private JpushMessageDBHelper dbHelper;
+    private List<JPushNotificationEntity> JpushList = new ArrayList<JPushNotificationEntity>();
+    public static String IMG = "http://appi.mpzn.com/userfiles/image/icon.png";
+
 
     public MessageFragment() {
         //注册EventBus
         EventBus.getDefault().register(this);
-        Log.e("TAG", "fm注册Eventbus");
+        Log.e("jpush_test", "fm注册Eventbus");
     }
 
 
@@ -89,11 +103,13 @@ public class MessageFragment extends BaseFragment {
 
     @Override
     public void initHolder(View view) {
-
+        Logger.d("initHolder");
         myActionBar.init("消息", 0, R.drawable.search_white);
 
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-        rvMessageAdapter = new RvMessageAdapter(mContext, messageEntityList);
+
+            rvMessageAdapter = new RvMessageAdapter(mContext, messageEntityList);
+
         rvMessage.setAdapter(rvMessageAdapter);
         rvMessage.setLayoutManager(linearLayoutManager);
         rvMessage.setItemAnimator(new DefaultItemAnimator());
@@ -111,21 +127,70 @@ public class MessageFragment extends BaseFragment {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
-    public void onEventBackgroudThread(final JPushNotificationEntity jPushNotificationEntity) {
-        Log.e("TAG", "接到消息" + jPushNotificationEntity.toString());
+//    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(sticky = true)
+    public void onUserEvent(final JPushNotificationEntity jPushNotificationEntity) {
+        Log.i("jpush_test", "onUserEvent()__");
+        Log.e(TAG, "JPushNotificationEntity接到消息" + jPushNotificationEntity.toString());
 
-        if (jPushNotificationEntity.getType().equals(TYPE_HTML)) {
+        handleJpushNotification(jPushNotificationEntity);
+
+    }
+
+    //报备成功的推送信息
+//    @Subscrible(threadMode = ThreadMode.ASYNC)
+    @Subscribe(sticky = true, threadMode = ThreadMode.Async)
+    public void onUserEvent(final BBmessage bBmessage) {
+        Log.i("jpush_test", "onUserEvent()__");
+        Logger.d("BBmessage接到消息" + bBmessage.toString());
+
+        MessageEntity messageEntity = new MessageEntity();
+        messageEntity.setThumb(IMG);
+        messageEntity.setSubject(bBmessage.getTitle());
+        messageEntity.setAbstractX(bBmessage.getContent());
+        messageEntity.setCreatDate(System.currentTimeMillis());
+        messageEntity.setType("baobei");
+        Logger.d("rvMessageAdapter1 ="+rvMessageAdapter);
+        //这里的bug：因为onUserEvent执行时initHolder不一定执行过，adapter不一定被初始化过，导致可能没有更新数据
+        if (rvMessageAdapter != null) {
+            Logger.d("rvMessageAdapter != null");
+            if(llNoData.getVisibility()== View.VISIBLE){
+                llNoData.setVisibility(View.GONE);
+            }
+            rvMessageAdapter.updata(messageEntity);
+//            messageEntityList.add(messageEntity);
+            rvMessageAdapter.notifyDataSetChanged();
+            rvMessage.scrollToPosition(messageEntityList.size() - 1);
+
+        } else {
+            List<MessageEntity> cacheList = (List<MessageEntity>) CacheUtils.getObject(mContext, "MessageList");
+            Logger.d("rvMessageAdapter == null \n cacheList.size = "+cacheList.size());
+            cacheList.add(messageEntity);
+            CacheUtils.putObject(mContext, "MessageList", cacheList);
+        }
+
+
+
+
+        }
+
+
+    private void handleJpushNotification(final JPushNotificationEntity jPushNotificationEntity) {
+        if (jPushNotificationEntity == null) {
+            return;
+        }
+
+        if (TYPE_HTML.equals(jPushNotificationEntity.getType())) {
 
         } else {
             String url = null;
-            if (jPushNotificationEntity.getType().equals(TYPE_BUILDING)) {
+            if (TYPE_BUILDING.equals(jPushNotificationEntity.getType())) {
                 url = API.BUILDINGABTRACT_GET;
 
-            } else if (jPushNotificationEntity.getType().equals(TYPE_NEWS)) {
+            } else if (TYPE_NEWS.equals(jPushNotificationEntity.getType()) || url == null) {
                 url = API.NEWSABTRACT_GET;
             }
-            Log.e("TAG", "联网" + url + jPushNotificationEntity.getId());
+            Log.e("jpush_test", "联网" + url);
             OkHttpUtils.get()
                     .url(url)
                     .addParams("aid", jPushNotificationEntity.getId())
@@ -133,11 +198,12 @@ public class MessageFragment extends BaseFragment {
                     .execute(new StringCallback() {
                         @Override
                         public void onError(Call call, Exception e, int id) {
-
+                            Log.i("jpush_test", "onError()__解析错误");
                         }
 
                         @Override
                         public void onResponse(String response, int id) {
+                            Log.i("jpush_test", "onResponse()__success");
                             AbstractEntity abstractEntity = new Gson().fromJson(response, AbstractEntity.class);
                             Log.e("TAG", "获取详情" + response);
 
@@ -147,7 +213,7 @@ public class MessageFragment extends BaseFragment {
                                 messageEntity.setType(jPushNotificationEntity.getType());
 
                                 if (rvMessageAdapter != null) {
-                                    if(llNoData.getVisibility()==View.VISIBLE){
+                                    if(llNoData.getVisibility()== View.VISIBLE){
                                         llNoData.setVisibility(View.GONE);
                                     }
                                     messageEntityList.add(messageEntity);
@@ -161,13 +227,14 @@ public class MessageFragment extends BaseFragment {
                     });
 
         }
-
     }
 
     @Override
     public void initData() {
-
         List<MessageEntity> messageList = (List<MessageEntity>) CacheUtils.getObject(mContext, "MessageList");
+        if (messageList != null) {
+            Logger.d("messageList.size = "+ messageList.size());
+        }
         if (messageList != null && messageList.size() != 0) {
             messageEntityList.addAll(messageList);
             rvMessageAdapter.notifyDataSetChanged();
@@ -180,8 +247,72 @@ public class MessageFragment extends BaseFragment {
             llNoData.setVisibility(View.VISIBLE);
         }
 
+        initJpushOffline();
+    }
+
+    private void initJpushOffline() {
+        Logger.i("读取数据库——initJpushOffline");
+        //读取程序没运行时获取的消息
+        dbHelper = new JpushMessageDBHelper(getContext(), "jpush.db", null, 1);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.query("jpush", null, null, null, null, null, null);
+        JPushNotificationEntity jPushNotificationEntity;
+        if (cursor.moveToFirst()) {
+            jPushNotificationEntity = new JPushNotificationEntity();
+            do {
+        // 遍历Cursor对象,取出数据并打印
+                String aId = cursor.getString(cursor.
+                        getColumnIndex("aid"));
+                String type = cursor.getString(cursor.
+                        getColumnIndex("type"));
+
+                Logger.i("initData()__读取消息：aId = "+aId);
+                Logger.i("initData()__读取消息：type = "+type);
+
+                if ("bbpush".equals(aId)) {
+                    //来自报备的推送
+                    Logger.d(TAG,"从数据库提取报备推送信息");
+                    MessageEntity messageEntity = new MessageEntity();
+                    messageEntity.setThumb(IMG);
+                    messageEntity.setSubject(aId);
+                    messageEntity.setAbstractX(type);
+                    messageEntity.setCreatDate(System.currentTimeMillis());
+                    messageEntity.setType("baobei");
+
+                    Logger.d("rvMessageAdapter ="+rvMessageAdapter);
+                    if (rvMessageAdapter != null) {
+                        if(llNoData.getVisibility()== View.VISIBLE){
+                            llNoData.setVisibility(View.GONE);
+                        }
+                        rvMessageAdapter.updata(messageEntity);
+//            messageEntityList.add(messageEntity);
+                        rvMessageAdapter.notifyDataSetChanged();
+                        rvMessage.scrollToPosition(messageEntityList.size() - 1);
+                    }
+//                    CacheUtils.putObject(mContext, "MessageList", messageEntityList);
+                } else {
+                    jPushNotificationEntity.setId(aId);
+                    jPushNotificationEntity.setType(type);
+                    JpushList.add(jPushNotificationEntity);
+                    if (jPushNotificationEntity == null) {
+                        return;
+                    }
+                    handleJpushNotification(jPushNotificationEntity);
+                }
+
+
+            } while (cursor.moveToNext());
+            //清空
+            db.delete("jpush", null, null);
+            //设置
+//            for (JPushNotificationEntity jn : JpushList) {
+//                handleJpushNotification(jn);
+//            }
+        }
+        cursor.close();
 
     }
+
 
     @Override
     public void bindListener() {

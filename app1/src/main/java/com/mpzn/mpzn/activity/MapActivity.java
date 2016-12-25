@@ -47,7 +47,9 @@ public class MapActivity extends BaseActivity {
     }
 
     private void initMyLocation() {
+        // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
+        // 构造定位数据
         MyLocationData locData = new MyLocationData.Builder()
                 .accuracy(100)
                 // 此处设置开发者获取到的方向信息，顺时针0-360

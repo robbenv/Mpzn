@@ -19,17 +19,17 @@ import java.util.List;
 public class VpRecyclerViewAdapter extends PagerAdapter{
 
     private  Context mContext;
-    private  List<RecyclerView> recyclerViews;
+    private  List<ViewGroup> views;
 
 
-    public VpRecyclerViewAdapter(Context mContext, List<RecyclerView> recyclerViews) {
+    public VpRecyclerViewAdapter(Context mContext, List views) {
         this.mContext=mContext;
-        this.recyclerViews=recyclerViews;
+        this.views=views;
     }
 
     @Override
     public int getCount() {
-        return recyclerViews.size();
+        return views.size();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class VpRecyclerViewAdapter extends PagerAdapter{
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        container.addView(recyclerViews.get(position));
+        container.addView(views.get(position));
 //        if(recyclerViews.get(position).getChildCount()==0){
 //            Log.e("TAG", "返回无数据信息");
 //            View noData = LayoutInflater.from(mContext).inflate(R.layout.layout_nonet, null);
@@ -49,7 +49,7 @@ public class VpRecyclerViewAdapter extends PagerAdapter{
 //            return noData;
 //        }else {
 //            Log.e("TAG", "返回有数据信息");
-            return recyclerViews.get(position);
+            return views.get(position);
 //        }
     }
 

@@ -35,7 +35,6 @@ import java.util.List;
 import butterknife.Bind;
 import okhttp3.Call;
 
-import static com.mpzn.mpzn.utils.ViewUtils.dip2px;
 import static com.mpzn.mpzn.utils.ViewUtils.loadedDismissProgressDialog;
 
 public class StarAndBrowseActivity extends BaseActivity {
@@ -153,7 +152,7 @@ public class StarAndBrowseActivity extends BaseActivity {
                         List<StarBuildingEntity.DataBean> starBuildingEntityData = starBuildingEntity.getData();
                         if (starBuildingEntity.getCode() == 200) {
                             starBuildingList.addAll(starBuildingEntityData);
-                            rvStarAdapter.updata(starBuildingList);
+                            rvStarAdapter.updata(starBuildingList, false);
                         }else{
 
                         }
@@ -180,7 +179,8 @@ public class StarAndBrowseActivity extends BaseActivity {
                         List<StarBuildingEntity.DataBean> starBuildingEntityData = starBuildingEntity.getData();
                         if (starBuildingEntity.getCode() == 200) {
                             browseBuildingList.addAll(starBuildingEntityData);
-                            rvBrowseAdapter.updata(browseBuildingList);
+                            Log.i("bug_browse", "onResponse()__list = browseBuildingList.size = "+browseBuildingList.size());
+                            rvBrowseAdapter.updata(browseBuildingList, false);
 
                         } else {
 
@@ -263,7 +263,8 @@ public class StarAndBrowseActivity extends BaseActivity {
         rv_Star.addOnItemTouchListener(new OnRecyclerItemClickListener(rv_Star){
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh) {
-                if(starBuildingList.size()==0){
+                if(starBuildingList.size()==0 ||actionBarEdit.getVisibility()==View.VISIBLE){
+                    Log.i("Bug_test1", "onItemClick()__return");
                   return;
                 }
                 StarBuildingEntity.DataBean dataBean = starBuildingList.get(vh.getLayoutPosition());
@@ -277,6 +278,7 @@ public class StarAndBrowseActivity extends BaseActivity {
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh) {
                 if(browseBuildingList.size()==0||actionBarEdit.getVisibility()==View.VISIBLE){
+                    Log.i("Bug_test1", "onItemClick()__return");
                     return ;
                 }
                 StarBuildingEntity.DataBean dataBean = browseBuildingList.get(vh.getLayoutPosition());
@@ -392,10 +394,10 @@ public class StarAndBrowseActivity extends BaseActivity {
                                 loadedDismissProgressDialog(StarAndBrowseActivity.this, true, loadProgressHUD, finalSuccussMsg, false);
                                 if(vpStarBrowse.getCurrentItem()==0) {
                                     starBuildingList.removeAll(deleteList);
-                                    currentAdapter.updata(starBuildingList);
+                                    currentAdapter.updata(starBuildingList, false);
                                 }else {
                                     browseBuildingList.removeAll(deleteList);
-                                    currentAdapter.updata(browseBuildingList);
+                                    currentAdapter.updata(browseBuildingList, false);
                                 }
 
 

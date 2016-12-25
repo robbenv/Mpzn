@@ -51,17 +51,14 @@ public class MySellActivity extends BaseActivity {
     private ListView lv_allSell;
     private ListView lv_check_suc;
     private ListView lv_check_ing;
-    private ListView lv_check_err;
 
     private MySelllvadapter lv_allSellAdapter;
     private MySelllvadapter lv_check_sucAdapter;
     private MySelllvadapter lv_check_ingAdapter;
-    private MySelllvadapter lv_check_errAdapter;
 
     List<MySellListEntity.DataBean> datalist = new ArrayList<>();
     List<MySellListEntity.DataBean> checklist = new ArrayList<>();
     List<MySellListEntity.DataBean> checkinglist = new ArrayList<>();
-    List<MySellListEntity.DataBean> unchecklist = new ArrayList<>();
 
     private MySelllvadapter currentAdapter;
     List<MySellListEntity.DataBean> currentlist;
@@ -83,36 +80,30 @@ public class MySellActivity extends BaseActivity {
         lv_allSell = new ListView(mContext);
         lv_check_suc = new ListView(mContext);
         lv_check_ing = new ListView(mContext);
-        lv_check_err = new ListView(mContext);
 
         ListView.LayoutParams layoutParams = new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         lv_allSell.setLayoutParams(layoutParams);
         lv_check_suc.setLayoutParams(layoutParams);
         lv_check_ing.setLayoutParams(layoutParams);
-        lv_check_err.setLayoutParams(layoutParams);
 
         lv_allSellAdapter = new MySelllvadapter(mContext, datalist);
         lv_check_sucAdapter = new MySelllvadapter(mContext, checklist);
         lv_check_ingAdapter = new MySelllvadapter(mContext, checkinglist);
-        lv_check_errAdapter = new MySelllvadapter(mContext, unchecklist);
 
         lv_allSell.setAdapter(lv_allSellAdapter);
         lv_check_suc.setAdapter(lv_check_sucAdapter);
         lv_check_ing.setAdapter(lv_check_ingAdapter);
-        lv_check_err.setAdapter(lv_check_errAdapter);
 
 
         List<ListView> lv_list = new ArrayList<>();
         lv_list.add(lv_allSell);
         lv_list.add(lv_check_suc);
         lv_list.add(lv_check_ing);
-        lv_list.add(lv_check_err);
 
         List<String> tab_title = new ArrayList<>();
         tab_title.add("全部申请");
         tab_title.add("已通过");
         tab_title.add("审核中");
-        tab_title.add("暂未通过");
 
 
         myBBViewPagerAdapter = new ListViewsVPAdapter(mContext, lv_list, tab_title);
@@ -132,7 +123,7 @@ public class MySellActivity extends BaseActivity {
                 .url(API.MYSELL_LIST_GET)
                 .addParams("token", MyApplication.getInstance().token)
                 .addParams("checked", isChecked)
-                .addParams("status", isSuccess)
+//                .addParams("status", isSuccess)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -144,18 +135,15 @@ public class MySellActivity extends BaseActivity {
                     public void onResponse(String response, int id) {
                         MySellListEntity mySellListEntity = new Gson().fromJson(response, MySellListEntity.class);
                         if (mySellListEntity.getCode() == 200) {
-                            if (isChecked == "" && isSuccess == "") {
+                            if (isChecked == "") {
                                 datalist.addAll(mySellListEntity.getData());
                                 lv_allSellAdapter.updata(datalist);
-                            } else if (isChecked == "" && isSuccess == "success") {
+                            } else if (isChecked == "checked") {
                                 checklist.addAll(mySellListEntity.getData());
                                 lv_check_sucAdapter.updata(checklist);
-                            } else if (isChecked == "unchecked" && isSuccess == "") {
+                            } else if (isChecked == "unchecked") {
                                 checkinglist.addAll(mySellListEntity.getData());
                                 lv_check_ingAdapter.updata(checkinglist);
-                            } else if (isChecked == "checked" && isSuccess == "failure") {
-                                unchecklist.addAll(mySellListEntity.getData());
-                                lv_check_errAdapter.updata(unchecklist);
                             }
 
                             Log.e("TAG", "代销数量---" + "isChecked-" + isChecked + "---isSuccess-" + isSuccess + mySellListEntity.getData().size());
@@ -171,9 +159,8 @@ public class MySellActivity extends BaseActivity {
     public void initData() {
 
         getdata("", "");
-        getdata("", "success");
+        getdata("checked", "");
         getdata("unchecked", "");
-        getdata("checked", "failure");
 
         Intent intent = getIntent();
         int type = intent.getIntExtra("type", 0);
@@ -200,10 +187,6 @@ public class MySellActivity extends BaseActivity {
                 currentAdapter=lv_check_ingAdapter;
                 currentlist=checkinglist;
                 break;
-            case  3:
-                currentAdapter=lv_check_errAdapter;
-                currentlist=unchecklist;
-                break;
         }
     }
 
@@ -226,6 +209,7 @@ public class MySellActivity extends BaseActivity {
         });
 
         etSearch.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 

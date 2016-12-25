@@ -1,6 +1,9 @@
 package com.mpzn.mpzn.fragment.RegForType;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +20,11 @@ import butterknife.ButterKnife;
  */
 
 public class RegForJJCom extends BaseFragment {
+
+
     @Bind(R.id.et_jjcom)
-    EditText etJjcom;
+    public EditText etJjcom;
+    private ComRegbtnEnableSetListener mRegbtnEnableSetListener;
 
     @Override
     public View getLayourView(LayoutInflater inflater, ViewGroup container) {
@@ -43,7 +49,22 @@ public class RegForJJCom extends BaseFragment {
 
     @Override
     public void bindListener() {
+        etJjcom.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mRegbtnEnableSetListener.setRegCombtnEnable(true, charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     @Override
@@ -59,4 +80,20 @@ public class RegForJJCom extends BaseFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
-}
+
+    public interface ComRegbtnEnableSetListener {
+        void setRegCombtnEnable(boolean enable, String name);
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mRegbtnEnableSetListener = (ComRegbtnEnableSetListener) context;
+        } catch (Exception e) {
+//            throw new ClassCastException(context.toString()
+//                    + "must implement RegbtnEnableSetListener");
+        }
+    }
+
+    }
+

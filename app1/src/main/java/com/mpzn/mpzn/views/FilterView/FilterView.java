@@ -67,6 +67,16 @@ public class FilterView extends LinearLayout implements View.OnClickListener {
     private int panelHeight;
     private FilterData filterData;
 
+    public int getFilterMeasureHeight() {
+        return filterMeasureHeight;
+    }
+
+    public void setFilterMeasureHeight(int measureHeight) {
+        this.filterMeasureHeight = filterMeasureHeight;
+    }
+
+    private int filterMeasureHeight;
+
     private FilterTwoEntity selectedCategoryEntity; // 被选择的分类项
     private FilterEntity selectedSortEntity; // 被选择的排序项
     private FilterEntity selectedFilterEntity; // 被选择的筛选项
@@ -359,4 +369,9 @@ public class FilterView extends LinearLayout implements View.OnClickListener {
         void onItemFilterClick(FilterEntity entity);
     }
 
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        setFilterMeasureHeight(getMeasuredHeight());
+    }
 }

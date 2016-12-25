@@ -2,6 +2,7 @@ package com.mpzn.mpzn.entity;
 
 /**
  * Created by Icy on 2016/11/2.
+ * 极光推送的内容解析之后的bean类
  */
 
 public class JPushNotificationEntity {

@@ -3,6 +3,7 @@ package com.mpzn.mpzn.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.mpzn.mpzn.activity.StarAndBrowseActivity;
 import com.mpzn.mpzn.base.BaseActivity;
 import com.mpzn.mpzn.entity.StarBuildingEntity;
 import com.mpzn.mpzn.http.API;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,15 +63,25 @@ public class RvCheckBuildingAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     }
 
-    public void updata(List<StarBuildingEntity.DataBean> starBuildingList) {
+    public void updata(List<StarBuildingEntity.DataBean> starBuildingList, boolean isAfterDelete) {
         if(starBuildingList.size()!=0) {
             this.starBuildingList = starBuildingList;
             this.notifyDataSetChanged();
         }else{
-            this.starBuildingList = noData;
-            this.notifyDataSetChanged();
+            Logger.d("没有数据了");
+            if (isAfterDelete) {
+                //如果是删除后没有数据了，可能只是全选删除后当页没有数据了，这时候执行回调让它再获取一遍数据
+                changCheckListener.onPageAllDelete();
+            } else {
+                this.starBuildingList = noData;
+                this.notifyDataSetChanged();
+            }
+
         }
     }
+
+
+
     public void changeEditable(boolean isEdit,boolean allDelete){
 
         this.isEdit=isEdit;
@@ -131,10 +143,12 @@ public class RvCheckBuildingAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         String createdate = formatData("yyyy年MM月dd日", Long.parseLong(String.valueOf(dataBean.getCreatedate())));
         mholder.tvDate.setText(fromType+"时间:"+createdate);
         if(isEdit){
+            Log.i("Bug_test1", "onBindViewHolder()__");
             mholder.cbDelete.setVisibility(View.VISIBLE);
             mholder.cbDelete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Log.i("Bug_test1", "onCheckedChanged()__");
                    if(isChecked){
                        dataBean.setCheck(true);
                    }else {
@@ -174,6 +188,7 @@ public class RvCheckBuildingAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public interface ChangCheckListener{
         void ChangCheck(boolean isCheck);
+        void onPageAllDelete();
     }
 
 
@@ -198,6 +213,7 @@ public class RvCheckBuildingAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ButterKnife.bind(this,itemView);
         }
     }
+
     public class NoDataViewHolder extends RecyclerView.ViewHolder{
 
         public NoDataViewHolder(View itemView) {

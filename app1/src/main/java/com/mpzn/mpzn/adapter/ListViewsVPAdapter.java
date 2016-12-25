@@ -2,6 +2,7 @@ package com.mpzn.mpzn.adapter;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -48,6 +49,7 @@ public class ListViewsVPAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         ListView listView = lv_list.get(position);
         container.addView(listView);
+        Log.i("Proxy_test", "instantiateItem()__listView = "+listView);
         return listView;
     }
 }

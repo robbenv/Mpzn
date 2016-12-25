@@ -35,10 +35,12 @@ import com.mpzn.mpzn.activity.LoginActivity;
 import com.mpzn.mpzn.activity.MyBBActivity;
 import com.mpzn.mpzn.activity.MyDataActivity;
 import com.mpzn.mpzn.activity.MySellActivity;
+import com.mpzn.mpzn.activity.ProxySellManageActivity;
 import com.mpzn.mpzn.activity.RegForUserTypeActivity;
 import com.mpzn.mpzn.activity.SetupActivity;
 import com.mpzn.mpzn.activity.StarAndBrowseActivity;
 import com.mpzn.mpzn.activity.TestActivity;
+import com.mpzn.mpzn.activity.UserTrackActivity;
 import com.mpzn.mpzn.activity.WebViewActivity;
 import com.mpzn.mpzn.adapter.MainUserRecyclerViewAdapter;
 import com.mpzn.mpzn.application.MyApplication;
@@ -54,6 +56,8 @@ import com.mpzn.mpzn.utils.VibratorUtil;
 import com.mpzn.mpzn.utils.ViewUtils;
 import com.mpzn.mpzn.views.DividerItemDecoration;
 import com.mpzn.mpzn.views.SmoothListView.DividerGridItemDecoration;
+import com.mpzn.mpzn.views.WaveView3;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +99,8 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
     private RecyclerView rv_user;
     private Button tv_calculator;
     private RelativeLayout rl_user_content;
+    private RelativeLayout user_top;
+    private WaveView3 wave_view;
     private MainUserRecyclerViewAdapter userRecyclerViewAdapter;
     private List<ItemUserTool> results=new ArrayList<>();
     private ItemTouchHelper itemTouchHelper;
@@ -129,7 +135,8 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
         tv_calculator = (Button)fragment_user.findViewById(R.id.tv_calculator);
         iv_setting = (ImageButton)fragment_user.findViewById(R.id.iv_setting);
         rl_user_content= (RelativeLayout)fragment_user.findViewById(R.id.rl_user_content);
-
+        user_top = (RelativeLayout) fragment_user.findViewById(R.id.user_top);
+        wave_view = (WaveView3) fragment_user.findViewById(R.id.wave_view);
     }
 
     @Override
@@ -191,6 +198,7 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
 
         }
         userRecyclerViewAdapter.updata(results);
+
 
         tv_login.setText("立即登录");
         Log.e("TAG", "tv_login"+tv_login.getText());
@@ -279,7 +287,7 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
                         Toast.makeText(mContext, "请先登录", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent();
                         intent.setClass(mContext, LoginActivity.class);
-                        getActivity().startActivity(intent);
+                        startActivityForResult(intent, REQCODE_LOGIN);
                     }
 
 
@@ -294,7 +302,7 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
                         Toast.makeText(mContext, "请先登录", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent();
                         intent.setClass(mContext, LoginActivity.class);
-                        getActivity().startActivity(intent);
+                        startActivityForResult(intent, REQCODE_LOGIN);
                     }
 
 
@@ -337,18 +345,27 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
                     Intent intent = new Intent();
                     intent.setClass(mContext,CheckBBActivity.class);
                     startActivity(intent);
-                }else if((itemName).equals("更多")){
+                } else if ((itemName).equals("代销管理")) {
+                    Intent intent = new Intent();
+                    intent.setClass(mContext,ProxySellManageActivity.class);
+                    startActivity(intent);
+                } else if((itemName).equals("更多")){
                     if(MyApplication.getInstance().isLogined) {
 //                        Toast.makeText(mContext, "暂无更多", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent();
-                        intent.setClass(mContext,TestActivity.class);
-                        startActivity(intent);
+//                        Intent intent = new Intent();
+//                        intent.setClass(mContext,TestActivity.class);
+//                        startActivity(intent);
+                        Toast.makeText(mContext, "更多功能，敬请期待", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(mContext, "查看更多，请先登录", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent();
                         intent.setClass(mContext, LoginActivity.class);
                         getActivity().startActivity(intent);
                     }
+                } else if ((itemName).equals("客户信息")) {
+                    Intent intent = new Intent();
+                    intent.setClass(mContext,UserTrackActivity.class);
+                    startActivity(intent);
                 }
             }
         });
@@ -378,6 +395,17 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
                 startActivityForResult(intent, REQCODE_SETTING);
             }
         });
+
+        final RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewUtils.dip2px(80),ViewUtils.dip2px(80));
+        lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        wave_view.setOnWaveAnimationListener(new WaveView3.OnWaveAnimationListener() {
+            @Override
+            public void OnWaveAnimation(float y) {
+                lp.setMargins(ViewUtils.dip2px(20),0,0,(int)y+ViewUtils.dip2px(5));
+                user_icon.setLayoutParams(lp);
+            }
+        });
+
 
 
     }
@@ -412,8 +440,12 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
            }
 
         mImageManager.loadCircleImageWithWhite(userMsg.getmIconUrl(),user_icon);
-
-        tv_login.setText(userMsg.getmName());
+        if (userMsg.getName() == null || "".equals(userMsg.getName())) {
+            //如果没有用户姓名，就用电话，如果有用户姓名，就用用户姓名
+            tv_login.setText(userMsg.getmName());
+        } else {
+            tv_login.setText(userMsg.getName());
+        }
 
 
         results = new ArrayList<>();
@@ -444,15 +476,18 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
 
         switch (requestCode) {
             case REQCODE_LOGIN:
+                Logger.d("onActivityResult()__REQCODE_LOGIN");
                 if(resultCode!=0) {
                     Log.e("TAG", "resultCode"+resultCode);
                     userMsg= data.getParcelableExtra("userMsg");
+                    Logger.d("onActivityResult()__name = " + userMsg.getmName());
                     upDataView();
 
                 }
 
                 break;
             case REQCODE_SETTING:
+                Logger.d("onActivityResult()__REQCODE_SETTING");
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         initViewForLogout();
@@ -462,8 +497,10 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
 
                 break;
             case REQCODE_MYDATA:
+                Logger.d("onActivityResult()__REQCODE_MYDATA");
                 switch (resultCode) {
                     case  Activity.RESULT_OK:
+
                         tv_login.setText(data.getStringExtra("Name"));
                         mImageManager.loadCircleImageWithWhite(MyApplication.getInstance().mUserMsg.getmIconUrl(),user_icon);
                         break;
@@ -472,12 +509,12 @@ public class UserFragment extends BaseFragment implements MyItemTouchCallback.On
 
                 break;
             case REQCODE_CHANGICON:
+                Logger.d("onActivityResult()__REQCODE_CHANGICON");
                 switch (resultCode) {
                     case  Activity.RESULT_OK:
                         mImageManager.loadCircleImageWithWhite(MyApplication.getInstance().mUserMsg.getmIconUrl(),user_icon);
                         break;
                     case Activity.RESULT_CANCELED:
-
                         break;
                 }
 

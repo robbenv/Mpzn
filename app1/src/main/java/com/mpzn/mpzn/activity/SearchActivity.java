@@ -259,7 +259,7 @@ public class SearchActivity extends BaseActivity {
                 }
                 searchHistory.add(0,data.getSubject());
                 CacheUtils.putObject(mContext, "SearchHistory",searchHistory);
-                finish();
+//                finish();
             }
         });
 
@@ -282,7 +282,7 @@ public class SearchActivity extends BaseActivity {
                 searchHistory.add(0,data.getSubject());
                 CacheUtils.putObject(mContext, "SearchHistory",searchHistory);
 
-                finish();
+//                finish();
 
             }
         });
@@ -328,7 +328,7 @@ public class SearchActivity extends BaseActivity {
         switch (requestCode) {
             case  Constant.REQCODE_SEARCHRESULT:
                 if(resultCode==0) {
-                    finish();
+//                    finish();
                 }else{
                     String searchContent = data.getStringExtra("SearchContent");
                     et_search.setText(searchContent);

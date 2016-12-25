@@ -121,7 +121,18 @@
     android:layout_below="@id/rl_et"
     android:layout_above="@id/rl_bottom"
     android:background="@color/white">
-
+    <com.cjj.MaterialRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/refresh"
+        app:overlay="true"
+        app:wave_show="true"
+        app:wave_color="#00000000"
+        app:progress_colors="@array/material_colors"
+        app:isLoadMore="true"
+        app:wave_height_type="higher">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_building"
@@ -129,6 +140,8 @@
         android:layout_height="match_parent"
         android:background="@color/fafafa">
     </android.support.v7.widget.RecyclerView>
+
+    </com.cjj.MaterialRefreshLayout>
     <ListView
         android:id="@+id/lv_search_tips"
         android:background="@color/fafafa"

@@ -1,14 +1,12 @@
 package com.mpzn.mpzn.activity;
 
-import android.app.Dialog;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -42,15 +40,14 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import okhttp3.Call;
 
-import static com.mpzn.mpzn.utils.ViewUtils.dip2px;
 import static com.mpzn.mpzn.utils.ViewUtils.loadedDismissProgressDialog;
 
 public class JingjiRenManageActivity extends BaseActivity {
 
 
+    private static final String TAG = "JingjiRen";
     @Bind(R.id.aciton_bar)
     MyActionBar acitonBar;
     @Bind(R.id.rb_own)
@@ -82,6 +79,8 @@ public class JingjiRenManageActivity extends BaseActivity {
     RelativeLayout rlWithVp2;
     @Bind(R.id.ll_bottom)
     LinearLayout llBottom;
+    @Bind(R.id.tv_nodata)
+    TextView tvNodata;
     private RecyclerView rv_own;
     private RecyclerView rv_add;
 
@@ -133,7 +132,7 @@ public class JingjiRenManageActivity extends BaseActivity {
         recyclerViews.add(rv_own);
         recyclerViews.add(rv_add);
 
-        VpRecyclerViewAdapter vpStarBrowseAdapter = new VpRecyclerViewAdapter(mContext,recyclerViews);
+        VpRecyclerViewAdapter vpStarBrowseAdapter = new VpRecyclerViewAdapter(mContext, recyclerViews);
         vpOwnAdd.setAdapter(vpStarBrowseAdapter);
 
         currentAdapter = rvOwnAdapter;
@@ -195,21 +194,21 @@ public class JingjiRenManageActivity extends BaseActivity {
                 OkHttpUtils.post()
                         .url(API.ADD_JINGJIREN_POST)
                         .addParams("token", MyApplication.getInstance().token)
-                        .addParams("broker_id", midForAdd+"")
+                        .addParams("broker_id", midForAdd + "")
                         .build()
                         .execute(new StringCallback() {
                             @Override
                             public void onError(Call call, Exception e, int id) {
-
+                                loadedDismissProgressDialog(JingjiRenManageActivity.this, false, loadProgressHUD, "加载失败，请检查网络", false);
                             }
 
                             @Override
                             public void onResponse(String response, int id) {
                                 SimpleEntity simpleEntity = new Gson().fromJson(response, SimpleEntity.class);
-                                if(simpleEntity.getCode()==200){
+                                if (simpleEntity.getCode() == 200) {
                                     dialog.dismiss();
                                     Toast.makeText(JingjiRenManageActivity.this, "添加经纪人成功", Toast.LENGTH_SHORT).show();
-                                }else{
+                                } else {
                                     dialog.btnCommit.setEnabled(false);
                                     add_dialog.tvName.setText("");
                                     add_dialog.tvPhone.setText("");
@@ -231,7 +230,7 @@ public class JingjiRenManageActivity extends BaseActivity {
     public void initData() {
 
         loadProgressHUD = KProgressHUD.create(this).
-                setSize(MyApplication.mScreenWidth/4, MyApplication.mScreenWidth/6).
+                setSize(MyApplication.mScreenWidth / 4, MyApplication.mScreenWidth / 6).
                 setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).
                 setLabel("正在同步...").setCancellable(true).show();
 
@@ -253,12 +252,14 @@ public class JingjiRenManageActivity extends BaseActivity {
                         JingjirenListEntity jinjirenListEntity = new Gson().fromJson(response, JingjirenListEntity.class);
                         List<JingjirenListEntity.DataBean> jinjirenListEntityData = jinjirenListEntity.getData();
                         if (jinjirenListEntity.getCode() == 200) {
+
                             ownJingjirenList.addAll(jinjirenListEntityData);
                             rvOwnAdapter.updata(ownJingjirenList);
 
                             loadedDismissProgressDialog(JingjiRenManageActivity.this, true, loadProgressHUD, "同步成功", false);
 
                         } else {
+//                            tvNodata.setVisibility(View.VISIBLE);
                             loadedDismissProgressDialog(JingjiRenManageActivity.this, false, loadProgressHUD, jinjirenListEntity.getMessage(), false);
 
                         }
@@ -407,6 +408,7 @@ public class JingjiRenManageActivity extends BaseActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "onClick()__btnDelete");
                 manageJingjiren("delete");
             }
         });
@@ -420,6 +422,12 @@ public class JingjiRenManageActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.show();
+            }
+        });
+        btnRefuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                manageJingjiren("unchecked");
             }
         });
 
@@ -438,6 +446,7 @@ public class JingjiRenManageActivity extends BaseActivity {
         } else if (action == "unchecked") {
             LoadingMsg = "正在驳回申请...";
             SuccussMsg = "驳回申请成功";
+            jingjirenlist = addJingjirenList;
 
         } else if (action == "delete") {
 
@@ -448,7 +457,7 @@ public class JingjiRenManageActivity extends BaseActivity {
         }
 
         loadProgressHUD = KProgressHUD.create(JingjiRenManageActivity.this).
-                setSize(MyApplication.mScreenWidth/4, MyApplication.mScreenWidth/6).
+                setSize(MyApplication.mScreenWidth / 4, MyApplication.mScreenWidth / 6).
                 setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).
                 setLabel(LoadingMsg).setCancellable(false).show();
 
@@ -464,10 +473,13 @@ public class JingjiRenManageActivity extends BaseActivity {
                 }
             }
         }
+
+        Log.i(TAG, "manageJingjiren()__daleteList = " + deleteList.size());
         if (str == "") {
             loadedDismissProgressDialog(JingjiRenManageActivity.this, false, loadProgressHUD, "请选择要移除的楼盘", false);
         } else {
             final String finalSuccussMsg = SuccussMsg;
+            Log.i(TAG, "manageJingjiren()__action = " + action);
             OkHttpUtils.post()
                     .url(API.MANAGEBROKERSLIST_POST)
                     .addParams("token", MyApplication.getInstance().token)
@@ -501,6 +513,13 @@ public class JingjiRenManageActivity extends BaseActivity {
                         }
                     });
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 
     static class ViewHolder {

@@ -34,6 +34,7 @@ import com.mpzn.mpzn.http.API;
 import com.mpzn.mpzn.views.AddJJRComFragmentDialog;
 import com.mpzn.mpzn.views.MyActionBar;
 import com.mpzn.mpzn.views.MyDialog;
+import com.orhanobut.logger.Logger;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -118,7 +119,7 @@ public class MyDataActivity extends BaseActivity {
 
     }
     private void setUserMsg(TextView textView,String getMsg){
-        if(getMsg.length()!=0){
+        if(getMsg == null || getMsg.length()!=0 ){
             textView.setText(getMsg);
             textView.setTextColor(getResources().getColor(R.color.font_black_5));
         }else{
@@ -191,9 +192,10 @@ public class MyDataActivity extends BaseActivity {
        }
         mImageManager.loadCircleImage(mUserMsg.getmIconUrl(),ivMyIcon);
         userMsgEntity= (UserMsgEntity) getObject(mContext,"userMsgEntity");
+//        Log.e("TAG", "userMsgEntity"+userMsgEntity.toString());
         if(userMsgEntity!=null){
             updataView();
-            Log.e("TAG", "userMsgEntity"+userMsgEntity);
+            Log.e("TAG", "userMsgEntity"+userMsgEntity.toString());
         }
         OkHttpUtils.get()
                 .url(API.USERMSG_GET)
@@ -212,6 +214,7 @@ public class MyDataActivity extends BaseActivity {
                         userMsgEntity = new Gson().fromJson(response, UserMsgEntity.class);
                         if(userMsgEntity.getCode()==200){
                             putObject(mContext,"userMsgEntity",userMsgEntity);
+                            Log.i("TAG", "onResponse()__userMsgEntity = "+userMsgEntity.getData().getName());
                             updataView();
 
                         }else {
@@ -376,7 +379,7 @@ public class MyDataActivity extends BaseActivity {
                 setStyle(KProgressHUD.Style.SPIN_INDETERMINATE).
                 setLabel("正在提交...").setCancellable(true).show();
 
-        Log.e("TAG", "paramskey"+paramskey+"commitMsg"+commitMsg);
+        Logger.d("paramskey"+paramskey+"commitMsg"+commitMsg);
         OkHttpUtils.post()
                 .url(API.COMMITUSERMSG_POST)
                 .addParams("token",MyApplication.getInstance().token)
@@ -452,4 +455,6 @@ public class MyDataActivity extends BaseActivity {
 
 
     }
+
+
 }

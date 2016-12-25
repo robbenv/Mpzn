@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.mpzn.mpzn.R;
 import com.mpzn.mpzn.activity.MainActivity;
 import com.mpzn.mpzn.entity.MessageEntity;
+import com.mpzn.mpzn.utils.CacheUtils;
+import com.orhanobut.logger.Logger;
 
 import java.text.DateFormat;
 import java.util.List;
@@ -64,6 +66,16 @@ public class RvMessageAdapter extends RecyclerView.Adapter<RvMessageAdapter.MyVi
     public int getItemCount() {
         return messageEntityList.size();
     }
+
+    public void updata(MessageEntity messageEntity) {
+        messageEntityList.add(messageEntity);
+        Logger.d("messageEntityList.size ="+messageEntityList.size());
+        notifyDataSetChanged();
+        CacheUtils.putObject(mContext, "MessageList", messageEntityList);
+
+    }
+
+
 
 
     static class MyViewHolder extends RecyclerView.ViewHolder {

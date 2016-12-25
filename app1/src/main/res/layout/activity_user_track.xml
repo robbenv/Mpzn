@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true">
+    <com.mpzn.mpzn.views.MyActionBar
+        android:id="@+id/aciton_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/fafafa"
+        app:title_color="@color/font_black_2">
+
+    </com.mpzn.mpzn.views.MyActionBar>
+    <View style="@style/divider_1"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/lv_my_bb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/et_search">
+
+        </ListView>
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/coners_radius_5dp_gray"
+            android:hint="输入客户姓名或手机号后四位"
+            android:textColorHint="@color/font_black_4"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="@color/font_black_3"
+            android:drawableLeft="@drawable/search_gray"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>

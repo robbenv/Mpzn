@@ -3,17 +3,27 @@ package com.mpzn.mpzn.application;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.mpzn.mpzn.entity.UserMsg;
+import com.orhanobut.logger.Logger;
+import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.https.HttpsUtils;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cn.jpush.android.api.JPushInterface;
@@ -31,21 +41,25 @@ public class MyApplication extends Application {
     public static String token;
     public static Context mContext;
     public static Boolean isNotFirstRun;
-    public static Boolean isLogined;
+    public static boolean isLogined = false;
     public static UserMsg mUserMsg;
     public static boolean isInfect;
     public static int mScreenWidth;
     public static int mScreenHeight;
+    private UMShareAPI mShareAPI;
+    private MobclickAgent.UMAnalyticsConfig umAnalyticsConfig;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+//        FreelineCore.init(this);
         mContext=getApplicationContext();
 
         getIsNotFirstRun();
 
-        isInfect=Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        isInfect=Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT;
 
         mScreenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
         mScreenHeight = mContext.getResources().getDisplayMetrics().heightPixels;
@@ -59,12 +73,22 @@ public class MyApplication extends Application {
         //极光推送初始化SDK
         JPushInterface.init(this);
 
+
         //微信 appid appsecret
         PlatformConfig.setWeixin("wx395a9fb9b698fabc", "c387dcbd2a344a2ece68589b624cceac");
 
         //百度地图初始化 SDK
         SDKInitializer.initialize(mContext);
 
+        //初始化友盟的SDK
+        UMShareAPI.get(this);
+
+        //授权
+        SHARE_MEDIA platform = SHARE_MEDIA.WEIXIN;
+
+        //友盟统计多渠道数据
+        umAnalyticsConfig = new MobclickAgent.UMAnalyticsConfig(mContext, "57a00dede0f55a7e29002b87", AnalyticsConfig.getChannel(mContext));
+        MobclickAgent. startWithConfigure(umAnalyticsConfig);
 
 
     }
@@ -75,17 +99,29 @@ public class MyApplication extends Application {
 
         this.isLogined=isLogined;
 
+
+
     }
 
-    public void setmUserMsg(UserMsg mUserMsg){
+    public void setmUserMsg(final UserMsg mUserMsg){
 
         this.mUserMsg=mUserMsg;
+//        JPushInterface.setAlias(this, mUserMsg.getmName()+"_dev", new TagAliasCallback() {
+//            @Override
+//            public void gotResult(int i, String s, Set<String> set) {
+//                Toast.makeText(MyApplication.this, "别名："+mUserMsg.getmName()+"_dev", Toast.LENGTH_SHORT).show();
+//                Logger.d( "别名："+mUserMsg.getmName()+"_dev");
+//                //啥也没有
+//            }
+//        });
+
 
     }
 
-    public void setToken(String token){
+    public void setToken(final String token){
 
         this.token=token;
+
     }
 
     //初始化OkHttp 生成OkhttpClient
@@ -145,5 +181,26 @@ public class MyApplication extends Application {
         }
         System.exit(0);
     }
+
+    //友盟授权监听
+    private UMAuthListener umAuthListener = new UMAuthListener() {
+        @Override
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+            Toast.makeText(getApplicationContext(), "授权成功", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+            Toast.makeText(getApplicationContext(), "授权失败", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform, int action) {
+            Toast.makeText(getApplicationContext(), "取消授权", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+
 
 }

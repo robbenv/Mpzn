@@ -2,6 +2,7 @@ package com.mpzn.mpzn.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -54,8 +55,8 @@ public class MainHomeBuildingLvAdapter extends BaseListAdapter<BuildingEntity> {
             // 添加空数据
             Toast.makeText(mContext, "刷新成功，发现"+getCount()+"个楼盘", Toast.LENGTH_SHORT).show();
             if (list.size() < ONE_SCREEN_COUNT) {
-
-                addALL(createEmptyList(ONE_SCREEN_COUNT - list.size()));
+                Log.i("Proxy_test34", "setData()__添加空数据");
+                addALL(createEmptyList(ONE_SCREEN_COUNT - list.size() + 1));
             }
         }
         notifyDataSetChanged();

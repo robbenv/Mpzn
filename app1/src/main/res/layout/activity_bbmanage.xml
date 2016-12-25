@@ -17,10 +17,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/fafafa"
-                app:title_color="@color/font_black_2">
-
-
-            </com.mpzn.mpzn.views.MyActionBar>
+                app:title_color="@color/font_black_2"/>
             <RadioGroup
                 android:layout_width="180dp"
                 android:layout_height="30dp"
@@ -192,6 +189,15 @@
         android:layout_above="@+id/ll_bottom">
 
     </com.mpzn.mpzn.views.IsCanScrollViewPager>
+
+    <TextView
+        android:id="@+id/tv_nodata"
+        android:visibility="gone"
+        android:textSize="20sp"
+        android:layout_centerInParent="true"
+        android:text="没有获取到经纪人数据"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
 </RelativeLayout>
